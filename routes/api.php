@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +13,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'namespace' => 'Account',
+    'prefix'    => 'auth',
+], function () {
+    Route::post('login', 'AccountController@login')->middleware('guest:api');
+    Route::delete('logout', 'AccountController@logout')->middleware('auth:api');
+    Route::post('register', 'AccountController@register')->middleware('guest:api');
+
+    Route::group([
+        'namespace' => 'SocialAccount',
+        'prefix'    => 'social-account',
+    ], function () {
+        Route::get('facebook', 'FacebookController@redirectToProvider');
+        Route::get('facebook/callback', 'FacebookController@handleProviderCallback');
+
+        Route::get('google', 'GoogleController@redirectToProvider');
+        Route::get('google/callback', 'GoogleController@handleProviderCallback');
+    });
+});
+
+Route::group([
+    'namespace' => 'Google',
+    'prefix'    => 'google',
+], function () {
+    Route::group([
+        'namespace' => 'AdWords',
+        'prefix'    => 'adwords',
+    ], function () {
+        Route::get('campaigns', 'CampaignController@index');
+    });
 });

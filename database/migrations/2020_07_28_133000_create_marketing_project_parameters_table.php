@@ -17,8 +17,6 @@ class CreateMarketingProjectParametersTable extends Migration
             $table->uuid('project_id')->index();
             $table->uuid('parameter_id')->index();
 
-            $table->timestamps();
-
             $table->primary(['project_id', 'parameter_id'], 'project_parameter_key');
         });
     }

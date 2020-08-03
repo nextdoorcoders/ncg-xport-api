@@ -15,7 +15,7 @@ class CreateMarketingCompaniesTable extends Migration
     {
         Schema::create('marketing_companies', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('user_id')->index();
+            $table->uuid('social_account_id')->index();
 
             $table->string('name');
             $table->text('desc')->nullable();

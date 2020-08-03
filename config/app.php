@@ -165,6 +165,8 @@ return [
         /*
          * Package Service Providers...
          */
+//        EbashuOnHolidays\Facebook\FacebookServiceProvider::class,
+        EbashuOnHolidays\Google\GoogleServiceProvider::class,
 
         /*
          * Application Service Providers...

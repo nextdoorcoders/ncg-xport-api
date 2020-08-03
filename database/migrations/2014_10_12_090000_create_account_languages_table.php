@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGeoStatesTable extends Migration
+class CreateAccountLanguagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateGeoStatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('geo_states', function (Blueprint $table) {
+        Schema::create('account_languages', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('country_id')->index();
 
-            $table->string('name_en');
-            $table->string('name_uk');
-            $table->string('name_ru');
+            $table->string('name');
+            $table->string('code')->index();
+
+            $table->boolean('is_primary')->default(false)->index();
+
+            $table->timestamps();
         });
     }
 
@@ -30,6 +32,6 @@ class CreateGeoStatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('geo_states');
+        Schema::dropIfExists('account_languages');
     }
 }

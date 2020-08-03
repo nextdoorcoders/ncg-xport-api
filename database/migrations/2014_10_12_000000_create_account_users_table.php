@@ -15,11 +15,17 @@ class CreateAccountUsersTable extends Migration
     {
         Schema::create('account_users', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
+            $table->uuid('country_id')->index()->nullable();
+            $table->uuid('language_id')->index();
 
-            $table->string('login')->unique();
+            $table->string('name')->nullable();
+            $table->string('email')->index()->unique();
+
             $table->string('password');
 
             $table->timestamps();
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('last_seen_at')->nullable();
         });
     }
 

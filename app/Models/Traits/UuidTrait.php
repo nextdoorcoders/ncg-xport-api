@@ -26,10 +26,8 @@ trait UuidTrait
      *
      * @return void
      */
-    protected static function boot()
+    protected static function bootUuidTrait()
     {
-        parent::boot();
-
         self::creating(function (Model $model) {
             $model->setAttribute($model->getKeyName(), Str::orderedUuid());
         });

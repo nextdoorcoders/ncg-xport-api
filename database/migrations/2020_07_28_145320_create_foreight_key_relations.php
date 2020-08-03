@@ -13,6 +13,18 @@ class CreateForeightKeyRelations extends Migration
      */
     public function up()
     {
+        Schema::table('account_users', function (Blueprint $table) {
+            $table->foreign('country_id')
+                ->references('id')
+                ->on('geo_countries')
+                ->onDelete('cascade');
+
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('account_languages')
+                ->onDelete('cascade');
+        });
+
         Schema::table('account_contacts', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')
@@ -20,10 +32,41 @@ class CreateForeightKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
+        Schema::table('account_socials', function (Blueprint $table) {
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('account_users')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('geo_countries_translate', function (Blueprint $table) {
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('account_languages')
+                ->onDelete('cascade');
+
+            $table->foreign('translatable_id')
+                ->references('id')
+                ->on('geo_countries')
+                ->onDelete('cascade');
+        });
+
         Schema::table('geo_states', function (Blueprint $table) {
             $table->foreign('country_id')
                 ->references('id')
                 ->on('geo_countries')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('geo_states_translate', function (Blueprint $table) {
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('account_languages')
+                ->onDelete('cascade');
+
+            $table->foreign('translatable_id')
+                ->references('id')
+                ->on('geo_states')
                 ->onDelete('cascade');
         });
 
@@ -39,10 +82,22 @@ class CreateForeightKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('marketing_companies', function (Blueprint $table) {
-            $table->foreign('user_id')
+        Schema::table('geo_cities_translate', function (Blueprint $table) {
+            $table->foreign('language_id')
                 ->references('id')
-                ->on('account_users')
+                ->on('account_languages')
+                ->onDelete('cascade');
+
+            $table->foreign('translatable_id')
+                ->references('id')
+                ->on('geo_cities')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('marketing_companies', function (Blueprint $table) {
+            $table->foreign('social_account_id')
+                ->references('id')
+                ->on('account_socials')
                 ->onDelete('cascade');
         });
 
