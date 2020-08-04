@@ -108,27 +108,46 @@ class CreateForeightKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('marketing_parameters', function (Blueprint $table) {
-            $table->foreign('city_id')
-                ->references('id')
-                ->on('geo_cities')
-                ->onDelete('cascade');
-
-            $table->foreign('trigger_id')
-                ->references('id')
-                ->on('vendor_triggers')
-                ->onDelete('cascade');
-        });
-
-        Schema::table('marketing_projects_has_parameters', function (Blueprint $table) {
+        Schema::table('marketing_groups', function (Blueprint $table) {
             $table->foreign('project_id')
                 ->references('id')
                 ->on('marketing_projects')
                 ->onDelete('cascade');
+        });
 
-            $table->foreign('parameter_id')
+        Schema::table('marketing_conditions', function (Blueprint $table) {
+            $table->foreign('group_id')
                 ->references('id')
-                ->on('marketing_parameters')
+                ->on('marketing_groups')
+                ->onDelete('cascade');
+
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('marketing_vendors')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('marketing_vendors_translate', function (Blueprint $table) {
+            $table->foreign('language_id')
+                ->references('id')
+                ->on('account_languages')
+                ->onDelete('cascade');
+
+            $table->foreign('translatable_id')
+                ->references('id')
+                ->on('marketing_vendors')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('marketing_vendors_has_geo_cities', function (Blueprint $table) {
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('marketing_vendors')
+                ->onDelete('cascade');
+
+            $table->foreign('city_id')
+                ->references('id')
+                ->on('geo_cities')
                 ->onDelete('cascade');
         });
     }

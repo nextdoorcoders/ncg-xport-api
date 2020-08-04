@@ -13,14 +13,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class Country
  *
  * @package App\Models\Geo
- * @property string       $id
- * @property string       $alpha2
- * @property string       $alpha3
- * @property string       $name
- * @property string       $phone_mask
- * @property Collection   $users
- * @property Collection   $states
- * @property Collection   $cities
+ * @property string            $id
+ * @property string            $alpha2
+ * @property string            $alpha3
+ * @property array             $name
+ * @property string            $phone_mask
+ * @property Collection<User>  $users
+ * @property Collection<State> $states
+ * @property Collection<City>  $cities
  */
 class Country extends Model
 {
@@ -46,7 +46,7 @@ class Country extends Model
     /**
      * @return HasMany
      */
-    public function users()
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
@@ -54,7 +54,7 @@ class Country extends Model
     /**
      * @return HasMany
      */
-    public function states()
+    public function states(): HasMany
     {
         return $this->hasMany(State::class);
     }
@@ -62,7 +62,7 @@ class Country extends Model
     /**
      * @return HasMany
      */
-    public function cities()
+    public function cities(): HasMany
     {
         return $this->hasMany(City::class);
     }

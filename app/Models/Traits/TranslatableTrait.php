@@ -4,8 +4,15 @@ namespace App\Models\Traits;
 
 use App\Models\Account\Language;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Trait TranslatableTrait
+ *
+ * @package App\Models\Traits
+ * @property Collection $translations
+ */
 trait TranslatableTrait
 {
     protected array $translationAttributes = [];

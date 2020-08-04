@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMarketingProjectParametersTable extends Migration
+class CreateMarketingGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateMarketingProjectParametersTable extends Migration
      */
     public function up()
     {
-        Schema::create('marketing_projects_has_parameters', function (Blueprint $table) {
+        Schema::create('marketing_groups', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
             $table->uuid('project_id')->index();
-            $table->uuid('parameter_id')->index();
 
-            $table->primary(['project_id', 'parameter_id'], 'project_parameter_key');
+            $table->string('name')->nullable();
+            $table->text('desc')->nullable();
+
+            $table->timestamps();
         });
     }
 
@@ -28,6 +31,6 @@ class CreateMarketingProjectParametersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('marketing_projects_has_parameters');
+        Schema::dropIfExists('marketing_groups');
     }
 }

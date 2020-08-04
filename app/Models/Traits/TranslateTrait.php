@@ -3,8 +3,16 @@
 namespace App\Models\Traits;
 
 use App\Models\Account\Language;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Trait TranslateTrait
+ *
+ * @package App\Models\Traits
+ * @property Model    $translatable
+ * @property Language $language
+ */
 trait TranslateTrait
 {
     use UuidTrait;

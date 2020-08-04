@@ -20,6 +20,8 @@ class CreateMarketingCompaniesTable extends Migration
             $table->string('name');
             $table->text('desc')->nullable();
 
+            $table->text('parameters');
+
             $table->timestamps();
         });
     }
