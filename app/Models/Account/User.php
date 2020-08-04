@@ -5,43 +5,50 @@ namespace App\Models\Account;
 use App\Models\File;
 use App\Models\Geo\Country;
 use App\Models\Marketing\Company;
+use App\Models\Traits\UserTrait;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class User
  *
  * @package App\Models\Account
- * @property string  $id
- * @property string  $country_id
- * @property string  $name
- * @property string  $language
- * @property string  $email
- * @property string  $password
- * @property Carbon  $created_at
- * @property Carbon  $updated_at
- * @property Carbon  $last_login_at
- * @property Carbon  $last_seen_at
- * @property boolean $is_online
+ * @property string                    $id
+ * @property string                    $country_id
+ * @property string                    $language_id
+ * @property string                    $name
+ * @property string                    $email
+ * @property string                    $password
+ * @property Carbon                    $created_at
+ * @property Carbon                    $updated_at
+ * @property Carbon                    $last_login_at
+ * @property Carbon                    $last_seen_at
+ * @property boolean                   $is_online
+ * @property Collection                $country
+ * @property Language                  $language
+ * @property Collection<Contact>       $contacts
+ * @property Collection<SocialAccount> $socialAccounts
+ * @property Collection<Company>       $companies
+ * @property File                      $picture
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, UuidTrait;
-
-    const PASSWORD_REGEX = '/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/';
-    const LAST_SEEN_INTERVAL = 15;
+    use HasApiTokens, Notifiable, UserTrait, UuidTrait;
 
     protected $table = 'account_users';
 
     protected $fillable = [
         'country_id',
+        'language_id',
         'name',
-        'language',
         'email',
         'password',
         'last_login_at',
@@ -61,104 +68,51 @@ class User extends Authenticatable
      */
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function country()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return BelongsTo
      */
-    public function contacts()
+    public function language(): BelongsTo
+    {
+        return $this->belongsTo(Language::class, 'language_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function contacts(): HasMany
     {
         return $this->hasMany(Contact::class, 'user_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function socialAccounts()
+    public function socialAccounts(): HasMany
     {
         return $this->hasMany(SocialAccount::class, 'user_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
-    public function companies()
+    public function companies(): HasManyThrough
     {
         return $this->hasManyThrough(Company::class, SocialAccount::class, 'user_id', 'social_account_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     * @return MorphOne
      */
-    public function picture()
+    public function picture(): MorphOne
     {
         return $this->morphOne(File::class, 'fileable')
             ->where('field', 'picture');
-    }
-
-    /*
-     * Mutators
-     */
-
-    /**
-     * @param $password
-     */
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = Hash::make($password);
-    }
-
-    /*
-     * Accessors
-     */
-
-    /**
-     * @return bool
-     */
-    public function getIsOnlineAttribute()
-    {
-        return $this->last_seen_at ? $this->last_seen_at->diffInMinutes() < self::LAST_SEEN_INTERVAL : false;
-    }
-
-    /*
-     * Functions
-     */
-
-    /**
-     * @return string
-     */
-    public static function getRandomPassword()
-    {
-        do {
-            preg_match(self::PASSWORD_REGEX, Str::random(8), $password);
-        } while (empty($password));
-
-        return $password[0];
-    }
-
-    /**
-     * Touch last login timestamp
-     */
-    public function touchLastLogin()
-    {
-        $this->last_login_at = now();
-        $this->last_seen_at = now();
-        $this->save();
-    }
-
-    /**
-     * Touch last seen timestamp
-     */
-    public function touchLastSeen()
-    {
-        if ($this->last_seen_at == null || $this->last_seen_at->diffInMinutes() > self::LAST_SEEN_INTERVAL || $this->last_seen_at < $this->last_login_at) {
-            $this->last_seen_at = now();
-            $this->save();
-        }
     }
 }
