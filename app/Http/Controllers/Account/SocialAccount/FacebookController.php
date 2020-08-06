@@ -6,5 +6,5 @@ use App\Http\Controllers\Account\SocialAuthController;
 
 class FacebookController extends SocialAuthController
 {
-    protected $provider = 'facebook';
+    protected ?string $provider = 'facebook';
 }

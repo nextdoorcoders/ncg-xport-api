@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class ForceJson
+class ForceApi
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request. Prepare request before processing
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -15,7 +15,9 @@ class ForceJson
      */
     public function handle($request, Closure $next)
     {
-        $request->headers->set('Accept', 'application/json');
+        if (!$request->hasHeader('Accept')) {
+            $request->headers->set('Accept', 'application/json');
+        }
 
         return $next($request);
     }

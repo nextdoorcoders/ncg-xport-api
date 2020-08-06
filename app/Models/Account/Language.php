@@ -40,16 +40,7 @@ class Language extends Model
     const LANGUAGE_IT = 'it';
     const LANGUAGE_UK = 'uk';
 
-    const LANGUAGES = [
-        self::LANGUAGE_EN,
-        self::LANGUAGE_ES,
-        self::LANGUAGE_RU,
-        self::LANGUAGE_PT,
-        self::LANGUAGE_FR,
-        self::LANGUAGE_DE,
-        self::LANGUAGE_IT,
-        self::LANGUAGE_UK,
-    ];
+    const LANGUAGE_BY_DEFAULT = self::LANGUAGE_EN;
 
     protected $table = 'account_languages';
 

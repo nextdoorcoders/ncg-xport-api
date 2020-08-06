@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Account\SocialAccount\RedirectToProvider;
+use App\Http\Resources\Account\SocialAccount\SocialAccountCollection;
+use App\Http\Resources\Users\AccessToken as AccessTokenResource;
 use App\Services\Account\SocialAuth as SocialAuthService;
+use App\Services\Account\User as UserService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,13 +18,27 @@ use Laravel\Socialite\Two\GoogleProvider;
 
 class SocialAuthController extends Controller
 {
-    protected $provider = null;
+    protected ?string $provider = null;
 
-    protected $socialAuthService;
+    protected array $scopes = [];
 
-    public function __construct(SocialAuthService $socialAccountService)
+    protected array $with = [];
+
+    protected SocialAuthService $socialAuthService;
+
+    protected UserService $userService;
+
+    /**
+     * SocialAuthController constructor.
+     *
+     * @param SocialAuthService $socialAccountService
+     * @param UserService       $userService
+     */
+    public function __construct(SocialAuthService $socialAccountService, UserService $userService)
     {
         $this->socialAuthService = $socialAccountService;
+
+        $this->userService = $userService;
     }
 
     /**
@@ -29,7 +47,7 @@ class SocialAuthController extends Controller
      */
     public function redirectToProvider(Request $request)
     {
-        $response = $this->socialAuthService->redirectToProvider($this->provider);
+        $response = $this->socialAuthService->redirectToProvider($this->provider, $this->scopes, $this->with);
 
         return (new RedirectToProvider($response))
             ->response()
@@ -38,15 +56,13 @@ class SocialAuthController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Exception
+     * @return SocialAccountCollection|AccessTokenResource
+     * @throws MessageException
      */
     public function handleProviderCallback(Request $request)
     {
-        dd($request->all());
-
         if ($this->provider == null) {
-            abort(Response::HTTP_BAD_GATEWAY, 'Unknown social provider');
+            throw new MessageException('Unknown social provider');
         }
 
         /** @var FacebookProvider|GoogleProvider $driver */
@@ -62,10 +78,16 @@ class SocialAuthController extends Controller
             throw $exception;
         }
 
-        // TODO: make user authorization
+        if (!auth()->check()) {
+            // Return Bearer token if user are not logged in
+            $response = $this->userService->generateBearerToken($user, $request->getClientIp(), $request->userAgent());
 
-        $user->touchLastLogin();
+            return new AccessTokenResource($response);
+        }
 
-//        return new SocialAccountCollection();
+        // Return full list of attached social accounts
+        $response = $user->socialAccounts()->get();
+
+        return new SocialAccountCollection($response);
     }
 }

@@ -9,10 +9,13 @@ use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\Users\AccessToken as AccessTokenResource;
+use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\User as UserModel;
+use App\Models\Geo\Country as CountryModel;
 use App\Services\Account\User as UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AccountController extends Controller
 {
@@ -37,10 +40,12 @@ class AccountController extends Controller
     {
         $email = $request->get('email');
         $password = $request->get('password');
-        $device = $request->get('device', $request->userAgent());
+
+        $ip = $request->getClientIp();
+        $agent = $request->userAgent();
         $abilities = $request->get('abilities', ['*']);
 
-        $response = $this->userService->login($email, $password, $device, $abilities);
+        $response = $this->userService->login($email, $password, $ip, $agent, $abilities);
 
         return new AccessTokenResource($response);
     }
@@ -70,10 +75,23 @@ class AccountController extends Controller
         $email = $request->get('email');
         $password = $request->get('password');
         $name = $request->get('name');
-        $language = app()->getLocale();
 
-        $this->userService->register($email, $password, $name, $language);
+        $countryId = $request->get('country_id', null);
+        $languageCode = app()->getLocale() ?? LanguageModel::LANGUAGE_BY_DEFAULT;
 
-        return new MessageResource('Регистрация завершена', 'Воспользуйтесь формой входа что-бы войти в систему');
+        /** @var CountryModel $country */
+        $country = CountryModel::query()
+            ->where('id', $countryId)
+            ->first();
+
+        /** @var LanguageModel $language */
+        $language = LanguageModel::query()
+            ->where('code', $languageCode)
+            ->first();
+
+        $this->userService->register($email, $password, $name, $language, $country);
+
+        return (new MessageResource('Регистрация завершена', 'Воспользуйтесь формой входа что-бы войти в систему'))
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 }

@@ -23,6 +23,8 @@ class Condition extends Model
 
     protected $table = 'marketing_conditions';
 
+    public $timestamps = false;
+
     /*
      * Relations
      */

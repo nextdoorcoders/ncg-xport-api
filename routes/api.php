@@ -34,8 +34,17 @@ Route::group([
 });
 
 Route::group([
-    'namespace' => 'Google',
-    'prefix'    => 'google',
+    'middleware' => 'auth:api',
+    'namespace'  => 'Geo',
+    'prefix'     => 'geo',
+], function () {
+    Route::get('countries', 'CountryController@countries');
+});
+
+Route::group([
+    'middleware' => 'auth:api',
+    'namespace'  => 'Google',
+    'prefix'     => 'google',
 ], function () {
     Route::group([
         'namespace' => 'AdWords',

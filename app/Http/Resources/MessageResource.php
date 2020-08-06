@@ -40,11 +40,10 @@ class MessageResource extends JsonResponse
 
         parent::__construct([
             'message' => [
-                'title'   => $this->title,
-                'message' => $this->message,
-                'type'    => $this->type,
+                'title'       => $this->title,
+                'description' => $this->message,
+                'type'        => $this->type,
             ],
-            'errors'  => [],
         ], $httpStatus);
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -37,9 +38,8 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Throwable  $exception
+     * @param \Throwable $exception
      * @return void
-     *
      * @throws \Exception
      */
     public function report(Throwable $exception)
@@ -50,10 +50,9 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Throwable               $exception
      * @return \Symfony\Component\HttpFoundation\Response
-     *
      * @throws \Throwable
      */
     public function render($request, Throwable $exception)
@@ -71,7 +70,7 @@ class Handler extends ExceptionHandler
         }
 
         $data = [
-            'error'  => [
+            'message' => [
                 'title'       => $title,
                 'description' => $description,
                 'type'        => 'danger',
@@ -104,7 +103,7 @@ class Handler extends ExceptionHandler
             return response($data, $exception->getStatusCode());
         }
 
-        if ($exception instanceof ModelNotFoundException) {
+        if ($exception instanceof ModelNotFoundException || $exception instanceof RouteNotFoundException) {
             return response($data, Response::HTTP_NOT_FOUND);
         }
 

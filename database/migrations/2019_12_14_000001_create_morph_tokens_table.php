@@ -18,9 +18,11 @@ class CreateMorphTokensTable extends Migration
             $table->string('tokenable_type')->index();
             $table->uuid('tokenable_id')->index()->nullable();
 
-            $table->string('name');
-            $table->string('token', 64)->unique();
+            $table->string('agent');
+            $table->string('ip');
             $table->text('abilities')->nullable();
+
+            $table->string('token', 64)->unique();
 
             $table->timestamps();
             $table->timestamp('last_used_at')->nullable();

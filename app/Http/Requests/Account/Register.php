@@ -4,6 +4,7 @@ namespace App\Http\Requests\Account;
 
 use App\Exceptions\MessageException;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class Register extends FormRequest
 {
@@ -25,6 +26,20 @@ class Register extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            'country_id' => [
+                'nullable',
+                Rule::exists('geo_countries'),
+            ],
+            'name'       => 'required',
+            'email'      => [
+                'required',
+                Rule::unique('account_users'),
+            ],
+            'password'   => [
+                'required',
+                'between:8,32',
+            ],
+        ];
     }
 }

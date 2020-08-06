@@ -3,7 +3,10 @@
 namespace App\Services\Account;
 
 use App\Exceptions\MessageException;
+use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\User as UserModel;
+use App\Models\Geo\Country as CountryModel;
+use App\Models\Token;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,12 +18,13 @@ class User
     /**
      * @param string $email
      * @param string $password
-     * @param string $device
+     * @param string $ip
+     * @param string $agent
      * @param array  $abilities
      * @return array
      * @throws MessageException
      */
-    public function login(string $email, string $password, string $device, array $abilities)
+    public function login(string $email, string $password, string $ip, string $agent, array $abilities)
     {
         /** @var UserModel $user */
         $user = UserModel::query()
@@ -31,10 +35,24 @@ class User
             throw new MessageException('The provided credentials are incorrect.');
         }
 
-        $accessToken = Str::random(80);
+        return $this->generateBearerToken($user, $ip, $agent, $abilities);
+    }
 
-        $user->tokens()->create([
-            'name'      => $device,
+    /**
+     * @param UserModel $user
+     * @param string    $ip
+     * @param string    $agent
+     * @param array     $abilities
+     * @return array
+     */
+    public function generateBearerToken(UserModel $user, string $ip, string $agent, array $abilities = ['*'])
+    {
+        $accessToken = Str::random(96);
+
+        /** @var Token $token */
+        $token = $user->tokens()->create([
+            'ip'        => $ip,
+            'agent'     => $agent,
             'token'     => hash('sha256', $accessToken),
             'abilities' => $abilities,
         ]);
@@ -43,7 +61,7 @@ class User
 
         return [
             'token_type'   => 'Bearer',
-            'access_token' => $accessToken,
+            'access_token' => sprintf('%s|%s', $token->id, $accessToken),
         ];
     }
 
@@ -60,15 +78,21 @@ class User
     }
 
     /**
-     * @param string $email
-     * @param string $password
-     * @param string $name
-     * @param string $language
+     * @param string            $email
+     * @param string            $password
+     * @param string            $name
+     * @param CountryModel|null $country
+     * @param LanguageModel     $language
      * @return UserModel
      * @throws Exception
      */
-    public function register(string $email, string $password, string $name, string $language)
-    {
+    public function register(
+        string $email,
+        string $password,
+        string $name,
+        LanguageModel $language,
+        CountryModel $country = null
+    ) {
         try {
             DB::beginTransaction();
 
@@ -76,10 +100,11 @@ class User
             $user = app(UserModel::class);
 
             $user->fill([
-                'name'     => $name,
-                'language' => $language,
-                'email'    => $email,
-                'password' => $password,
+                'country_id'  => $country->id ?? null,
+                'language_id' => $language->id ?? null,
+                'name'        => $name,
+                'email'       => $email,
+                'password'    => $password,
             ]);
 
             $user->save();
