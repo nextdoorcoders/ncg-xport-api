@@ -2,7 +2,7 @@
 
 namespace App\Services\Google\AdWords;
 
-use EbashuOnHolidays\Google\Repositories\AdWords\CampaignRepository;
+use App\Repositories\Google\AdWords\CampaignRepository as CampaignRepository;
 
 class CampaignService
 {
