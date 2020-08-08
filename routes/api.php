@@ -35,6 +35,32 @@ Route::group([
 
 Route::group([
     'middleware' => 'auth:api',
+    'namespace'  => 'Marketing',
+    'prefix'     => 'marketing',
+], function () {
+    Route::group([
+        'prefix' => 'campaigns',
+    ], function () {
+        Route::get('/', 'CampaignController@allCompanies');
+
+        Route::group([
+            'prefix' => 'social-account-{socialAccount}',
+        ], function () {
+            Route::get('', 'CampaignController@socialAccountAllCompanies');
+            Route::post('', 'CampaignController@socialAccountCreateCompany');
+        });
+    });
+
+    Route::group([
+        'prefix' => 'projects/campaign-{campaign}',
+    ], function () {
+        Route::get('', 'ProjectController@campaignAllProjects');
+        Route::post('', 'ProjectController@campaignCreateProject');
+    });
+});
+
+Route::group([
+    'middleware' => 'auth:api',
     'namespace'  => 'Geo',
     'prefix'     => 'geo',
 ], function () {
@@ -50,6 +76,16 @@ Route::group([
         'namespace' => 'AdWords',
         'prefix'    => 'adwords',
     ], function () {
-        Route::get('campaigns', 'CampaignController@index');
+        Route::group([
+            'prefix' => 'accounts',
+        ], function () {
+            Route::get('', 'AccountController@index');
+        });
+
+        Route::group([
+            'prefix' => 'campaigns/campaign-{campaign}',
+        ], function () {
+            Route::get('', 'CampaignController@index');
+        });
     });
 });

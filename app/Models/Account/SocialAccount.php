@@ -31,6 +31,9 @@ class SocialAccount extends Model
 {
     use UuidTrait;
 
+    const PROVIDER_NAME_GOOGLE = 'google';
+    const PROVIDER_NAME_FACEBOOK = 'facebook';
+
     protected $table = 'account_socials';
 
     protected $fillable = [
@@ -41,6 +44,12 @@ class SocialAccount extends Model
         'access_token',
         'refresh_token',
         'last_login_at',
+    ];
+
+    protected $hidden = [
+        'provider_id',
+        'access_token',
+        'refresh_token',
     ];
 
     /*

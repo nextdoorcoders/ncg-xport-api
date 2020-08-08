@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Google\AdWords;
 
 use App\Http\Controllers\Controller;
+use App\Models\Marketing\Company;
 use App\Services\Google\AdWords\CampaignService;
 
 class CampaignController extends Controller
@@ -20,11 +21,12 @@ class CampaignController extends Controller
     }
 
     /**
+     * @param Company $campaign
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Company $campaign)
     {
-        $response = $this->campaignService->index();
+        $response = $this->campaignService->index($campaign);
 
         return response()
             ->json($response);

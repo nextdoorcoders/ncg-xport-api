@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string              $social_account_id
  * @property string              $name
  * @property string              $desc
- * @property string              $parameters
+ * @property array               $parameters
  * @property Carbon              $created_at
  * @property Carbon              $updated_at
  * @property SocialAccount       $socialAccount
@@ -29,6 +29,16 @@ class Company extends Model
     use UuidTrait;
 
     protected $table = 'marketing_companies';
+
+    protected $fillable = [
+        'name',
+        'desc',
+        'parameters',
+    ];
+
+    protected $casts = [
+        'parameters' => 'array',
+    ];
 
     /*
      * Relations
