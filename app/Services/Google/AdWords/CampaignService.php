@@ -2,7 +2,8 @@
 
 namespace App\Services\Google\AdWords;
 
-use App\Models\Marketing\Company;
+use App\Exceptions\MessageException;
+use App\Models\Marketing\Campaign;
 use App\Repositories\Google\AdWords\CampaignRepository;
 
 class CampaignService
@@ -20,11 +21,11 @@ class CampaignService
     }
 
     /**
-     * @param Company $campaign
+     * @param Campaign $campaign
      * @return array
-     * @throws \App\Exceptions\MessageException
+     * @throws MessageException
      */
-    public function index(Company $campaign)
+    public function index(Campaign $campaign)
     {
         $this->campaignRepository->setCampaign($campaign);
 

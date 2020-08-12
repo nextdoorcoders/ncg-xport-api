@@ -14,13 +14,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @package App\Models\Marketing
  * @property string            $id
- * @property string            $company_id
+ * @property string            $campaign_id
  * @property string            $name
  * @property Carbon            $start_at
  * @property Carbon            $end_at
  * @property Carbon            $created_at
  * @property Carbon            $updated_at
- * @property Company           $company
+ * @property Campaign          $campaign
  * @property Collection<Group> $groups
  */
 class Project extends Model
@@ -36,9 +36,9 @@ class Project extends Model
     /**
      * @return BelongsTo
      */
-    public function company(): BelongsTo
+    public function campaign(): BelongsTo
     {
-        return $this->belongsTo(Company::class, 'company_id');
+        return $this->belongsTo(Campaign::class, 'campaign_id');
     }
 
     /**

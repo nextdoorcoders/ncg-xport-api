@@ -2,7 +2,7 @@
 
 namespace App\Models\Account;
 
-use App\Models\Marketing\Company;
+use App\Models\Marketing\Campaign;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,18 +14,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class SocialAccount
  *
  * @package App\Models\Account
- * @property string              $id
- * @property string              $user_id
- * @property string              $provider_id
- * @property string              $provider_name
- * @property string              $email
- * @property string              $access_token
- * @property string              $refresh_token
- * @property Carbon              $created_at
- * @property Carbon              $updated_at
- * @property Carbon              $last_login_at
- * @property User                $user
- * @property Collection<Company> $companies
+ * @property string               $id
+ * @property string               $user_id
+ * @property string               $provider_id
+ * @property string               $provider_name
+ * @property string               $email
+ * @property string               $access_token
+ * @property string               $refresh_token
+ * @property Carbon               $created_at
+ * @property Carbon               $updated_at
+ * @property Carbon               $last_login_at
+ * @property User                 $user
+ * @property Collection<Campaign> $campaigns
  */
 class SocialAccount extends Model
 {
@@ -67,8 +67,8 @@ class SocialAccount extends Model
     /**
      * @return HasMany
      */
-    public function companies(): HasMany
+    public function campaigns(): HasMany
     {
-        return $this->hasMany(Company::class, 'social_account_id');
+        return $this->hasMany(Campaign::class, 'social_account_id');
     }
 }

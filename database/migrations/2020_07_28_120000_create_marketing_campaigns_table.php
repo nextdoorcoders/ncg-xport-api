@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMarketingCompaniesTable extends Migration
+class CreateMarketingCampaignsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMarketingCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('marketing_companies', function (Blueprint $table) {
+        Schema::create('marketing_campaigns', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('social_account_id')->index();
 
@@ -33,6 +33,6 @@ class CreateMarketingCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('marketing_companies');
+        Schema::dropIfExists('marketing_campaigns');
     }
 }

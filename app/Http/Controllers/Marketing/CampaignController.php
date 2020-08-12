@@ -9,25 +9,25 @@ use Illuminate\Http\Request;
 
 class CampaignController extends Controller
 {
-    public function allCompanies()
+    public function allCampaigns()
     {
         /** @var User $user */
         $user = auth()->user();
 
-        $response = $user->companies()->get();
+        $response = $user->campaigns()->get();
 
         return response()->json($response);
     }
 
-    public function socialAccountAllCompanies(SocialAccount $socialAccount)
+    public function socialAccountAllCampaigns(SocialAccount $socialAccount)
     {
-        $response = $socialAccount->companies()
+        $response = $socialAccount->campaigns()
             ->get();
 
         return response()->json($response);
     }
 
-    public function socialAccountCreateCompany(SocialAccount $socialAccount, Request $request)
+    public function socialAccountCreateCampaign(SocialAccount $socialAccount, Request $request)
     {
         $data = $request->only([
             'name',
@@ -35,7 +35,7 @@ class CampaignController extends Controller
             'parameters',
         ]);
 
-        return $socialAccount->companies()
+        return $socialAccount->campaigns()
             ->create($data);
     }
 }

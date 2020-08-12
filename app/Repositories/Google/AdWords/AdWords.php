@@ -4,9 +4,10 @@ namespace App\Repositories\Google\AdWords;
 
 use App\Exceptions\MessageException;
 use App\Models\Account\SocialAccount as SocialAccountModel;
-use App\Models\Marketing\Company as CompanyModel;
+use App\Models\Marketing\Campaign as CampaignModel;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
+use Google\AdsApi\Common\AdsBuilder;
 use Google\AdsApi\Common\Configuration;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 
@@ -27,10 +28,10 @@ abstract class AdWords
     }
 
     /**
-     * @param CompanyModel $campaign
+     * @param CampaignModel $campaign
      * @throws MessageException
      */
-    public function setCampaign(CompanyModel $campaign)
+    public function setCampaign(CampaignModel $campaign)
     {
         if ($campaign->socialAccount->provider_name != SocialAccountModel::PROVIDER_NAME_GOOGLE) {
             throw new MessageException('This social account does not support here');
@@ -40,10 +41,10 @@ abstract class AdWords
     }
 
     /**
-     * @param CompanyModel $compaign
-     * @return AdWordsSessionBuilder|\Google\AdsApi\Common\AdsBuilder
+     * @param CampaignModel $compaign
+     * @return AdWordsSessionBuilder|AdsBuilder
      */
-    private function getSessionBuilder(CompanyModel $compaign)
+    private function getSessionBuilder(CampaignModel $compaign)
     {
         $configuration = $this->getConfiguration($compaign);
 
@@ -60,10 +61,10 @@ abstract class AdWords
     }
 
     /**
-     * @param CompanyModel $campaign
+     * @param CampaignModel $campaign
      * @return Configuration
      */
-    protected function getConfiguration(CompanyModel $campaign)
+    protected function getConfiguration(CampaignModel $campaign)
     {
         $configuration = [
             'ADWORDS' => [

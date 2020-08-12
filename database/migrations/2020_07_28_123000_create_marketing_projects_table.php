@@ -15,7 +15,7 @@ class CreateMarketingProjectsTable extends Migration
     {
         Schema::create('marketing_projects', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('company_id')->index();
+            $table->uuid('campaign_id')->index();
 
             $table->string('name');
 

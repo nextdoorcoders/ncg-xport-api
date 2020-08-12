@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class Company
+ * Class Campaign
  *
  * @package App\Models\Marketing
  * @property string              $id
@@ -24,11 +24,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property SocialAccount       $socialAccount
  * @property Collection<Project> $projects
  */
-class Company extends Model
+class Campaign extends Model
 {
     use UuidTrait;
 
-    protected $table = 'marketing_companies';
+    protected $table = 'marketing_campaigns';
 
     protected $fillable = [
         'name',
@@ -57,6 +57,6 @@ class Company extends Model
      */
     public function projects(): HasMany
     {
-        return $this->hasMany(Project::class, 'company_id');
+        return $this->hasMany(Project::class, 'campaign_id');
     }
 }
