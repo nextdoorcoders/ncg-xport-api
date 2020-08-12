@@ -16,5 +16,6 @@ class GoogleController extends SocialAuthController
 
     protected array $with = [
         'access_type' => 'offline',
+        'prompt'      => 'consent',
     ];
 }
