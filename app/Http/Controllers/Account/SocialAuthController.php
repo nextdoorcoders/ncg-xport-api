@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Account;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Account\AccessToken as AccessTokenResource;
 use App\Http\Resources\Account\SocialAccount\RedirectToProvider;
 use App\Http\Resources\Account\SocialAccount\SocialAccountCollection;
-use App\Http\Resources\Users\AccessToken as AccessTokenResource;
 use App\Services\Account\SocialAuth as SocialAuthService;
 use App\Services\Account\User as UserService;
 use Exception;
