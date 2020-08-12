@@ -118,4 +118,13 @@ class User
 
         return $user;
     }
+
+    /**
+     * @param UserModel $user
+     * @return UserModel
+     */
+    public function user(UserModel $user)
+    {
+        return $user;
+    }
 }

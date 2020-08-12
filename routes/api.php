@@ -21,6 +21,8 @@ Route::group([
     Route::delete('logout', 'AccountController@logout')->middleware('auth:api');
     Route::post('register', 'AccountController@register')->middleware('guest:api');
 
+    Route::get('user', 'AccountController@user')->middleware('auth:api');
+
     Route::group([
         'namespace' => 'SocialAccount',
         'prefix'    => 'social-account',

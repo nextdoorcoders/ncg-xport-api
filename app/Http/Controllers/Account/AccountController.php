@@ -7,14 +7,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\Login as LoginRequest;
 use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
+use App\Http\Resources\Account\User\User as UserResource;
 use App\Http\Resources\MessageResource;
-use App\Http\Resources\Users\AccessToken as AccessTokenResource;
+use App\Http\Resources\Account\AccessToken as AccessTokenResource;
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\User as UserModel;
 use App\Models\Geo\Country as CountryModel;
 use App\Services\Account\User as UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AccountController extends Controller
@@ -93,5 +95,19 @@ class AccountController extends Controller
 
         return (new MessageResource('Регистрация завершена', 'Воспользуйтесь формой входа что-бы войти в систему'))
             ->setStatusCode(Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param Request $request
+     * @return UserResource
+     */
+    public function user(Request $request)
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->userService->user($user);
+
+        return new UserResource($response);
     }
 }

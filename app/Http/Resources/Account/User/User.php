@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Users;
+namespace App\Http\Resources\Account\User;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Models\Account\User as UserModel;
@@ -24,6 +24,7 @@ class User extends JsonResource
 
         $response = [
             'id'         => $resource->id,
+            'name'       => $resource->name,
             'email'      => $resource->email,
             'is_online'  => $resource->is_online,
             'last_login' => $resource->last_login_at,
