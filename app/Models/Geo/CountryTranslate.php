@@ -21,4 +21,8 @@ class CountryTranslate extends Model
     use TranslateTrait;
 
     protected $table = 'geo_countries_translate';
+
+    protected $fillable = [
+        'name',
+    ];
 }

@@ -22,4 +22,8 @@ class CityTranslate extends Model
     use TranslateTrait;
 
     protected $table = 'geo_cities_translate';
+
+    protected $fillable = [
+        'name',
+    ];
 }

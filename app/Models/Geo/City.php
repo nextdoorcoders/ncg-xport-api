@@ -9,19 +9,25 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class City
  *
  * @package App\Models\Geo
- * @property string             $id
- * @property string             $country_id
- * @property string             $state_id
- * @property array              $name
- * @property string             $type
- * @property Country            $country
- * @property State              $state
- * @property Collection<Vendor> $vendors
+ * @property string              $id
+ * @property string              $country_id
+ * @property string              $state_id
+ * @property integer             $owm_id
+ * @property array               $name
+ * @property string              $center
+ * @property string              $type
+ * @property Country             $country
+ * @property State               $state
+ * @property Weather             $actualWeather
+ * @property Collection<Vendor>  $vendors
+ * @property Collection<Weather> $weathers
  */
 class City extends Model
 {
@@ -42,7 +48,13 @@ class City extends Model
     protected $fillable = [
         'country_id',
         'state_id',
+        'owm_id',
+        'center',
         'type',
+    ];
+
+    protected $casts = [
+        'center' => 'array',
     ];
 
     protected $translatable = [
@@ -67,6 +79,23 @@ class City extends Model
     public function state(): BelongsTo
     {
         return $this->belongsTo(State::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function weathers()
+    {
+        return $this->hasMany(Weather::class, 'city_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function actualWeather()
+    {
+        return $this->hasOne(Weather::class, 'city_id')
+            ->orderBy('datetime_at', 'desc');
     }
 
     /**

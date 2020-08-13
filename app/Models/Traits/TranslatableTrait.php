@@ -17,23 +17,7 @@ trait TranslatableTrait
 {
     protected array $translationAttributes = [];
 
-    /**
-     * @return HasMany
-     */
-    public function translations(): HasMany
-    {
-        return $this->hasMany($this->getTranslateClass(), 'translatable_id');
-    }
-
-    /**
-     * @return array
-     */
-    public function getTranslatable(): array
-    {
-        return $this->translatable;
-    }
-
-    public static function bootTranslatableTrait()
+    public static function bootTranslatableTrait(): void
     {
         // Добавляем глобальный scope при помощи которого всегда будем вытягивать переводы
         static::addGlobalScope('translations', function (Builder $builder) {
@@ -46,10 +30,7 @@ trait TranslatableTrait
 
         // Получаем модель с готовым списком полей и переводов
         static::retrieved(function (self $model) {
-            collect($model->getTranslatable())
-                ->each(function ($columnName) use ($model) {
-                    $model->setAttribute($columnName, $model->translations->pluck($columnName, 'language.code'));
-                });
+            self::setTranslationAttributes($model);
         });
 
         // Препроцессор сохранения модели
@@ -73,20 +54,9 @@ trait TranslatableTrait
 
         // Постпроцессор сохранения модели
         static::saved(function (self $model) {
-            $languages = Language::query()
-                ->get();
+            self::createTranslationModels($model);
 
-            foreach ($languages as $language) {
-                $translationAttributes = $model->translationAttributes[$language->code] ?? null;
-
-                if ($translationAttributes) {
-                    $model->translations()
-                        ->updateOrCreate([
-                            'language_id'     => $language->id,
-                            'translatable_id' => $model->id,
-                        ], $translationAttributes);
-                }
-            }
+            self::setTranslationAttributes($model);
         });
 
         // Удаляем все переводы вместе с родительской записью
@@ -94,6 +64,61 @@ trait TranslatableTrait
             $model->traslations()
                 ->delete();
         });
+    }
+
+    protected function initializeTranslatableTrait(): void
+    {
+        $this->mergeFillable($this->getTranslatable());
+    }
+
+    /**
+     * @param TranslatableTrait $model
+     */
+    protected static function createTranslationModels(self $model): void
+    {
+        $languages = Language::query()
+            ->get();
+
+        foreach ($languages as $language) {
+            $translationAttributes = $model->translationAttributes[$language->code] ?? null;
+
+            if ($translationAttributes) {
+                // TODO: Delete all, create new
+                $model->translations()
+                    ->updateOrCreate([
+                        'language_id' => $language->id,
+                    ], $translationAttributes);
+            }
+        }
+    }
+
+    /**
+     * @param TranslatableTrait $model
+     */
+    protected static function setTranslationAttributes(self $model): void
+    {
+        collect($model->getTranslatable())
+            ->each(function ($columnName) use ($model) {
+                $columnValues = $model->translations->pluck($columnName, 'language.code');
+
+                $model->setAttribute($columnName, $columnValues);
+            });
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function translations(): HasMany
+    {
+        return $this->hasMany($this->getTranslateClass(), 'translatable_id');
+    }
+
+    /**
+     * @return array
+     */
+    public function getTranslatable(): array
+    {
+        return $this->translatable;
     }
 
     /**

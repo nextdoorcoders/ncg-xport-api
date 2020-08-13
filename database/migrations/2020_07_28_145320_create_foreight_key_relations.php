@@ -94,6 +94,13 @@ class CreateForeightKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
+        Schema::table('geo_weather', function (Blueprint $table) {
+            $table->foreign('city_id')
+                ->references('id')
+                ->on('geo_cities')
+                ->onDelete('cascade');
+        });
+
         Schema::table('marketing_campaigns', function (Blueprint $table) {
             $table->foreign('social_account_id')
                 ->references('id')

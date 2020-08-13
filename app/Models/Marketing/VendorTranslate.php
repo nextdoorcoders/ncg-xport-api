@@ -23,4 +23,9 @@ class VendorTranslate extends Model
     use TranslateTrait;
 
     protected $table = 'marketing_vendors_translate';
+
+    protected $fillable = [
+        'name',
+        'desc',
+    ];
 }

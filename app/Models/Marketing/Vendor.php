@@ -33,6 +33,10 @@ class Vendor extends Model
 
     protected $table = 'marketing_vendors';
 
+    protected $fillable = [
+        'type',
+    ];
+
     protected $translatable = [
         'name',
         'desc',

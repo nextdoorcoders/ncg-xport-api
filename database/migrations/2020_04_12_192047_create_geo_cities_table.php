@@ -19,6 +19,10 @@ class CreateGeoCitiesTable extends Migration
             $table->uuid('country_id')->index();
             $table->uuid('state_id')->index()->nullable();
 
+            $table->bigInteger('owm_id')->nullable();
+
+            $table->string('center')->nullable();
+
             $table->string('type')->default(CityModel::TYPE_CITY)->index();
 
             $table->timestamps();

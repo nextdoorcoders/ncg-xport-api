@@ -17,6 +17,13 @@ trait TranslateTrait
 {
     use UuidTrait;
 
+    protected function initializeTranslateTrait()
+    {
+        $this->mergeFillable([
+            'language_id',
+        ]);
+    }
+
     /**
      * @return BelongsTo
      */

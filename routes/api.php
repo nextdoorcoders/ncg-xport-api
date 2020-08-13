@@ -66,7 +66,14 @@ Route::group([
     'namespace'  => 'Geo',
     'prefix'     => 'geo',
 ], function () {
-    Route::get('countries', 'CountryController@countries');
+    Route::get('countries', 'CountryController@index');
+    Route::post('countries', 'CountryController@create');
+
+    Route::get('states/country-{country}', 'StateController@index');
+    Route::post('states/country-{country}', 'StateController@create');
+
+    Route::get('cities/state-{state}', 'CityController@index');
+    Route::post('cities/state-{state}', 'CityController@create');
 });
 
 Route::group([

@@ -29,7 +29,6 @@ class Country extends Model
     protected $table = 'geo_countries';
 
     protected $fillable = [
-        'osm_id',
         'alpha2',
         'alpha3',
         'phone_mask',
