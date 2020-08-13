@@ -15,7 +15,7 @@ class CreateMarketingGroupsTable extends Migration
     {
         Schema::create('marketing_groups', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('project_id')->index();
+            $table->uuid('campaign_id')->index();
 
             $table->string('name')->nullable();
             $table->text('desc')->nullable();

@@ -3,7 +3,7 @@
 namespace App\Services\Google\AdWords;
 
 use App\Exceptions\MessageException;
-use App\Models\Marketing\Campaign;
+use App\Models\Marketing\Account as AccountModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
 
 class CampaignService
@@ -21,13 +21,13 @@ class CampaignService
     }
 
     /**
-     * @param Campaign $campaign
+     * @param AccountModel $account
      * @return array
      * @throws MessageException
      */
-    public function index(Campaign $campaign)
+    public function index(AccountModel $account)
     {
-        $this->campaignRepository->setCampaign($campaign);
+        $this->campaignRepository->setCampaign($account);
 
         return $this->campaignRepository->paginate();
     }

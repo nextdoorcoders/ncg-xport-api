@@ -41,23 +41,27 @@ Route::group([
     'prefix'     => 'marketing',
 ], function () {
     Route::group([
-        'prefix' => 'campaigns',
+        'prefix' => 'accounts',
     ], function () {
-        Route::get('/', 'CampaignController@allCompanies');
+        Route::get('/', 'AccountController@allAccounts');
 
         Route::group([
             'prefix' => 'social-account-{socialAccount}',
         ], function () {
-            Route::get('', 'CampaignController@socialAccountAllCompanies');
-            Route::post('', 'CampaignController@socialAccountCreateCompany');
+            Route::get('', 'AccountController@socialAccountAllAccounts');
+            Route::post('', 'AccountController@socialAccountAddAccount');
         });
     });
 
     Route::group([
-        'prefix' => 'projects/campaign-{campaign}',
+        'prefix' => 'campaigns',
     ], function () {
-        Route::get('', 'ProjectController@campaignAllProjects');
-        Route::post('', 'ProjectController@campaignCreateProject');
+        Route::group([
+            'prefix' => 'account-{account}',
+        ], function () {
+            Route::get('', 'CampaignController@accountAllCampaigns');
+            Route::post('', 'CampaignController@accountAddCampaign');
+        });
     });
 });
 
@@ -86,7 +90,7 @@ Route::group([
         'prefix'    => 'adwords',
     ], function () {
         Route::group([
-            'prefix' => 'campaigns/campaign-{campaign}',
+            'prefix' => 'campaigns/account-{account}',
         ], function () {
             Route::get('', 'CampaignController@index');
         });

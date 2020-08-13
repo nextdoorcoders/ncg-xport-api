@@ -2,7 +2,6 @@
 
 namespace App\Models\Marketing;
 
-use App\Models\Account\SocialAccount;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,15 +13,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class Campaign
  *
  * @package App\Models\Marketing
- * @property string              $id
- * @property string              $social_account_id
- * @property string              $name
- * @property string              $desc
- * @property array               $parameters
- * @property Carbon              $created_at
- * @property Carbon              $updated_at
- * @property SocialAccount       $socialAccount
- * @property Collection<Project> $projects
+ * @property string            $id
+ * @property string            $account_id
+ * @property string            $name
+ * @property string            $desc
+ * @property Carbon            $start_at
+ * @property Carbon            $end_at
+ * @property Carbon            $created_at
+ * @property Carbon            $updated_at
+ * @property Account           $account
+ * @property Collection<Group> $groups
  */
 class Campaign extends Model
 {
@@ -33,11 +33,8 @@ class Campaign extends Model
     protected $fillable = [
         'name',
         'desc',
-        'parameters',
-    ];
-
-    protected $casts = [
-        'parameters' => 'array',
+        'start_at',
+        'end_at',
     ];
 
     /*
@@ -47,16 +44,16 @@ class Campaign extends Model
     /**
      * @return BelongsTo
      */
-    public function socialAccount(): BelongsTo
+    public function account(): BelongsTo
     {
-        return $this->belongsTo(SocialAccount::class, 'social_account_id');
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     /**
      * @return HasMany
      */
-    public function projects(): HasMany
+    public function groups(): HasMany
     {
-        return $this->hasMany(Project::class, 'campaign_id');
+        return $this->hasMany(Group::class, 'campaign_id');
     }
 }

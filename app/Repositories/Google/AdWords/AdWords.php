@@ -4,7 +4,7 @@ namespace App\Repositories\Google\AdWords;
 
 use App\Exceptions\MessageException;
 use App\Models\Account\SocialAccount as SocialAccountModel;
-use App\Models\Marketing\Campaign as CampaignModel;
+use App\Models\Marketing\Account as AccountModel;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Google\AdsApi\Common\AdsBuilder;
@@ -28,23 +28,23 @@ abstract class AdWords
     }
 
     /**
-     * @param CampaignModel $campaign
+     * @param AccountModel $account
      * @throws MessageException
      */
-    public function setCampaign(CampaignModel $campaign)
+    public function setCampaign(AccountModel $account)
     {
-        if ($campaign->socialAccount->provider_name != SocialAccountModel::PROVIDER_NAME_GOOGLE) {
+        if ($account->socialAccount->provider_name != SocialAccountModel::PROVIDER_NAME_GOOGLE) {
             throw new MessageException('This social account does not support here');
         }
 
-        $this->sessionBuilder = $this->getSessionBuilder($campaign);
+        $this->sessionBuilder = $this->getSessionBuilder($account);
     }
 
     /**
-     * @param CampaignModel $compaign
+     * @param AccountModel $compaign
      * @return AdWordsSessionBuilder|AdsBuilder
      */
-    private function getSessionBuilder(CampaignModel $compaign)
+    private function getSessionBuilder(AccountModel $compaign)
     {
         $configuration = $this->getConfiguration($compaign);
 
@@ -61,10 +61,10 @@ abstract class AdWords
     }
 
     /**
-     * @param CampaignModel $campaign
+     * @param AccountModel $account
      * @return Configuration
      */
-    protected function getConfiguration(CampaignModel $campaign)
+    protected function getConfiguration(AccountModel $account)
     {
         $configuration = [
             'ADWORDS' => [
@@ -73,14 +73,14 @@ abstract class AdWords
                  * https://developers.google.com/adwords/api/docs/guides/basic-concepts#soap_and_xml
                  */
 
-                'developerToken'   => $campaign->parameters['developer_token'],
-                'clientCustomerId' => $campaign->parameters['campaign_id'],
+                'developerToken'   => $account->parameters['developer_token'],
+                'clientCustomerId' => $account->parameters['account_id'],
 
                 /*
                  * Optional. Set a friendly application name identifier.
                  */
 
-                'userAgent' => env('GOOGLE.ADWORDS.USER_AGENT', env('APP_NAME', null)),
+                'userAgent' => config('app.name'),
 
                 /*
                  * Optional additional AdWords API settings.
@@ -119,9 +119,9 @@ abstract class AdWords
                  * For installed application or web application flow.
                  */
 
-                'clientId'     => env('GOOGLE_CLIENT_ID', null),
-                'clientSecret' => env('GOOGLE_CLIENT_SECRET', null),
-                'refreshToken' => $campaign->socialAccount->refresh_token,
+                'clientId'     => config('services.google.client_id', null),
+                'clientSecret' => config('services.google.client_secret', null),
+                'refreshToken' => $account->socialAccount->refresh_token,
 
                 /*
                  * For service account flow.
