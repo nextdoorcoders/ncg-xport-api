@@ -79,12 +79,6 @@ Route::group([
         'prefix'    => 'adwords',
     ], function () {
         Route::group([
-            'prefix' => 'accounts',
-        ], function () {
-            Route::get('', 'AccountController@index');
-        });
-
-        Route::group([
             'prefix' => 'campaigns/campaign-{campaign}',
         ], function () {
             Route::get('', 'CampaignController@index');

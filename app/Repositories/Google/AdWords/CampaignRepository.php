@@ -3,11 +3,31 @@
 namespace App\Repositories\Google\AdWords;
 
 use Google\AdsApi\AdWords\AdWordsSession;
+use Google\AdsApi\AdWords\v201809\cm\AdvertisingChannelType;
+use Google\AdsApi\AdWords\v201809\cm\BiddingStrategyConfiguration;
+use Google\AdsApi\AdWords\v201809\cm\BiddingStrategyType;
+use Google\AdsApi\AdWords\v201809\cm\Budget;
+use Google\AdsApi\AdWords\v201809\cm\BudgetBudgetDeliveryMethod;
+use Google\AdsApi\AdWords\v201809\cm\BudgetOperation;
+use Google\AdsApi\AdWords\v201809\cm\BudgetService;
+use Google\AdsApi\AdWords\v201809\cm\Campaign;
+use Google\AdsApi\AdWords\v201809\cm\CampaignOperation;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
+use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
+use Google\AdsApi\AdWords\v201809\cm\FrequencyCap;
+use Google\AdsApi\AdWords\v201809\cm\GeoTargetTypeSetting;
+use Google\AdsApi\AdWords\v201809\cm\GeoTargetTypeSettingNegativeGeoTargetType;
+use Google\AdsApi\AdWords\v201809\cm\GeoTargetTypeSettingPositiveGeoTargetType;
+use Google\AdsApi\AdWords\v201809\cm\Level;
+use Google\AdsApi\AdWords\v201809\cm\ManualCpcBiddingScheme;
+use Google\AdsApi\AdWords\v201809\cm\Money;
+use Google\AdsApi\AdWords\v201809\cm\NetworkSetting;
+use Google\AdsApi\AdWords\v201809\cm\Operator;
 use Google\AdsApi\AdWords\v201809\cm\OrderBy;
 use Google\AdsApi\AdWords\v201809\cm\Paging;
 use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Google\AdsApi\AdWords\v201809\cm\SortOrder;
+use Google\AdsApi\AdWords\v201809\cm\TimeUnit;
 
 class CampaignRepository extends AdWords
 {
@@ -170,36 +190,36 @@ class CampaignRepository extends AdWords
 //            printf("Campaign with name '%s' and ID %d was added.\n", $campaign->getName(), $campaign->getId());
 //        }
 //    }
-//
-//    public function update($campaignId)
-//    {
-//        $session = $this->sessionBuilder
-//            ->withDeveloperToken(config('google.ADWORDS.developerToken'))
-//            ->withClientCustomerId(config('google.ADWORDS.clientCustomerId'))
-//            ->build();
-//
-//        $campaignService = $this->services->get($session, CampaignService::class);
-//
-//        $operations = [];
-//        // Create a campaign with PAUSED status.
-//        $campaign = new Campaign();
-//        $campaign->setId($campaignId);
-//        $campaign->setStatus(CampaignStatus::PAUSED);
-//
-//        // Create a campaign operation and add it to the list.
-//        $operation = new CampaignOperation();
-//        $operation->setOperand($campaign);
-//        $operation->setOperator(Operator::SET);
-//        $operations[] = $operation;
-//
-//        // Update the campaign on the server.
-//        $result = $campaignService->mutate($operations);
-//
-//        $campaign = $result->getValue()[0];
-//
-//        printf("Campaign with ID %d, name '%s', and budget delivery method '%s' was updated.\n", $campaign->getId(), $campaign->getName(), $campaign->getBudget()->getDeliveryMethod());
-//    }
-//
+
+    public function update($campaignId)
+    {
+        $session = $this->sessionBuilder
+            ->withDeveloperToken(config('google.ADWORDS.developerToken'))
+            ->withClientCustomerId(config('google.ADWORDS.clientCustomerId'))
+            ->build();
+
+        $campaignService = $this->services->get($session, CampaignService::class);
+
+        $operations = [];
+        // Create a campaign with PAUSED status.
+        $campaign = new Campaign();
+        $campaign->setId($campaignId);
+        $campaign->setStatus(CampaignStatus::PAUSED);
+
+        // Create a campaign operation and add it to the list.
+        $operation = new CampaignOperation();
+        $operation->setOperand($campaign);
+        $operation->setOperator(Operator::SET);
+        $operations[] = $operation;
+
+        // Update the campaign on the server.
+        $result = $campaignService->mutate($operations);
+
+        $campaign = $result->getValue()[0];
+
+        printf("Campaign with ID %d, name '%s', and budget delivery method '%s' was updated.\n", $campaign->getId(), $campaign->getName(), $campaign->getBudget()->getDeliveryMethod());
+    }
+
 //    public function delete($campaignId)
 //    {
 //        $session = $this->sessionBuilder
