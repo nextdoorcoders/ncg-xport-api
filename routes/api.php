@@ -62,6 +62,14 @@ Route::group([
             Route::get('', 'CampaignController@accountAllCampaigns');
             Route::post('', 'CampaignController@accountAddCampaign');
         });
+
+        Route::group([
+            'prefix' => 'campaign-{campaign}',
+        ], function () {
+            Route::get('', 'CampaignController@getCampaign');
+            Route::put('', 'CampaignController@updateCampaign');
+            Route::delete('', 'CampaignController@deleteCampaign');
+        });
     });
 });
 

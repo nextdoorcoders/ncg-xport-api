@@ -31,7 +31,7 @@ abstract class AdWords
      * @param AccountModel $account
      * @throws MessageException
      */
-    public function setCampaign(AccountModel $account)
+    public function setAccount(AccountModel $account)
     {
         if ($account->socialAccount->provider_name != SocialAccountModel::PROVIDER_NAME_GOOGLE) {
             throw new MessageException('This social account does not support here');
@@ -41,12 +41,12 @@ abstract class AdWords
     }
 
     /**
-     * @param AccountModel $compaign
+     * @param AccountModel $campaign
      * @return AdWordsSessionBuilder|AdsBuilder
      */
-    private function getSessionBuilder(AccountModel $compaign)
+    private function getSessionBuilder(AccountModel $campaign)
     {
-        $configuration = $this->getConfiguration($compaign);
+        $configuration = $this->getConfiguration($campaign);
 
         // Generate a refreshable OAuth2 credential for authentication.
         $oAuth2Credential = (new OAuth2TokenBuilder())

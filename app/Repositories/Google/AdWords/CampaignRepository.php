@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Google\AdWords;
 
+use App\Models\Marketing\Campaign as CampaignModel;
 use Google\AdsApi\AdWords\AdWordsSession;
 use Google\AdsApi\AdWords\v201809\cm\AdvertisingChannelType;
 use Google\AdsApi\AdWords\v201809\cm\BiddingStrategyConfiguration;
@@ -191,20 +192,18 @@ class CampaignRepository extends AdWords
 //        }
 //    }
 
-    public function update($campaignId)
+    public function update(CampaignModel $campaignModel)
     {
-        $session = $this->sessionBuilder
-            ->withDeveloperToken(config('google.ADWORDS.developerToken'))
-            ->withClientCustomerId(config('google.ADWORDS.clientCustomerId'))
-            ->build();
+        /** @var AdWordsSession $session */
+        $session = $this->sessionBuilder->build();
 
         $campaignService = $this->services->get($session, CampaignService::class);
 
         $operations = [];
         // Create a campaign with PAUSED status.
         $campaign = new Campaign();
-        $campaign->setId($campaignId);
-        $campaign->setStatus(CampaignStatus::PAUSED);
+        $campaign->setId($campaignModel->campaign_id);
+        $campaign->setStatus(CampaignStatus::ENABLED);
 
         // Create a campaign operation and add it to the list.
         $operation = new CampaignOperation();

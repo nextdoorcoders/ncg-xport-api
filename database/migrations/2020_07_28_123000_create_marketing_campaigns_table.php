@@ -17,6 +17,8 @@ class CreateMarketingCampaignsTable extends Migration
             $table->uuid('id')->index()->primary();
             $table->uuid('account_id')->index();
 
+            $table->bigInteger('campaign_id')->index();
+
             $table->string('name');
             $table->text('desc')->nullable();
 

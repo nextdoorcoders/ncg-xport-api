@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @package App\Models\Marketing
  * @property string            $id
  * @property string            $account_id
+ * @property integer           $campaign_id
  * @property string            $name
  * @property string            $desc
  * @property Carbon            $start_at
@@ -31,6 +32,7 @@ class Campaign extends Model
     protected $table = 'marketing_campaigns';
 
     protected $fillable = [
+        'campaign_id',
         'name',
         'desc',
         'start_at',

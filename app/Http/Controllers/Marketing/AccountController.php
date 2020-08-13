@@ -37,7 +37,7 @@ class AccountController extends Controller
     /**
      * @param SocialAccountModel $socialAccount
      * @param Request            $request
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Http\JsonResponse
      */
     public function socialAccountAddAccount(SocialAccountModel $socialAccount, Request $request)
     {
@@ -46,7 +46,9 @@ class AccountController extends Controller
             'parameters',
         ]);
 
-        return $socialAccount->accounts()
+        $response = $socialAccount->accounts()
             ->create($data);
+
+        return response()->json($response);
     }
 }

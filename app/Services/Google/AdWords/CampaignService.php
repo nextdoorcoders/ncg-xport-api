@@ -27,7 +27,7 @@ class CampaignService
      */
     public function index(AccountModel $account)
     {
-        $this->campaignRepository->setCampaign($account);
+        $this->campaignRepository->setAccount($account);
 
         return $this->campaignRepository->paginate();
     }
