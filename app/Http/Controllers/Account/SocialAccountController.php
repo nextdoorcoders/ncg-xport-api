@@ -4,19 +4,18 @@ namespace App\Http\Controllers\Account;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Account\AccessToken as AccessTokenResource;
-use App\Http\Resources\Account\SocialAccount\RedirectToProvider;
 use App\Http\Resources\Account\SocialAccount\SocialAccountCollection;
+use App\Models\Account\User as UserModel;
 use App\Services\Account\SocialAuth as SocialAuthService;
 use App\Services\Account\User as UserService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
+use Laravel\Socialite\Two\User as UserSocialite;
 
-class SocialAuthController extends Controller
+class SocialAccountController extends Controller
 {
     protected ?string $provider = null;
 
@@ -42,6 +41,19 @@ class SocialAuthController extends Controller
     }
 
     /**
+     * @return SocialAccountCollection
+     */
+    public function index()
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->socialAuthService->getAllSocialAccounts($user);
+
+        return new SocialAccountCollection($response);
+    }
+
+    /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|object
      */
@@ -49,14 +61,12 @@ class SocialAuthController extends Controller
     {
         $response = $this->socialAuthService->redirectToProvider($this->provider, $this->scopes, $this->with);
 
-        return (new RedirectToProvider($response))
-            ->response()
-            ->setStatusCode(Response::HTTP_FOUND);
+        return $response->redirect();
     }
 
     /**
      * @param Request $request
-     * @return SocialAccountCollection|AccessTokenResource
+     * @return \Illuminate\Http\RedirectResponse
      * @throws MessageException
      */
     public function handleProviderCallback(Request $request)
@@ -65,29 +75,27 @@ class SocialAuthController extends Controller
             throw new MessageException('Unknown social provider');
         }
 
+        /** @var UserModel $user */
+        $user = auth()->user();
+
         /** @var FacebookProvider|GoogleProvider $driver */
         $driver = Socialite::driver($this->provider);
-
         $driver->stateless();
 
+        /** @var UserSocialite $userData */
         $userData = $driver->user();
 
+        $locale = app()->getLocale();
+
         try {
-            $user = $this->socialAuthService->getOrCreateUser($request, $userData, $this->provider);
+            $account = $this->socialAuthService->getOrCreateUser($user, $this->provider, $userData, $locale);
+
+            // Return Bearer token if user are not logged in
+            $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
         } catch (Exception $exception) {
             throw $exception;
         }
 
-        if (!auth()->check()) {
-            // Return Bearer token if user are not logged in
-            $response = $this->userService->generateBearerToken($user, $request->getClientIp(), $request->userAgent());
-
-            return new AccessTokenResource($response);
-        }
-
-        // Return full list of attached social accounts
-        $response = $user->socialAccounts()->get();
-
-        return new SocialAccountCollection($response);
+        return redirect()->to(env('APP_SPA_URL') . '/social-account/' . $response['token_type'] . '/' . $response['access_token']);
     }
 }

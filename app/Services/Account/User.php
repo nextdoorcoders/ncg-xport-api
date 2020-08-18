@@ -50,12 +50,13 @@ class User
         $accessToken = Str::random(96);
 
         /** @var Token $token */
-        $token = $user->tokens()->create([
-            'ip'        => $ip,
-            'agent'     => $agent,
-            'token'     => hash('sha256', $accessToken),
-            'abilities' => $abilities,
-        ]);
+        $token = $user->tokens()
+            ->create([
+                'ip'        => $ip,
+                'agent'     => $agent,
+                'token'     => hash('sha256', $accessToken),
+                'abilities' => $abilities,
+            ]);
 
         $user->touchLastLogin();
 

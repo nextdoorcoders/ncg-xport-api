@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Account\SocialAccount;
+namespace App\Http\Resources\Marketing\Campaigns;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RedirectToProvider extends JsonResource
+class Tree extends JsonResource
 {
     use ResourceTrait;
 
@@ -17,8 +17,6 @@ class RedirectToProvider extends JsonResource
      */
     public function toArray($request)
     {
-        $resource = $this->resource;
-
-        return $resource;
+        return parent::toArray($request);
     }
 }

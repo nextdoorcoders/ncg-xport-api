@@ -24,14 +24,19 @@ Route::group([
     Route::get('user', 'AccountController@user')->middleware('auth:api');
 
     Route::group([
-        'namespace' => 'SocialAccount',
-        'prefix'    => 'social-account',
+        'prefix' => 'social-account',
     ], function () {
-        Route::get('facebook', 'FacebookController@redirectToProvider');
-        Route::get('facebook/callback', 'FacebookController@handleProviderCallback');
+        Route::get('', 'SocialAccountController@index')->middleware('auth:api');
 
-        Route::get('google', 'GoogleController@redirectToProvider');
-        Route::get('google/callback', 'GoogleController@handleProviderCallback');
+        Route::group([
+            'namespace' => 'SocialAccount',
+        ], function () {
+            Route::get('facebook', 'FacebookController@redirectToProvider');
+            Route::get('facebook/callback', 'FacebookController@handleProviderCallback');
+
+            Route::get('google', 'GoogleController@redirectToProvider');
+            Route::get('google/callback', 'GoogleController@handleProviderCallback');
+        });
     });
 });
 
@@ -40,6 +45,8 @@ Route::group([
     'namespace'  => 'Marketing',
     'prefix'     => 'marketing',
 ], function () {
+    Route::get('campaigns-tree', 'MarketingController@campaignsTree');
+
     Route::group([
         'prefix' => 'accounts',
     ], function () {

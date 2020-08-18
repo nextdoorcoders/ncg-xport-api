@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Account\SocialAccount;
 
-use App\Http\Controllers\Account\SocialAuthController;
+use App\Http\Controllers\Account\SocialAccountController;
 use App\Models\Account\SocialAccount as SocialAccountModel;
 
-class GoogleController extends SocialAuthController
+class GoogleController extends SocialAccountController
 {
     protected ?string $provider = SocialAccountModel::PROVIDER_NAME_GOOGLE;
 

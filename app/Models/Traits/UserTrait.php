@@ -11,6 +11,14 @@ trait UserTrait
 
     private static int $lastSeenInterval = 15;
 
+    protected function initializeUserTrait(): void
+    {
+        $this->dates = [
+            'last_login_at',
+            'last_seen_at',
+        ];
+    }
+
     /*
      * Mutators
      */

@@ -7,16 +7,8 @@ use Illuminate\Support\Str;
 
 trait UuidTrait
 {
-    /**
-     * Create a new Eloquent model instance.
-     *
-     * @param array $attributes
-     * @return void
-     */
-    public function __construct(array $attributes = [])
+    public function initializeUuidTrait(): void
     {
-        parent::__construct($attributes);
-
         $this->setIncrementing(false);
         $this->setKeyType('string');
     }

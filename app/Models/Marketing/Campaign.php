@@ -39,6 +39,11 @@ class Campaign extends Model
         'end_at',
     ];
 
+    protected $dates = [
+        'start_at',
+        'end_at',
+    ];
+
     /*
      * Relations
      */
