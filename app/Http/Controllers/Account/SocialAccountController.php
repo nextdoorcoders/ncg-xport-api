@@ -96,6 +96,6 @@ class SocialAccountController extends Controller
             throw $exception;
         }
 
-        return redirect()->to(env('APP_SPA_URL') . '/social-account/' . $response['token_type'] . '/' . $response['access_token']);
+        return redirect()->to(env('APP_SPA_URL') . '/auth/social-account/' . $response['token_type'] . '/' . $response['access_token']);
     }
 }
