@@ -22,8 +22,8 @@ class CreateAccountSocialAccountsTable extends Migration
 
             $table->string('email')->index()->nullable();
 
-            $table->string('access_token')->nullable();
-            $table->string('refresh_token')->nullable();
+            $table->text('access_token')->nullable();
+            $table->text('refresh_token')->nullable();
 
             $table->timestamps();
             $table->timestamp('last_login_at')->nullable();

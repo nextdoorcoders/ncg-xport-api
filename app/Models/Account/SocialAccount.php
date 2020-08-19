@@ -2,6 +2,7 @@
 
 namespace App\Models\Account;
 
+use App\Casts\Encrypt;
 use App\Models\Marketing\Account;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
@@ -50,6 +51,11 @@ class SocialAccount extends Model
         'provider_id',
         'access_token',
         'refresh_token',
+    ];
+
+    protected $casts = [
+        'access_token'  => Encrypt::class,
+        'refresh_token' => Encrypt::class,
     ];
 
     /*

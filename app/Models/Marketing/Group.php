@@ -29,6 +29,7 @@ class Group extends Model
     protected $table = 'marketing_groups';
 
     protected $fillable = [
+        'project_id',
         'name',
         'desc',
     ];

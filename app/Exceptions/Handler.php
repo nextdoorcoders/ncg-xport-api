@@ -79,7 +79,8 @@ class Handler extends ExceptionHandler
 
         if (config('app.debug', false) && !$exception instanceof MessageException && !$exception instanceof ValidationException) {
             $data = array_merge($data, [
-                'trace' => collect($exception->getTrace())->take(10)->toArray(),
+                'instanceof' => get_class($exception),
+                'trace'      => collect($exception->getTrace())->take(10)->toArray(),
             ]);
         }
 

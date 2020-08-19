@@ -3,6 +3,7 @@
 namespace App\Models\Geo;
 
 use App\Models\Traits\TranslateTrait;
+use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CityTranslate extends Model
 {
-    use TranslateTrait;
+    use TranslateTrait, UuidTrait;
 
     protected $table = 'geo_cities_translate';
 

@@ -48,13 +48,32 @@ Route::group([
     Route::group([
         'prefix' => 'accounts',
     ], function () {
-        Route::get('/', 'AccountController@allAccounts');
+        Route::get('', 'AccountController@allAccounts');
+        Route::get('social-account-{socialAccount}', 'AccountController@allAccountsOfSocialAccount');
+
+        Route::post('', 'AccountController@createAccount');
 
         Route::group([
-            'prefix' => 'social-account-{socialAccount}',
+            'prefix' => 'account-{account}',
         ], function () {
-            Route::get('', 'AccountController@socialAccountAllAccounts');
-            Route::post('', 'AccountController@socialAccountAddAccount');
+            Route::get('', 'AccountController@readAccount');
+            Route::put('', 'AccountController@updateAccount');
+            Route::delete('', 'AccountController@deleteAccount');
+        });
+    });
+
+    Route::group([
+        'prefix' => 'campaigns/account-{account}',
+    ], function () {
+        Route::get('', 'CampaignController@allCampaigns');
+        Route::post('', 'CampaignController@createCampaign');
+
+        Route::group([
+            'prefix' => 'campaign-{campaign}',
+        ], function () {
+            Route::get('', 'CampaignController@readCampaign');
+            Route::put('', 'CampaignController@updateCampaign');
+            Route::delete('', 'CampaignController@deleteCampaign');
         });
     });
 
@@ -62,7 +81,7 @@ Route::group([
         'prefix' => 'projects',
     ], function () {
         Route::get('', 'ProjectController@allProjects');
-        Route::post('', 'ProjectController@createProjects');
+        Route::post('', 'ProjectController@createProject');
 
         Route::group([
             'prefix' => 'project-{project}',
@@ -72,25 +91,6 @@ Route::group([
             Route::delete('', 'ProjectController@deleteProject');
 
             Route::post('replicate', 'ProjectController@replicateProject');
-        });
-    });
-
-    Route::group([
-        'prefix' => 'campaigns',
-    ], function () {
-        Route::group([
-            'prefix' => 'account-{account}',
-        ], function () {
-            Route::get('', 'CampaignController@accountAllCampaigns');
-            Route::post('', 'CampaignController@accountAddCampaign');
-        });
-
-        Route::group([
-            'prefix' => 'campaign-{campaign}',
-        ], function () {
-            Route::get('', 'CampaignController@getCampaign');
-            Route::put('', 'CampaignController@updateCampaign');
-            Route::delete('', 'CampaignController@deleteCampaign');
         });
     });
 });

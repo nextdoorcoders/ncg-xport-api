@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\Contracts\HasAbilities;
 
 /**
@@ -72,14 +74,19 @@ class Token extends Model implements HasAbilities
      */
     public static function findToken($token)
     {
-        [$id, $token] = explode('|', $token, 2);
+        try {
+            [$id, $token] = explode('|', $token, 2);
 
-        /** @var self $instance */
-        $instance = static::query()
-            ->find($id);
+            /** @var self $instance */
+            $instance = static::query()
+                ->where('id', $id)
+                ->first();
 
-        if ($instance) {
-            return hash_equals($instance->token, hash('sha256', $token)) ? $instance : null;
+            if ($instance) {
+                return hash_equals($instance->token, hash('sha256', $token)) ? $instance : null;
+            }
+        } catch (Exception $exception) {
+            Log::error($exception);
         }
 
         return null;

@@ -43,14 +43,14 @@ class ProjectController extends Controller
      * @param Request $request
      * @return ProjectResource
      */
-    public function createProjects(Request $request)
+    public function createProject(Request $request)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->projectService->createProjects($user, $data);
+        $response = $this->projectService->createProject($user, $data);
 
         return new ProjectResource($response);
     }
@@ -101,6 +101,10 @@ class ProjectController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * @param ProjectModel $project
+     * @return ProjectResource
+     */
     public function replicateProject(ProjectModel $project)
     {
         /** @var UserModel $user */

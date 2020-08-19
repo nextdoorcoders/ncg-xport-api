@@ -5,28 +5,48 @@ namespace App\Services\Marketing;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Project as ProjectModel;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class ProjectService
 {
+    /**
+     * @param UserModel $user
+     * @return Collection
+     */
     public function allProjects(UserModel $user)
     {
         return $user->projects()
             ->get();
     }
 
-    public function createProjects(UserModel $user, array $data): ProjectModel
+    /**
+     * @param UserModel $user
+     * @param array     $data
+     * @return Model
+     */
+    public function createProject(UserModel $user, array $data)
     {
-        $project = $user->projects()
+        return $user->projects()
             ->create($data);
-
-        return $project;
     }
 
+    /**
+     * @param ProjectModel $project
+     * @param UserModel    $user
+     * @return ProjectModel
+     */
     public function readProject(ProjectModel $project, UserModel $user)
     {
         return $project;
     }
 
+    /**
+     * @param ProjectModel $project
+     * @param UserModel    $user
+     * @param array        $data
+     * @return ProjectModel|null
+     */
     public function updateProject(ProjectModel $project, UserModel $user, array $data)
     {
         $project->fill($data);
@@ -49,6 +69,11 @@ class ProjectService
         }
     }
 
+    /**
+     * @param ProjectModel $project
+     * @param UserModel    $user
+     * @return ProjectModel
+     */
     public function replicateProject(ProjectModel $project, UserModel $user)
     {
         $replicate = $project->replicate();

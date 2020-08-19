@@ -5,13 +5,15 @@ namespace App\Models\Traits;
 use App\Models\Account\Language;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Trait TranslatableTrait
  *
  * @package App\Models\Traits
- * @property Collection $translations
+ * @property Collection<Model> $translations
+ * @property array             $translatable
  */
 trait TranslatableTrait
 {
@@ -19,7 +21,6 @@ trait TranslatableTrait
 
     public static function bootTranslatableTrait(): void
     {
-        // Добавляем глобальный scope при помощи которого всегда будем вытягивать переводы
         static::addGlobalScope('translations', function (Builder $builder) {
             $builder->with([
                 'translations' => function ($query) {
@@ -28,38 +29,20 @@ trait TranslatableTrait
             ]);
         });
 
-        // Получаем модель с готовым списком полей и переводов
         static::retrieved(function (self $model) {
             self::setTranslationAttributes($model);
         });
 
-        // Препроцессор сохранения модели
         static::saving(function (self $model) {
-            $translatable = $model->getTranslatable();
-            $attributes = $model->getAttributes();
-
-            $cleanAttributes = array_diff_key($attributes, array_flip($translatable));
-            $cleanTranslationAttributes = array_diff_key($attributes, $cleanAttributes);
-
-            foreach ($cleanTranslationAttributes as $translateColumnName => $translateColumnValues) {
-                if (in_array($translateColumnName, $model->getTranslatable())) {
-                    foreach ($translateColumnValues as $language => $value) {
-                        $model->translationAttributes[$language][$translateColumnName] = $value;
-                    }
-                }
-            }
-
-            $model->setRawAttributes($cleanAttributes);
+            self::purgeableTranslationAttributes($model);
         });
 
-        // Постпроцессор сохранения модели
         static::saved(function (self $model) {
             self::createTranslationModels($model);
 
             self::setTranslationAttributes($model);
         });
 
-        // Удаляем все переводы вместе с родительской записью
         static::deleted(function ($model) {
             $model->traslations()
                 ->delete();
@@ -69,6 +52,26 @@ trait TranslatableTrait
     protected function initializeTranslatableTrait(): void
     {
         $this->mergeFillable($this->getTranslatable());
+    }
+
+    /**
+     * @param TranslatableTrait $model
+     */
+    protected static function purgeableTranslationAttributes(self $model): void
+    {
+        $translatable = $model->getTranslatable();
+        $attributes = $model->getAttributes();
+
+        $cleanAttributes = array_diff_key($attributes, array_flip($translatable));
+        $cleanTranslationAttributes = array_diff_key($attributes, $cleanAttributes);
+
+        foreach ($cleanTranslationAttributes as $translateColumnName => $translateColumnValues) {
+            foreach ($translateColumnValues as $language => $value) {
+                $model->translationAttributes[$language][$translateColumnName] = $value;
+            }
+        }
+
+        $model->setRawAttributes($cleanAttributes);
     }
 
     /**

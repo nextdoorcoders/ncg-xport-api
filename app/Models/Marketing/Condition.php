@@ -23,6 +23,10 @@ class Condition extends Model
 
     protected $table = 'marketing_conditions';
 
+    protected $casts = [
+        'parameters' => 'array',
+    ];
+
     public $timestamps = false;
 
     /*

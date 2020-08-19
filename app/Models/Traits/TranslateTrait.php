@@ -15,8 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 trait TranslateTrait
 {
-    use UuidTrait;
-
     protected function initializeTranslateTrait()
     {
         $this->mergeFillable([

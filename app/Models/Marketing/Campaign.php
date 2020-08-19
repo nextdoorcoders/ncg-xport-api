@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string  $account_id
  * @property string  $project_id
  * @property string  $campaign_id
+ * @property string  $name
+ * @property string  $desc
  * @property Carbon  $start_at
  * @property Carbon  $end_at
  * @property Carbon  $created_at
@@ -32,6 +34,8 @@ class Campaign extends Model
         'account_id',
         'project_id',
         'campaign_id',
+        'name',
+        'desc',
         'start_at',
         'end_at',
     ];

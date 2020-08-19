@@ -16,9 +16,11 @@ class CreateMarketingCampaignsTable extends Migration
         Schema::create('marketing_campaigns', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('account_id')->index();
-            $table->uuid('project_id')->index();
+            $table->uuid('project_id')->index()->nullable();
 
             $table->string('campaign_id')->index();
+            $table->string('name');
+            $table->string('desc');
 
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();
