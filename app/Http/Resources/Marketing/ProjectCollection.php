@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Marketing\Campaigns;
+namespace App\Http\Resources\Marketing;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class TreeCollection extends ResourceCollection
+class ProjectCollection extends ResourceCollection
 {
     use ResourceTrait;
 

@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Google\AdWords;
 
-use App\Models\Marketing\Campaign as CampaignModel;
+use App\Models\Marketing\Project as CampaignModel;
 use Google\AdsApi\AdWords\AdWordsSession;
 use Google\AdsApi\AdWords\v201809\cm\AdvertisingChannelType;
 use Google\AdsApi\AdWords\v201809\cm\BiddingStrategyConfiguration;

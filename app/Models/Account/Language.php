@@ -32,12 +32,7 @@ class Language extends Model
     use UuidTrait;
 
     const LANGUAGE_EN = 'en';
-    const LANGUAGE_ES = 'es';
     const LANGUAGE_RU = 'ru';
-    const LANGUAGE_PT = 'pt';
-    const LANGUAGE_FR = 'fr';
-    const LANGUAGE_DE = 'de';
-    const LANGUAGE_IT = 'it';
     const LANGUAGE_UK = 'uk';
 
     const LANGUAGE_BY_DEFAULT = self::LANGUAGE_EN;

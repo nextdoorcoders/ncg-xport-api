@@ -78,7 +78,11 @@ class Token extends Model implements HasAbilities
         $instance = static::query()
             ->find($id);
 
-        return hash_equals($instance->token, hash('sha256', $token)) ? $instance : null;
+        if ($instance) {
+            return hash_equals($instance->token, hash('sha256', $token)) ? $instance : null;
+        }
+
+        return null;
     }
 
     /*

@@ -17,7 +17,8 @@ class AccountController extends Controller
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $user->campaigns()->get();
+        $response = $user->accounts()
+            ->get();
 
         return response()->json($response);
     }

@@ -34,7 +34,7 @@ class SocialAccount extends Model
     const PROVIDER_NAME_GOOGLE = 'google';
     const PROVIDER_NAME_FACEBOOK = 'facebook';
 
-    protected $table = 'account_socials';
+    protected $table = 'account_social_accounts';
 
     protected $fillable = [
         'user_id',

@@ -4,7 +4,8 @@ namespace App\Models\Account;
 
 use App\Models\File;
 use App\Models\Geo\Country;
-use App\Models\Marketing\Campaign;
+use App\Models\Marketing\Account;
+use App\Models\Marketing\Project;
 use App\Models\Traits\UserTrait;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
@@ -36,7 +37,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Language                  $language
  * @property Collection<Contact>       $contacts
  * @property Collection<SocialAccount> $socialAccounts
- * @property Collection<Campaign>      $campaigns
+ * @property Collection<Project>       $campaigns
  * @property File                      $picture
  */
 class User extends Authenticatable
@@ -102,9 +103,17 @@ class User extends Authenticatable
     /**
      * @return HasManyThrough
      */
-    public function campaigns(): HasManyThrough
+    public function accounts(): HasManyThrough
     {
-        return $this->hasManyThrough(Campaign::class, SocialAccount::class, 'user_id', 'social_account_id');
+        return $this->hasManyThrough(Account::class, SocialAccount::class, 'user_id', 'social_account_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'user_id');
     }
 
     /**

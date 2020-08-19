@@ -52,12 +52,7 @@ class GeoDataSeeder extends Seeder
             'alpha3'     => 'UKR',
             'name'       => [
                 LanguageModel::LANGUAGE_EN => 'Ukraine',
-                LanguageModel::LANGUAGE_ES => 'Ucrania',
                 LanguageModel::LANGUAGE_RU => 'Украина',
-                LanguageModel::LANGUAGE_PT => 'Ucrânia',
-                LanguageModel::LANGUAGE_FR => 'Ukraine',
-                LanguageModel::LANGUAGE_DE => 'Ukraine',
-                LanguageModel::LANGUAGE_IT => 'Ucraina',
                 LanguageModel::LANGUAGE_UK => 'Україна',
             ],
             'phone_mask' => '380 (##) ##-##-###',

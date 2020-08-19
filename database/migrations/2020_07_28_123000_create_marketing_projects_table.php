@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMarketingCampaignsTable extends Migration
+class CreateMarketingProjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,12 @@ class CreateMarketingCampaignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('marketing_campaigns', function (Blueprint $table) {
+        Schema::create('marketing_projects', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('account_id')->index();
-
-            $table->bigInteger('campaign_id')->index();
+            $table->uuid('user_id')->index();
 
             $table->string('name');
             $table->text('desc')->nullable();
-
-            $table->timestamp('start_at')->nullable();
-            $table->timestamp('end_at')->nullable();
 
             $table->timestamps();
         });
@@ -36,6 +31,6 @@ class CreateMarketingCampaignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('marketing_campaigns');
+        Schema::dropIfExists('marketing_projects');
     }
 }

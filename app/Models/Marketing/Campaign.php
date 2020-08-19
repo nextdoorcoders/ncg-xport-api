@@ -4,26 +4,23 @@ namespace App\Models\Marketing;
 
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Campaign
  *
  * @package App\Models\Marketing
- * @property string            $id
- * @property string            $account_id
- * @property integer           $campaign_id
- * @property string            $name
- * @property string            $desc
- * @property Carbon            $start_at
- * @property Carbon            $end_at
- * @property Carbon            $created_at
- * @property Carbon            $updated_at
- * @property Account           $account
- * @property Collection<Group> $groups
+ * @property string  $id
+ * @property string  $account_id
+ * @property string  $project_id
+ * @property string  $campaign_id
+ * @property Carbon  $start_at
+ * @property Carbon  $end_at
+ * @property Carbon  $created_at
+ * @property Carbon  $updated_at
+ * @property Account $account
+ * @property Project $project
  */
 class Campaign extends Model
 {
@@ -32,9 +29,9 @@ class Campaign extends Model
     protected $table = 'marketing_campaigns';
 
     protected $fillable = [
+        'account_id',
+        'project_id',
         'campaign_id',
-        'name',
-        'desc',
         'start_at',
         'end_at',
     ];
@@ -57,10 +54,10 @@ class Campaign extends Model
     }
 
     /**
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function groups(): HasMany
+    public function project(): BelongsTo
     {
-        return $this->hasMany(Group::class, 'campaign_id');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 }

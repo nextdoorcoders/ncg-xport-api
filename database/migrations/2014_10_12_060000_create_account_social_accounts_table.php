@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccountSocialsTable extends Migration
+class CreateAccountSocialAccountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAccountSocialsTable extends Migration
      */
     public function up()
     {
-        Schema::create('account_socials', function (Blueprint $table) {
+        Schema::create('account_social_accounts', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
 
             $table->uuid('user_id')->index();
@@ -37,6 +37,6 @@ class CreateAccountSocialsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('account_socials');
+        Schema::dropIfExists('account_social_accounts');
     }
 }

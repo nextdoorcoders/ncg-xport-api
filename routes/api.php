@@ -45,8 +45,6 @@ Route::group([
     'namespace'  => 'Marketing',
     'prefix'     => 'marketing',
 ], function () {
-    Route::get('campaigns-tree', 'MarketingController@campaignsTree');
-
     Route::group([
         'prefix' => 'accounts',
     ], function () {
@@ -57,6 +55,23 @@ Route::group([
         ], function () {
             Route::get('', 'AccountController@socialAccountAllAccounts');
             Route::post('', 'AccountController@socialAccountAddAccount');
+        });
+    });
+
+    Route::group([
+        'prefix' => 'projects',
+    ], function () {
+        Route::get('', 'ProjectController@allProjects');
+        Route::post('', 'ProjectController@createProjects');
+
+        Route::group([
+            'prefix' => 'project-{project}',
+        ], function () {
+            Route::get('', 'ProjectController@readProject');
+            Route::put('', 'ProjectController@updateProject');
+            Route::delete('', 'ProjectController@deleteProject');
+
+            Route::post('replicate', 'ProjectController@replicateProject');
         });
     });
 
