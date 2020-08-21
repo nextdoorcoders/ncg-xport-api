@@ -77,6 +77,7 @@ class ProjectService
     public function replicateProject(ProjectModel $project, UserModel $user)
     {
         $replicate = $project->replicate();
+        $replicate->desc = sprintf('(replicated %s) - %s', now()->format('H:i:s, d.m.Y'), $replicate->desc);
         $replicate->push();
 
         return $replicate;
