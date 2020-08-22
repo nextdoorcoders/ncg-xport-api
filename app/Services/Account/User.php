@@ -126,6 +126,8 @@ class User
      */
     public function user(UserModel $user)
     {
+        $user->load('language');
+
         return $user;
     }
 }

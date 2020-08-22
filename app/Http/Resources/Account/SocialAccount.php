@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Account\SocialAccount;
+namespace App\Http\Resources\Account;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use Illuminate\Http\Resources\Json\JsonResource;

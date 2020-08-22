@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\Login as LoginRequest;
 use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
-use App\Http\Resources\Account\User\User as UserResource;
+use App\Http\Resources\Account\User as UserResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\Account\AccessToken as AccessTokenResource;
 use App\Models\Account\Language as LanguageModel;
