@@ -33,6 +33,11 @@ class Vendor extends Model
 
     const TYPE_TEMPERATURE = 'temperature';
     const TYPE_WIND = 'wind';
+    const TYPE_CLOUDS = 'clouds';
+    const TYPE_RAIN = 'rain';
+    const TYPE_SNOW = 'snow';
+    const TYPE_PRESSURE = 'pressure';
+    const TYPE_HUMIDITY = 'humidity';
 
     protected $table = 'marketing_vendors';
 
