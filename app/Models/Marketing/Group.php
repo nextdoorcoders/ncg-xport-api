@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -37,6 +38,15 @@ class Group extends Model
     /*
      * Relations
      */
+
+    /**
+     * @return BelongsToMany
+     */
+    public function vendors(): BelongsToMany
+    {
+        return $this->belongsToMany(Vendor::class, 'marketing_conditions', 'group_id', 'vendor_id')
+            ->using(Condition::class);
+    }
 
     /**
      * @return BelongsTo

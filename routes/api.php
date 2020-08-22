@@ -93,6 +93,34 @@ Route::group([
             Route::post('replicate', 'ProjectController@replicateProject');
         });
     });
+
+    Route::group([
+        'prefix' => 'groups/project-{project}',
+    ], function () {
+        Route::get('', 'GroupController@allGroups');
+        Route::post('', 'GroupController@createGroup');
+
+        Route::group([
+            'prefix' => 'group-{group}',
+        ], function () {
+            Route::get('', 'GroupController@readGroup');
+            Route::put('', 'GroupController@updateGroup');
+            Route::delete('', 'GroupController@deleteGroup');
+        });
+    });
+
+    Route::group([
+        'prefix' => 'vendors',
+    ], function () {
+        Route::get('', 'VendorController@allVendors');
+
+        Route::group([
+            'prefix' => 'project-{project}',
+        ], function () {
+            Route::get('free-vendors', 'VendorController@freeProjectVendors');
+            Route::get('busy-vendors', 'VendorController@busyProjectVendors');
+        });
+    });
 });
 
 Route::group([

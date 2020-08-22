@@ -71,6 +71,6 @@ class Project extends Model
      */
     public function groups(): HasMany
     {
-        return $this->hasMany(Group::class, 'campaign_id');
+        return $this->hasMany(Group::class, 'project_id');
     }
 }
