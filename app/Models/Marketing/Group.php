@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon                $updated_at
  * @property Project               $project
  * @property Collection<Condition> $conditions
+ * @property Collection<Vendor>    $vendors
  */
 class Group extends Model
 {

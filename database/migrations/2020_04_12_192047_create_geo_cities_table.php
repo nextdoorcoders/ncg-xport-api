@@ -29,7 +29,6 @@ class CreateGeoCitiesTable extends Migration
         });
 
         Schema::create('geo_cities_translate', function (Blueprint  $table) {
-            $table->uuid('id')->index()->primary();
             $table->uuid('language_id')->index();
             $table->uuid('translatable_id')->index();
 
@@ -37,7 +36,7 @@ class CreateGeoCitiesTable extends Migration
 
             $table->timestamps();
 
-//            $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
+            $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
         });
     }
 

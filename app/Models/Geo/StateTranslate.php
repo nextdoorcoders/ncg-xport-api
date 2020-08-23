@@ -3,7 +3,6 @@
 namespace App\Models\Geo;
 
 use App\Models\Traits\TranslateTrait;
-use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  * Class StateTranslate
  *
  * @package App\Models\Geo
- * @property string $id
  * @property string $language_id
  * @property string $translatable_id
  * @property string $name
@@ -20,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StateTranslate extends Model
 {
-    use TranslateTrait, UuidTrait;
+    use TranslateTrait;
 
     protected $table = 'geo_states_translate';
 

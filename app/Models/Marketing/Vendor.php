@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class Vendor
@@ -82,6 +83,9 @@ class Vendor extends Model
      */
     public function cities(): BelongsToMany
     {
-        return $this->belongsToMany(City::class, 'marketing_vendors_has_geo_cities', 'vendor_id', 'city_id');
+        return $this->belongsToMany(City::class, 'marketing_vendors_has_geo_cities', 'vendor_id', 'city_id')
+            ->using(new class extends Pivot {
+                use UuidTrait;
+            });
     }
 }

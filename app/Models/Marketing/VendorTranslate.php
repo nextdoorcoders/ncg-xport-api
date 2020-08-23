@@ -3,7 +3,6 @@
 namespace App\Models\Marketing;
 
 use App\Models\Traits\TranslateTrait;
-use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  * Class VendorTranslate
  *
  * @package App\Models\Marketing
- * @property string $id
  * @property string $language_id
  * @property string $translatable_id
  * @property string $name
@@ -21,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class VendorTranslate extends Model
 {
-    use TranslateTrait, UuidTrait;
+    use TranslateTrait;
 
     protected $table = 'marketing_vendors_translate';
 

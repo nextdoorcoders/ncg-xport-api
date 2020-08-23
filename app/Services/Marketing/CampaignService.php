@@ -26,23 +26,25 @@ class CampaignService
      * @param AccountModel $account
      * @param UserModel    $user
      * @param array        $data
-     * @return Model
+     * @return CampaignModel
      */
     public function createCampaign(AccountModel $account, UserModel $user, array $data)
     {
-        return $account->campaigns()
+        $campaign = $account->campaigns()
             ->create($data);
+
+        return $this->readCampaign($account, $campaign, $user);
     }
 
     /**
      * @param AccountModel  $account
      * @param CampaignModel $campaign
      * @param UserModel     $user
-     * @return CampaignModel
+     * @return CampaignModel|null
      */
     public function readCampaign(AccountModel $account, CampaignModel $campaign, UserModel $user)
     {
-        return $campaign;
+        return $campaign->fresh();
     }
 
     /**
@@ -57,7 +59,7 @@ class CampaignService
         $campaign->fill($data);
         $campaign->save();
 
-        return $campaign->fresh();
+        return $this->readCampaign($account, $campaign, $user);
     }
 
     /**

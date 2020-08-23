@@ -24,7 +24,6 @@ class CreateMarketingVendorsTable extends Migration
         });
 
         Schema::create('marketing_vendors_translate', function (Blueprint $table) {
-            $table->uuid('id')->index()->primary();
             $table->uuid('language_id')->index();
             $table->uuid('translatable_id')->index();
 
@@ -33,14 +32,15 @@ class CreateMarketingVendorsTable extends Migration
 
             $table->timestamps();
 
-//            $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
+            $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
         });
 
         Schema::create('marketing_vendors_has_geo_cities', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
             $table->uuid('vendor_id')->index();
             $table->uuid('city_id')->index();
 
-            $table->primary(['vendor_id', 'city_id'], 'vendor_city_key');
+            $table->unique(['vendor_id', 'city_id'], 'vendor_city_key');
         });
     }
 

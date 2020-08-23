@@ -8,7 +8,6 @@ use App\Models\Marketing\Project as ProjectModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class GroupService
 {
@@ -43,6 +42,12 @@ class GroupService
      */
     public function readGroup(ProjectModel $project, GroupModel $group, UserModel $user)
     {
+        $group->load([
+            'conditions' => function ($query) {
+                $query->with('vendor');
+            },
+        ]);
+
         return $group;
     }
 

@@ -20,6 +20,8 @@ class CreateMarketingConditionsTable extends Migration
 
             $table->json('parameters');
 
+            $table->timestamps();
+
             $table->unique(['group_id', 'vendor_id'], 'project_group_vendor_key');
         });
     }

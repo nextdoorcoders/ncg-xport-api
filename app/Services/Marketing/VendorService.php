@@ -4,9 +4,13 @@ namespace App\Services\Marketing;
 
 use App\Models\Marketing\Project as ProjectModel;
 use App\Models\Marketing\Vendor as VendorModel;
+use Illuminate\Database\Eloquent\Collection;
 
 class VendorService
 {
+    /**
+     * @return Collection
+     */
     public function allVendors()
     {
         return VendorModel::query()
@@ -15,7 +19,7 @@ class VendorService
 
     /**
      * @param ProjectModel $project
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function freeProjectVendors(ProjectModel $project)
     {
@@ -28,7 +32,7 @@ class VendorService
 
     /**
      * @param ProjectModel $project
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function busyProjectVendors(ProjectModel $project)
     {

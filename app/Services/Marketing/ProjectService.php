@@ -6,7 +6,6 @@ use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Project as ProjectModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class ProjectService
 {
@@ -23,22 +22,25 @@ class ProjectService
     /**
      * @param UserModel $user
      * @param array     $data
-     * @return Model
+     * @return ProjectModel|null
      */
     public function createProject(UserModel $user, array $data)
     {
-        return $user->projects()
+        /** @var ProjectModel $project */
+        $project = $user->projects()
             ->create($data);
+
+        return $this->readProject($project, $user);
     }
 
     /**
      * @param ProjectModel $project
      * @param UserModel    $user
-     * @return ProjectModel
+     * @return ProjectModel|null
      */
     public function readProject(ProjectModel $project, UserModel $user)
     {
-        return $project;
+        return $project->fresh();
     }
 
     /**
@@ -52,7 +54,7 @@ class ProjectService
         $project->fill($data);
         $project->save();
 
-        return $project->fresh();
+        return $this->readProject($project, $user);
     }
 
     /**
@@ -72,7 +74,7 @@ class ProjectService
     /**
      * @param ProjectModel $project
      * @param UserModel    $user
-     * @return ProjectModel
+     * @return ProjectModel|null
      */
     public function replicateProject(ProjectModel $project, UserModel $user)
     {
@@ -80,6 +82,6 @@ class ProjectService
         $replicate->desc = sprintf('(replicated %s) - %s', now()->format('H:i:s, d.m.Y'), $replicate->desc);
         $replicate->push();
 
-        return $replicate;
+        return $this->readProject($replicate, $user);
     }
 }

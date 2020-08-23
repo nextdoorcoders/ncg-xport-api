@@ -21,7 +21,6 @@ class CreateGeoStatesTable extends Migration
         });
 
         Schema::create('geo_states_translate', function (Blueprint  $table) {
-            $table->uuid('id')->index()->primary();
             $table->uuid('language_id')->index();
             $table->uuid('translatable_id')->index();
 
@@ -29,7 +28,7 @@ class CreateGeoStatesTable extends Migration
 
             $table->timestamps();
 
-//            $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
+            $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
         });
     }
 

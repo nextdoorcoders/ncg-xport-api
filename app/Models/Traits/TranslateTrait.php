@@ -17,6 +17,9 @@ trait TranslateTrait
 {
     protected function initializeTranslateTrait()
     {
+        $this->setIncrementing(false);
+        $this->setKeyType(null);
+
         $this->mergeFillable([
             'language_id',
         ]);

@@ -35,22 +35,25 @@ class AccountService
     /**
      * @param UserModel $user
      * @param array     $data
-     * @return Model
+     * @return AccountModel
      */
     public function createAccount(UserModel $user, array $data)
     {
-        return $user->accounts()
+        /** @var AccountModel $account */
+        $account = $user->accounts()
             ->create($data);
+
+        return $this->readAccount($account, $user);
     }
 
     /**
      * @param AccountModel $account
      * @param UserModel    $user
-     * @return AccountModel
+     * @return AccountModel|null
      */
     public function readAccount(AccountModel $account, UserModel $user)
     {
-        return $account;
+        return $account->fresh();
     }
 
     /**
@@ -64,7 +67,7 @@ class AccountService
         $account->fill($data);
         $account->save();
 
-        return $account->fresh();
+        return $this->readAccount($account, $user);
     }
 
     /**

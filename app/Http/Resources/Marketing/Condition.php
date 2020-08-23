@@ -3,10 +3,10 @@
 namespace App\Http\Resources\Marketing;
 
 use App\Http\Resources\Traits\ResourceTrait;
-use App\Models\Marketing\Group as GroupModel;
+use App\Models\Marketing\Condition as ConditionModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Group extends JsonResource
+class Condition extends JsonResource
 {
     use ResourceTrait;
 
@@ -18,18 +18,18 @@ class Group extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var GroupModel $response */
+        /** @var ConditionModel $response */
         $response = $this->resource;
 
-        if ($response->relationLoaded('conditions')) {
+        if ($response->relationLoaded('group')) {
             $response = array_merge($response, [
-                'conditions' => new ConditionCollection($response->conditions),
+                'group' => new Group($response->group),
             ]);
         }
 
-        if ($response->relationLoaded('vendors')) {
+        if ($response->relationLoaded('vendor')) {
             $response = array_merge($response, [
-                'vendors' => new VendorCollection($response->vendors),
+                'vendor' => new Vendor($response->vendor),
             ]);
         }
 

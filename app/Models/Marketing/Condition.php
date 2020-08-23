@@ -3,8 +3,9 @@
 namespace App\Models\Marketing;
 
 use App\Models\Traits\UuidTrait;
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class Condition
@@ -13,21 +14,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $id
  * @property string $group_id
  * @property string $vendor_id
- * @property string $parameters
+ * @property array  $parameters
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property Group  $group
  * @property Vendor $vendor
  */
-class Condition extends Model
+class Condition extends Pivot
 {
     use UuidTrait;
 
     protected $table = 'marketing_conditions';
 
+    protected $fillable = [
+        'parameters',
+    ];
+
     protected $casts = [
         'parameters' => 'array',
     ];
-
-    public $timestamps = false;
 
     /*
      * Relations

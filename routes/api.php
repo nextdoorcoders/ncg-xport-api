@@ -110,6 +110,22 @@ Route::group([
     });
 
     Route::group([
+        'prefix' => 'conditions'
+    ], function () {
+        Route::get('group-{group}', 'ConditionController@allByGroup');
+        Route::get('vendor-{vendor}', 'ConditionController@allByVendor');
+        Route::post('group-{group}/vendor-{vendor}', 'ConditionController@createCondition');
+
+        Route::group([
+            'prefix' => 'condition-{condition}',
+        ], function() {
+            Route::get('', 'ConditionController@readCondition');
+            Route::put('', 'ConditionController@updateCondition');
+            Route::delete('', 'ConditionController@deleteCondition');
+        });
+    });
+
+    Route::group([
         'prefix' => 'vendors',
     ], function () {
         Route::get('', 'VendorController@allVendors');

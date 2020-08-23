@@ -11,12 +11,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class City
  *
  * @package App\Models\Geo
- * @property string              $id
  * @property string              $country_id
  * @property string              $state_id
  * @property integer             $owm_id
@@ -103,6 +103,9 @@ class City extends Model
      */
     public function vendors(): BelongsToMany
     {
-        return $this->belongsToMany(Vendor::class, 'marketing_vendors_has_geo_cities', 'city_id', 'vendor_id');
+        return $this->belongsToMany(Vendor::class, 'marketing_vendors_has_geo_cities', 'city_id', 'vendor_id')
+            ->using(new class extends Pivot {
+                use UuidTrait;
+            });
     }
 }
