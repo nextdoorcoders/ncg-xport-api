@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Marketing\Condition as ConditionResponse;
 use App\Http\Resources\Marketing\ConditionCollection;
 use App\Models\Account\User;
+use App\Models\Geo\City as CityModel;
 use App\Models\Marketing\Condition as ConditionModel;
 use App\Models\Marketing\Group as GroupModel;
 use App\Models\Marketing\Vendor as VendorModel;
@@ -56,15 +57,16 @@ class ConditionController extends Controller
      * @param Request     $request
      * @param GroupModel  $group
      * @param VendorModel $vendor
+     * @param CityModel   $city
      * @return ConditionResponse
      */
-    public function createCondition(Request $request, GroupModel $group, VendorModel $vendor) {
+    public function createCondition(Request $request, GroupModel $group, VendorModel $vendor, CityModel $city) {
         /** @var User $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->conditionService->createCondition($group, $vendor, $user, $data);
+        $response = $this->conditionService->createCondition($group, $vendor, $city, $user, $data);
 
         return new ConditionResponse($response);
     }

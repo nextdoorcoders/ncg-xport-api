@@ -49,8 +49,8 @@ class Condition extends Pivot
     /**
      * @return BelongsTo
      */
-    public function vendor(): BelongsTo
+    public function vendorLocation(): BelongsTo
     {
-        return $this->belongsTo(Vendor::class, 'vendor_id');
+        return $this->belongsTo(VendorLocation::class, 'vendor_location_id');
     }
 }

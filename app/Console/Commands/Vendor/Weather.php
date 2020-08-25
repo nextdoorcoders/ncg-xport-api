@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Console\Commands\Geo;
+namespace App\Console\Commands\Vendor;
 
 use App\Services\Geo\CityService;
+use Exception;
 use Illuminate\Console\Command;
 
 class Weather extends Command
@@ -12,7 +13,7 @@ class Weather extends Command
      *
      * @var string
      */
-    protected $signature = 'geo:weather';
+    protected $signature = 'vendor:weather';
 
     /**
      * The console command description.
@@ -38,7 +39,8 @@ class Weather extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
+     * @throws Exception
      */
     public function handle()
     {

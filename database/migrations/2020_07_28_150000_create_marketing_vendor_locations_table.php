@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMarketingProjectsTable extends Migration
+class CreateMarketingVendorLocationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateMarketingProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('marketing_projects', function (Blueprint $table) {
+        Schema::create('marketing_vendors_location', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('user_id')->index();
+            $table->uuid('vendor_id')->index();
             $table->uuid('city_id')->index();
 
-            $table->string('name');
-            $table->text('desc')->nullable();
-
-            $table->timestamps();
+            $table->unique(['vendor_id', 'city_id'], 'vendor_city_key');
         });
     }
 
@@ -32,6 +29,6 @@ class CreateMarketingProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('marketing_projects');
+        Schema::dropIfExists('marketing_vendors_location');
     }
 }

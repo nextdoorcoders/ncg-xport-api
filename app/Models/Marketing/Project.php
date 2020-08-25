@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class Campaign
+ * Class Project
  *
  * @package App\Models\Marketing
  * @property string              $id

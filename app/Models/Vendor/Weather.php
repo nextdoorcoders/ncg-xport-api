@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models\Geo;
+namespace App\Models\Vendor;
 
+use App\Models\Geo\City;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class Weather
  *
- * @package App\Models\Geo
+ * @package App\Models\Vendor
  * @property string  $id
  * @property string  $city_id
  * @property Carbon  $datetime_at
@@ -28,7 +29,7 @@ class Weather extends Model
 {
     use UuidTrait;
 
-    protected $table = 'geo_weather';
+    protected $table = 'vendor_weather';
 
     protected $fillable = [
         'datetime_at',

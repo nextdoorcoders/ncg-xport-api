@@ -2,21 +2,25 @@
 
 namespace App\Models\Geo;
 
+use App\Models\Marketing\Condition;
 use App\Models\Marketing\Vendor;
+use App\Models\Marketing\VendorLocation;
 use App\Models\Traits\TranslatableTrait;
 use App\Models\Traits\UuidTrait;
+use App\Models\Vendor\Weather;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class City
  *
  * @package App\Models\Geo
+ * @property string              $id
  * @property string              $country_id
  * @property string              $state_id
  * @property integer             $owm_id
@@ -104,8 +108,14 @@ class City extends Model
     public function vendors(): BelongsToMany
     {
         return $this->belongsToMany(Vendor::class, 'marketing_vendors_has_geo_cities', 'city_id', 'vendor_id')
-            ->using(new class extends Pivot {
-                use UuidTrait;
-            });
+            ->using(VendorLocation::class);
+    }
+
+    /**
+     * @return HasManyThrough
+     */
+    public function conditions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Condition::class, VendorLocation::class, 'city_id', 'vendor_location_id');
     }
 }

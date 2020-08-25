@@ -94,7 +94,7 @@ class CreateForeightKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('geo_weather', function (Blueprint $table) {
+        Schema::table('vendor_weather', function (Blueprint $table) {
             $table->foreign('city_id')
                 ->references('id')
                 ->on('geo_cities')
@@ -112,6 +112,11 @@ class CreateForeightKeyRelations extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('account_users')
+                ->onDelete('cascade');
+
+            $table->foreign('city_id')
+                ->references('id')
+                ->on('geo_cities')
                 ->onDelete('cascade');
         });
 
@@ -140,9 +145,9 @@ class CreateForeightKeyRelations extends Migration
                 ->on('marketing_groups')
                 ->onDelete('cascade');
 
-            $table->foreign('vendor_id')
+            $table->foreign('vendor_location_id')
                 ->references('id')
-                ->on('marketing_vendors')
+                ->on('marketing_vendors_location')
                 ->onDelete('cascade');
         });
 
@@ -158,7 +163,7 @@ class CreateForeightKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('marketing_vendors_has_geo_cities', function (Blueprint $table) {
+        Schema::table('marketing_vendors_location', function (Blueprint $table) {
             $table->foreign('vendor_id')
                 ->references('id')
                 ->on('marketing_vendors')

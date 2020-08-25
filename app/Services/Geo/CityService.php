@@ -5,6 +5,8 @@ namespace App\Services\Geo;
 use App\Models\Geo\City as CityModel;
 use App\Models\Geo\State as StateModel;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -34,8 +36,8 @@ class CityService
     /**
      * @param StateModel $state
      * @param            $data
-     * @return \Illuminate\Database\Eloquent\Model
-     * @throws \Illuminate\Http\Client\RequestException
+     * @return Model
+     * @throws RequestException
      */
     public function createCity(StateModel $state, $data)
     {

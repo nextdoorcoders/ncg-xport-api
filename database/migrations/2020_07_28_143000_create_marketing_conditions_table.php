@@ -16,13 +16,13 @@ class CreateMarketingConditionsTable extends Migration
         Schema::create('marketing_conditions', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('group_id')->index();
-            $table->uuid('vendor_id')->index();
+            $table->uuid('vendor_location_id')->index();
 
             $table->json('parameters');
 
             $table->timestamps();
 
-            $table->unique(['group_id', 'vendor_id'], 'project_group_vendor_key');
+            $table->unique(['group_id', 'vendor_location_id'], 'group_vendor_city_key');
         });
     }
 

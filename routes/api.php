@@ -114,7 +114,7 @@ Route::group([
     ], function () {
         Route::get('group-{group}', 'ConditionController@allByGroup');
         Route::get('vendor-{vendor}', 'ConditionController@allByVendor');
-        Route::post('group-{group}/vendor-{vendor}', 'ConditionController@createCondition');
+        Route::post('group-{group}/vendor-{vendor}/city-{city}', 'ConditionController@createCondition');
 
         Route::group([
             'prefix' => 'condition-{condition}',

@@ -14,15 +14,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class Group
  *
  * @package App\Models\Marketing
- * @property string                $id
- * @property string                $project_id
- * @property string                $name
- * @property string                $desc
- * @property Carbon                $created_at
- * @property Carbon                $updated_at
- * @property Project               $project
- * @property Collection<Condition> $conditions
- * @property Collection<Vendor>    $vendors
+ * @property string                     $id
+ * @property string                     $project_id
+ * @property string                     $name
+ * @property string                     $desc
+ * @property Carbon                     $created_at
+ * @property Carbon                     $updated_at
+ * @property Project                    $project
+ * @property Collection<Condition>      $conditions
+ * @property Collection<VendorLocation> $vendorLocations
  */
 class Group extends Model
 {
@@ -41,15 +41,6 @@ class Group extends Model
      */
 
     /**
-     * @return BelongsToMany
-     */
-    public function vendors(): BelongsToMany
-    {
-        return $this->belongsToMany(Vendor::class, 'marketing_conditions', 'group_id', 'vendor_id')
-            ->using(Condition::class);
-    }
-
-    /**
      * @return BelongsTo
      */
     public function project(): BelongsTo
@@ -63,5 +54,13 @@ class Group extends Model
     public function conditions(): HasMany
     {
         return $this->hasMany(Condition::class, 'group_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function vendorLocations(): BelongsToMany
+    {
+        return $this->belongsToMany(VendorLocation::class, 'marketing_vendors_location', 'group_id', 'vendor_location_id');
     }
 }

@@ -10,8 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * Class Vendor
@@ -64,28 +63,17 @@ class Vendor extends Model
     /**
      * @return BelongsToMany
      */
-    public function groups(): BelongsToMany
-    {
-        return $this->belongsToMany(Group::class, 'marketing_conditions', 'vendor_id', 'group_id')
-            ->using(Condition::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function conditions(): HasMany
-    {
-        return $this->hasMany(Condition::class, 'vendor_id');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
     public function cities(): BelongsToMany
     {
-        return $this->belongsToMany(City::class, 'marketing_vendors_has_geo_cities', 'vendor_id', 'city_id')
-            ->using(new class extends Pivot {
-                use UuidTrait;
-            });
+        return $this->belongsToMany(City::class, 'marketing_vendors_location', 'vendor_id', 'city_id')
+            ->using(VendorLocation::class);
+    }
+
+    /**
+     * @return HasManyThrough
+     */
+    public function conditions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Condition::class, VendorLocation::class, 'vendor_id', 'vendor_location_id');
     }
 }
