@@ -25,11 +25,12 @@ class CityService
     }
 
     /**
+     * @param StateModel $state
      * @return Collection
      */
-    public function index(): Collection
+    public function allByState(StateModel $state): Collection
     {
-        return CityModel::query()
+        return $state->cities()
             ->get();
     }
 

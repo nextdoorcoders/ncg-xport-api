@@ -3,27 +3,29 @@
 namespace App\Services\Geo;
 
 use App\Models\Geo\Country as CountryModel;
-use App\Models\Geo\State as StateModel;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class StateService
 {
     /**
+     * @param CountryModel $country
      * @return Collection
      */
-    public function index(): Collection
+    public function allByCountry(CountryModel $country): Collection
     {
-        return StateModel::query()
+        return $country->states()
             ->get();
     }
 
     /**
      * @param CountryModel $country
      * @param array|object $data
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function createState(CountryModel $country, $data)
     {
-        return $country->states()->create($data);
+        return $country->states()
+            ->create($data);
     }
 }

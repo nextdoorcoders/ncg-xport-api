@@ -24,11 +24,12 @@ class StateController extends Controller
     }
 
     /**
+     * @param CountryModel $country
      * @return StateCollection
      */
-    public function index()
+    public function allByCountry(CountryModel $country)
     {
-        $response = $this->stateService->index();
+        $response = $this->stateService->allByCountry($country);
 
         return new StateCollection($response);
     }

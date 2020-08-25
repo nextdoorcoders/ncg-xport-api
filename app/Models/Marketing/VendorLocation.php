@@ -6,6 +6,7 @@ use App\Models\Geo\City;
 use App\Models\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -59,5 +60,14 @@ class VendorLocation extends Pivot
     public function conditions(): HasMany
     {
         return $this->hasMany(Condition::class, 'vendor_location_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'marketing_conditions', 'vendor_location_id', 'group_id')
+            ->using(Condition::class);
     }
 }

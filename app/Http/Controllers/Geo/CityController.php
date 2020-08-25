@@ -24,11 +24,12 @@ class CityController extends Controller
     }
 
     /**
+     * @param StateModel $state
      * @return CityCollection
      */
-    public function index()
+    public function allByState(StateModel $state)
     {
-        $response = $this->cityService->index();
+        $response = $this->cityService->allByState($state);
 
         return new CityCollection($response);
     }

@@ -25,9 +25,9 @@ class CountryController extends Controller
     /**
      * @return CountryCollection
      */
-    public function index()
+    public function allCountries()
     {
-        $response = $this->countryService->index();
+        $response = $this->countryService->allCountries();
 
         return new CountryCollection($response);
     }

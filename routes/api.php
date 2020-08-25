@@ -129,12 +129,16 @@ Route::group([
         'prefix' => 'vendors',
     ], function () {
         Route::get('', 'VendorController@allVendors');
+    });
 
+    Route::group([
+        'prefix' => 'vendors-location',
+    ], function () {
         Route::group([
             'prefix' => 'project-{project}',
         ], function () {
-            Route::get('free-vendors', 'VendorController@freeProjectVendors');
-            Route::get('busy-vendors', 'VendorController@busyProjectVendors');
+            Route::get('free', 'VendorLocationController@freeProjectVendorsLocation');
+            Route::get('busy', 'VendorLocationController@busyProjectVendorsLocation');
         });
     });
 });
@@ -144,13 +148,13 @@ Route::group([
     'namespace'  => 'Geo',
     'prefix'     => 'geo',
 ], function () {
-    Route::get('countries', 'CountryController@index');
+    Route::get('countries', 'CountryController@allCountries');
     Route::post('countries', 'CountryController@create');
 
-    Route::get('states/country-{country}', 'StateController@index');
+    Route::get('states/country-{country}', 'StateController@allByCountry');
     Route::post('states/country-{country}', 'StateController@create');
 
-    Route::get('cities/state-{state}', 'CityController@index');
+    Route::get('cities/state-{state}', 'CityController@allByState');
     Route::post('cities/state-{state}', 'CityController@create');
 });
 

@@ -10,7 +10,7 @@ class CountryService
     /**
      * @return Collection
      */
-    public function index(): Collection
+    public function allCountries(): Collection
     {
         return CountryModel::query()
             ->get();
