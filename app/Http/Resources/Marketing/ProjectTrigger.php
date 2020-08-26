@@ -28,12 +28,14 @@ class ProjectTrigger extends JsonResource
             return [
                 'name'  => $resource->name,
                 'desc'  => $resource->desc,
-                'cards' => $resource->vendorsLocation->map(function (VendorLocationModel $item) {
+                'type'  => 'vendor',
+                'cards' => $resource->vendorsLocation->map(function (VendorLocationModel $vendorLocation) {
                     return [
-                        'id'   => $item->id,
-                        'name' => $item->vendor->name,
-                        'desc' => $item->vendor->desc,
-                        'type' => 'vendorLocation',
+                        'id'        => $vendorLocation->id,
+                        'vendor_id' => $vendorLocation->vendor_id,
+                        'name'      => $vendorLocation->vendor->name,
+                        'desc'      => $vendorLocation->vendor->desc,
+                        'type'      => 'vendorLocation',
                     ];
                 }),
             ];
@@ -41,14 +43,17 @@ class ProjectTrigger extends JsonResource
 
         /** @var GroupModel $resource */
         return [
+            'id'    => $resource->id,
             'name'  => $resource->name,
             'desc'  => $resource->desc,
-            'cards' => $resource->conditions->map(function (ConditionModel $item) {
+            'type'  => 'group',
+            'cards' => $resource->conditions->map(function (ConditionModel $condition) {
                 return [
-                    'id'   => $item->id,
-                    'name' => $item->vendorLocation->vendor->name,
-                    'desc' => $item->vendorLocation->vendor->desc,
-                    'type' => 'condition',
+                    'id'       => $condition->id,
+                    'group_id' => $condition->group_id,
+                    'name'     => $condition->vendorLocation->vendor->name,
+                    'desc'     => $condition->vendorLocation->vendor->desc,
+                    'type'     => 'condition',
                 ];
             }),
         ];

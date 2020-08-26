@@ -4,7 +4,6 @@ namespace App\Services\Marketing;
 
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Condition as ConditionModel;
-use App\Models\Marketing\Group as GroupModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Models\Marketing\VendorLocation as VendorLocationModel;
 use Exception;
@@ -124,8 +123,54 @@ class ProjectService
         return $groupColumns->prepend($vendorColumn);
     }
 
+    /**
+     * @param ProjectModel $project
+     * @param UserModel    $user
+     * @param array        $data
+     * @return Collection
+     */
     public function updateTriggers(ProjectModel $project, UserModel $user, array $data)
     {
+        $data = collect($data);
+        $vendorColumn = (object)$data->shift();
+        $groupColumns = $data->map(function ($item) {
+            return (object)$item;
+        });
+
+        foreach ($vendorColumn->cards as $card) {
+            $card = (object)$card;
+
+            if ($card->type === 'condition') {
+                ConditionModel::query()
+                    ->where('id', $card->id)
+                    ->delete();
+            }
+        }
+
+        $groupColumns->each(function ($group) {
+            foreach ($group->cards as $card) {
+                $card = (object)$card;
+
+                /** @var ConditionModel $condition */
+                if ($card->type === 'vendorLocation') {
+                    $condition = app(ConditionModel::class);
+//                    $condition->fill($data);
+                    $condition->group()->associate($group->id);
+                    $condition->vendorLocation()->associate($card->id);
+                    $condition->save();
+                } else {
+                    if ($group->id !== $card->group_id) {
+                        $condition = ConditionModel::query()
+                            ->where('id', $card->id)
+                            ->first();
+
+                        $condition->group()->associate($group->id);
+                        $condition->save();
+                    }
+                }
+            }
+        });
+
         return $this->allTriggers($project, $user);
     }
 }
