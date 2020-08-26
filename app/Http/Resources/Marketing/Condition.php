@@ -18,18 +18,23 @@ class Condition extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var ConditionModel $response */
-        $response = $this->resource;
+        /** @var ConditionModel $resource */
+        $resource = $this->resource;
 
-        if ($response->relationLoaded('group')) {
+        $response = [
+            'id'         => $resource->id,
+            'parameters' => $resource->parameters,
+        ];
+
+        if ($resource->relationLoaded('group')) {
             $response = array_merge($response, [
-                'group' => new Group($response->group),
+                'group' => new Group($resource->group),
             ]);
         }
 
-        if ($response->relationLoaded('vendor')) {
+        if ($resource->relationLoaded('vendorLocation')) {
             $response = array_merge($response, [
-                'vendor' => new Vendor($response->vendor),
+                'vendorLocation' => new VendorLocation($resource->vendorLocation),
             ]);
         }
 

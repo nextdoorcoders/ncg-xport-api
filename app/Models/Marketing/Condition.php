@@ -11,14 +11,14 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * Class Condition
  *
  * @package App\Models\Marketing
- * @property string $id
- * @property string $group_id
- * @property string $vendor_id
- * @property array  $parameters
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Group  $group
- * @property Vendor $vendor
+ * @property string         $id
+ * @property string         $group_id
+ * @property string         $vendor_id
+ * @property array          $parameters
+ * @property Carbon         $created_at
+ * @property Carbon         $updated_at
+ * @property Group          $group
+ * @property VendorLocation $vendorLocation
  */
 class Condition extends Pivot
 {
@@ -27,6 +27,8 @@ class Condition extends Pivot
     protected $table = 'marketing_conditions';
 
     protected $fillable = [
+        'group_id',
+        'vendor_location_id',
         'parameters',
     ];
 

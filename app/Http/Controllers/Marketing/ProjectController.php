@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Marketing;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Marketing\Project as ProjectResource;
 use App\Http\Resources\Marketing\ProjectCollection;
+use App\Http\Resources\Marketing\ProjectTriggerCollection;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Services\Marketing\ProjectService;
@@ -113,5 +114,36 @@ class ProjectController extends Controller
         $response = $this->projectService->replicateProject($project, $user);
 
         return new ProjectResource($response);
+    }
+
+    /**
+     * @param ProjectModel $project
+     * @return ProjectTriggerCollection
+     */
+    public function allTriggers(ProjectModel $project)
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->projectService->allTriggers($project, $user);
+
+        return new ProjectTriggerCollection($response);
+    }
+
+    /**
+     * @param Request      $request
+     * @param ProjectModel $project
+     * @return ProjectTriggerCollection
+     */
+    public function updateTriggers(Request $request, ProjectModel $project)
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $data = $request->all();
+
+        $response = $this->projectService->updateTriggers($project, $user, $data);
+
+        return new ProjectTriggerCollection($response);
     }
 }

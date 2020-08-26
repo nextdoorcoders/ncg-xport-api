@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Account\User as UserModel;
-use App\Models\Geo\City as CityModel;
 use App\Models\Marketing\Condition as ConditionModel;
 use App\Models\Marketing\Group as GroupModel;
 use App\Models\Marketing\Vendor as VendorModel;
@@ -36,20 +35,14 @@ class ConditionService
     }
 
     /**
-     * @param GroupModel  $group
-     * @param VendorModel $vendor
-     * @param UserModel   $user
-     * @param CityModel   $city
-     * @param array       $data
+     * @param GroupModel          $group
+     * @param VendorLocationModel $vendorLocation
+     * @param UserModel           $user
+     * @param array               $data
      * @return ConditionModel
      */
-    public function createCondition(GroupModel $group, VendorModel $vendor, CityModel $city, UserModel $user, array $data)
+    public function createCondition(GroupModel $group, VendorLocationModel $vendorLocation, UserModel $user, array $data)
     {
-        $vendorLocation = VendorLocationModel::query()
-            ->where('city_id', $city->id)
-            ->where('vendor_id', $vendor->id)
-            ->first();
-
         /** @var ConditionModel $condition */
         $condition = app(ConditionModel::class);
         $condition->fill($data);

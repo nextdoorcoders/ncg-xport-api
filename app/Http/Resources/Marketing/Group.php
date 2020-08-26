@@ -18,18 +18,30 @@ class Group extends JsonResource
      */
     public function toArray($request)
     {
-        /** @var GroupModel $response */
-        $response = $this->resource;
+        /** @var GroupModel $resource */
+        $resource = $this->resource;
 
-        if ($response->relationLoaded('conditions')) {
+        $response = [
+            'id'   => $resource->id,
+            'name' => $resource->name,
+            'desc' => $resource->desc,
+        ];
+
+        if ($resource->relationLoaded('project')) {
             $response = array_merge($response, [
-                'conditions' => new ConditionCollection($response->conditions),
+                'project' => new Project($resource->project),
             ]);
         }
 
-        if ($response->relationLoaded('vendors')) {
+        if ($resource->relationLoaded('conditions')) {
             $response = array_merge($response, [
-                'vendors' => new VendorCollection($response->vendors),
+                'conditions' => new ConditionCollection($resource->conditions),
+            ]);
+        }
+
+        if ($resource->relationLoaded('vendorsLocation')) {
+            $response = array_merge($response, [
+                'vendorsLocation' => new VendorCollection($resource->vendorsLocation),
             ]);
         }
 

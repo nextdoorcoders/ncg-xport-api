@@ -15,10 +15,10 @@ class CreateMarketingVendorLocationsTable extends Migration
     {
         Schema::create('marketing_vendors_location', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('vendor_id')->index();
             $table->uuid('city_id')->index();
+            $table->uuid('vendor_id')->index();
 
-            $table->unique(['vendor_id', 'city_id'], 'vendor_city_key');
+            $table->unique(['city_id', 'vendor_id'], 'city_vendor_key');
         });
     }
 

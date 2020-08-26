@@ -18,7 +18,7 @@ class CreateMarketingConditionsTable extends Migration
             $table->uuid('group_id')->index();
             $table->uuid('vendor_location_id')->index();
 
-            $table->json('parameters');
+            $table->json('parameters')->nullable();
 
             $table->timestamps();
 

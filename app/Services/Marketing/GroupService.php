@@ -19,6 +19,15 @@ class GroupService
     public function allGroups(ProjectModel $project, UserModel $user)
     {
         return $project->groups()
+            ->with([
+                'conditions' => function ($query) {
+                    $query->with([
+                        'vendorLocation' => function ($query) {
+                            $query->with('vendor');
+                        }
+                    ]);
+                },
+            ])
             ->get();
     }
 

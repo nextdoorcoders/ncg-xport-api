@@ -91,6 +91,13 @@ Route::group([
             Route::delete('', 'ProjectController@deleteProject');
 
             Route::post('replicate', 'ProjectController@replicateProject');
+
+            Route::group([
+                'prefix' => 'triggers',
+            ], function () {
+                Route::get('', 'ProjectController@allTriggers');
+                Route::put('', 'ProjectController@updateTriggers');
+            });
         });
     });
 
@@ -110,15 +117,15 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'conditions'
+        'prefix' => 'conditions',
     ], function () {
         Route::get('group-{group}', 'ConditionController@allByGroup');
         Route::get('vendor-{vendor}', 'ConditionController@allByVendor');
-        Route::post('group-{group}/vendor-{vendor}/city-{city}', 'ConditionController@createCondition');
+        Route::post('group-{group}/vendor-location-{vendorLocation}', 'ConditionController@createCondition');
 
         Route::group([
             'prefix' => 'condition-{condition}',
-        ], function() {
+        ], function () {
             Route::get('', 'ConditionController@readCondition');
             Route::put('', 'ConditionController@updateCondition');
             Route::delete('', 'ConditionController@deleteCondition');

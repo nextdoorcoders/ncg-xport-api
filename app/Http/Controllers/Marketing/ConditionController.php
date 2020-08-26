@@ -10,6 +10,7 @@ use App\Models\Geo\City as CityModel;
 use App\Models\Marketing\Condition as ConditionModel;
 use App\Models\Marketing\Group as GroupModel;
 use App\Models\Marketing\Vendor as VendorModel;
+use App\Models\Marketing\VendorLocation;
 use App\Services\ConditionService;
 use Illuminate\Http\Request;
 
@@ -54,19 +55,18 @@ class ConditionController extends Controller
     }
 
     /**
-     * @param Request     $request
-     * @param GroupModel  $group
-     * @param VendorModel $vendor
-     * @param CityModel   $city
+     * @param Request        $request
+     * @param GroupModel     $group
+     * @param VendorLocation $vendorLocation
      * @return ConditionResponse
      */
-    public function createCondition(Request $request, GroupModel $group, VendorModel $vendor, CityModel $city) {
+    public function createCondition(Request $request, GroupModel $group, VendorLocation $vendorLocation) {
         /** @var User $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->conditionService->createCondition($group, $vendor, $city, $user, $data);
+        $response = $this->conditionService->createCondition($group, $vendorLocation, $user, $data);
 
         return new ConditionResponse($response);
     }
