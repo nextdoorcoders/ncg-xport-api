@@ -44,12 +44,11 @@ class GroupService
     }
 
     /**
-     * @param ProjectModel $project
-     * @param GroupModel   $group
-     * @param UserModel    $user
+     * @param GroupModel $group
+     * @param UserModel  $user
      * @return GroupModel
      */
-    public function readGroup(ProjectModel $project, GroupModel $group, UserModel $user)
+    public function readGroup(GroupModel $group, UserModel $user)
     {
         $group->load([
             'conditions' => function ($query) {
@@ -61,13 +60,12 @@ class GroupService
     }
 
     /**
-     * @param ProjectModel $project
-     * @param GroupModel   $group
-     * @param UserModel    $user
-     * @param array        $data
+     * @param GroupModel $group
+     * @param UserModel  $user
+     * @param array      $data
      * @return GroupModel|null
      */
-    public function updateGroup(ProjectModel $project, GroupModel $group, UserModel $user, array $data)
+    public function updateGroup(GroupModel $group, UserModel $user, array $data)
     {
         $group->fill($data);
         $group->save();
@@ -76,12 +74,11 @@ class GroupService
     }
 
     /**
-     * @param ProjectModel $project
-     * @param GroupModel   $group
-     * @param UserModel    $user
+     * @param GroupModel $group
+     * @param UserModel  $user
      * @throws Exception
      */
-    public function deleteGroup(ProjectModel $project, GroupModel $group, UserModel $user)
+    public function deleteGroup(GroupModel $group, UserModel $user)
     {
         try {
             $group->delete();

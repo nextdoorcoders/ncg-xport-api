@@ -62,30 +62,29 @@ class CampaignController extends Controller
      * @param CampaignModel $campaign
      * @return CampaignResource
      */
-    public function readCampaign(AccountModel $account, CampaignModel $campaign)
+    public function readCampaign(CampaignModel $campaign)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->campaignService->readCampaign($account, $campaign, $user);
+        $response = $this->campaignService->readCampaign($campaign, $user);
 
         return new CampaignResource($response);
     }
 
     /**
      * @param Request       $request
-     * @param AccountModel  $account
      * @param CampaignModel $campaign
      * @return CampaignResource
      */
-    public function updateCampaign(Request $request, AccountModel $account, CampaignModel $campaign)
+    public function updateCampaign(Request $request, CampaignModel $campaign)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->campaignService->updateCampaign($account, $campaign, $user, $data);
+        $response = $this->campaignService->updateCampaign($campaign, $user, $data);
 
         return new CampaignResource($response);
     }
@@ -95,13 +94,13 @@ class CampaignController extends Controller
      * @return Response
      * @throws Exception
      */
-    public function deleteCampaign(AccountModel $account, CampaignModel $campaign)
+    public function deleteCampaign(CampaignModel $campaign)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
 
-        $this->campaignService->deleteCampaign($account, $campaign, $user);
+        $this->campaignService->deleteCampaign($campaign, $user);
 
         return response()->noContent();
     }

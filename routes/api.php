@@ -63,10 +63,14 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'campaigns/account-{account}',
+        'prefix' => 'campaigns',
     ], function () {
-        Route::get('', 'CampaignController@allCampaigns');
-        Route::post('', 'CampaignController@createCampaign');
+        Route::group([
+            'prefix' => 'account-{account}',
+        ], function () {
+            Route::get('', 'CampaignController@allCampaigns');
+            Route::post('', 'CampaignController@createCampaign');
+        });
 
         Route::group([
             'prefix' => 'campaign-{campaign}',
@@ -102,10 +106,14 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'groups/project-{project}',
+        'prefix' => 'groups',
     ], function () {
-        Route::get('', 'GroupController@allGroups');
-        Route::post('', 'GroupController@createGroup');
+        Route::group([
+            'prefix' => 'project-{project}'
+        ], function () {
+            Route::get('', 'GroupController@allGroups');
+            Route::post('', 'GroupController@createGroup');
+        });
 
         Route::group([
             'prefix' => 'group-{group}',

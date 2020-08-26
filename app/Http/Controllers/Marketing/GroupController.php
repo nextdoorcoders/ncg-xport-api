@@ -54,50 +54,47 @@ class GroupController extends Controller
     }
 
     /**
-     * @param ProjectModel $project
-     * @param GroupModel   $group
+     * @param GroupModel $group
      * @return GroupResource
      */
-    public function readGroup(ProjectModel $project, GroupModel $group)
+    public function readGroup(GroupModel $group)
     {
         /** @var User $user */
         $user = auth()->user();
 
-        $response = $this->groupService->readGroup($project, $group, $user);
+        $response = $this->groupService->readGroup($group, $user);
 
         return new GroupResource($response);
     }
 
     /**
-     * @param Request      $request
-     * @param ProjectModel $project
-     * @param GroupModel   $group
+     * @param Request    $request
+     * @param GroupModel $group
      * @return GroupResource
      */
-    public function updateGroup(Request $request, ProjectModel $project, GroupModel $group)
+    public function updateGroup(Request $request, GroupModel $group)
     {
         /** @var User $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->groupService->updateGroup($project, $group, $user, $data);
+        $response = $this->groupService->updateGroup($group, $user, $data);
 
         return new GroupResource($response);
     }
 
     /**
-     * @param ProjectModel  $project
      * @param GroupModel $group
      * @return Response
      * @throws Exception
      */
-    public function deleteGroup(ProjectModel $project, GroupModel $group)
+    public function deleteGroup(GroupModel $group)
     {
         /** @var User $user */
         $user = auth()->user();
 
-        $this->groupService->deleteGroup($project, $group, $user);
+        $this->groupService->deleteGroup($group, $user);
 
         return response()->noContent();
     }

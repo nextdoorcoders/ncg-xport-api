@@ -7,7 +7,6 @@ use App\Models\Marketing\Account as AccountModel;
 use App\Models\Marketing\Campaign as CampaignModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class CampaignService
 {
@@ -30,45 +29,43 @@ class CampaignService
      */
     public function createCampaign(AccountModel $account, UserModel $user, array $data)
     {
+        /** @var CampaignModel $campaign */
         $campaign = $account->campaigns()
             ->create($data);
 
-        return $this->readCampaign($account, $campaign, $user);
+        return $this->readCampaign($campaign, $user);
     }
 
     /**
-     * @param AccountModel  $account
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @return CampaignModel|null
      */
-    public function readCampaign(AccountModel $account, CampaignModel $campaign, UserModel $user)
+    public function readCampaign(CampaignModel $campaign, UserModel $user)
     {
         return $campaign->fresh();
     }
 
     /**
-     * @param AccountModel  $account
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @param array         $data
      * @return CampaignModel|null
      */
-    public function updateCampaign(AccountModel $account, CampaignModel $campaign, UserModel $user, array $data)
+    public function updateCampaign(CampaignModel $campaign, UserModel $user, array $data)
     {
         $campaign->fill($data);
         $campaign->save();
 
-        return $this->readCampaign($account, $campaign, $user);
+        return $this->readCampaign($campaign, $user);
     }
 
     /**
-     * @param AccountModel  $account
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @throws Exception
      */
-    public function deleteCampaign(AccountModel $account, CampaignModel $campaign, UserModel $user)
+    public function deleteCampaign(CampaignModel $campaign, UserModel $user)
     {
         try {
             $campaign->delete();
