@@ -109,7 +109,12 @@ class CreateForeightKeyRelations extends Migration
         });
 
         Schema::table('marketing_projects', function (Blueprint $table) {
-            $table->foreign('user_id')
+            $table->foreign('owner_user_id')
+                ->references('id')
+                ->on('account_users')
+                ->onDelete('cascade');
+
+            $table->foreign('client_user_id')
                 ->references('id')
                 ->on('account_users')
                 ->onDelete('cascade');

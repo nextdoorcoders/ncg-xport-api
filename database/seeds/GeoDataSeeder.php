@@ -479,6 +479,12 @@ class GeoDataSeeder extends Seeder
 
         $this->cityService->createCity($state, [
             'name' => [
+                LanguageModel::LANGUAGE_RU => 'Киев',
+            ],
+        ]);
+
+        $this->cityService->createCity($state, [
+            'name' => [
                 LanguageModel::LANGUAGE_RU => 'Славутич',
             ],
         ]);

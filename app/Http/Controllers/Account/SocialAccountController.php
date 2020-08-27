@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Account;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Account\SocialAccount\SocialAccountCollection;
+use App\Http\Resources\Account\SocialAccountCollection;
 use App\Models\Account\User as UserModel;
-use App\Services\Account\SocialAuth as SocialAuthService;
-use App\Services\Account\User as UserService;
+use App\Services\Account\SocialAccountService as SocialAuthService;
+use App\Services\Account\UserService as UserService;
 use Exception;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -43,12 +43,12 @@ class SocialAccountController extends Controller
     /**
      * @return SocialAccountCollection
      */
-    public function index()
+    public function allSocialAccounts()
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->socialAuthService->getAllSocialAccounts($user);
+        $response = $this->socialAuthService->allSocialAccounts($user);
 
         return new SocialAccountCollection($response);
     }

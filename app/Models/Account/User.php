@@ -37,7 +37,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Language                  $language
  * @property Collection<Contact>       $contacts
  * @property Collection<SocialAccount> $socialAccounts
- * @property Collection<Project>       $campaigns
+ * @property Collection<Project>       $ownerProjects
+ * @property Collection<Project>       $clientProjects
  * @property File                      $picture
  */
 class User extends Authenticatable
@@ -111,9 +112,17 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function projects(): HasMany
+    public function ownerProjects(): HasMany
     {
-        return $this->hasMany(Project::class, 'user_id');
+        return $this->hasMany(Project::class, 'owner_user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function clientProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'client_user_id');
     }
 
     /**

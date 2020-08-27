@@ -15,13 +15,13 @@ use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\User as UserSocialite;
 
-class SocialAuth
+class SocialAccountService
 {
     /**
      * @param UserModel $user
      * @return Collection
      */
-    public function getAllSocialAccounts(UserModel $user): Collection
+    public function allSocialAccounts(UserModel $user): Collection
     {
         return $user->socialAccounts()
             ->get();

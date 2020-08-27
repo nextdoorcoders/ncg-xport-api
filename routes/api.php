@@ -15,18 +15,48 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'namespace' => 'Account',
-    'prefix'    => 'auth',
+    'prefix'    => 'accounts',
 ], function () {
-    Route::post('login', 'AccountController@login')->middleware('guest:api');
-    Route::delete('logout', 'AccountController@logout')->middleware('auth:api');
-    Route::post('register', 'AccountController@register')->middleware('guest:api');
+    Route::group([
+        'prefix' => 'auth',
+    ], function () {
+        Route::post('login', 'UserController@login')->middleware('guest:api');
+        Route::delete('logout', 'UserController@logout')->middleware('auth:api');
+        Route::post('register', 'UserController@register')->middleware('guest:api');
 
-    Route::get('user', 'AccountController@user')->middleware('auth:api');
+        Route::group([
+            'middleware' => 'guest:api',
+            'prefix'     => 'forgot',
+        ], function () {
+            Route::post('send-code', 'UserController@forgotSendCode');
+            Route::post('confirm-code', 'UserController@forgotConfirmCode');
+        });
+    });
+
+    Route::group([
+        'middleware' => 'auth:api',
+        'prefix'     => 'users',
+    ], function () {
+        Route::get('', 'UserController@allUsers');
+
+        Route::group([
+            'prefix' => 'user-{user}',
+        ], function () {
+            Route::get('', 'UserController@readUser');
+        });
+
+        Route::group([
+            'prefix' => 'current',
+        ], function () {
+            Route::get('', 'UserController@readCurrentUser');
+            Route::put('', 'UserController@updateCurrentUser');
+        });
+    });
 
     Route::group([
         'prefix' => 'social-account',
     ], function () {
-        Route::get('', 'SocialAccountController@index')->middleware('auth:api');
+        Route::get('', 'SocialAccountController@allSocialAccounts')->middleware('auth:api');
 
         Route::group([
             'namespace' => 'SocialAccount',
@@ -48,17 +78,17 @@ Route::group([
     Route::group([
         'prefix' => 'accounts',
     ], function () {
-        Route::get('', 'AccountController@allAccounts');
-        Route::get('social-account-{socialAccount}', 'AccountController@allAccountsOfSocialAccount');
+        Route::get('', 'UserController@allAccounts');
+        Route::get('social-account-{socialAccount}', 'UserController@allAccountsOfSocialAccount');
 
-        Route::post('', 'AccountController@createAccount');
+        Route::post('', 'UserController@createAccount');
 
         Route::group([
             'prefix' => 'account-{account}',
         ], function () {
-            Route::get('', 'AccountController@readAccount');
-            Route::put('', 'AccountController@updateAccount');
-            Route::delete('', 'AccountController@deleteAccount');
+            Route::get('', 'UserController@readAccount');
+            Route::put('', 'UserController@updateAccount');
+            Route::delete('', 'UserController@deleteAccount');
         });
     });
 
@@ -109,7 +139,7 @@ Route::group([
         'prefix' => 'groups',
     ], function () {
         Route::group([
-            'prefix' => 'project-{project}'
+            'prefix' => 'project-{project}',
         ], function () {
             Route::get('', 'GroupController@allGroups');
             Route::post('', 'GroupController@createGroup');

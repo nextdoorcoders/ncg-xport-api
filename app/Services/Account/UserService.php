@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class User
+class UserService
 {
     /**
      * @param string $email
@@ -120,11 +120,19 @@ class User
         return $user;
     }
 
+    public function allUsers()
+    {
+        $users = UserModel::query()
+            ->get();
+
+        return $users;
+    }
+
     /**
      * @param UserModel $user
      * @return UserModel
      */
-    public function user(UserModel $user)
+    public function readUser(UserModel $user)
     {
         $user->load('language');
 

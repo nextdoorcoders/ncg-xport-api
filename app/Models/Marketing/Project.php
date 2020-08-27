@@ -18,13 +18,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @package App\Models\Marketing
  * @property string              $id
  * @property string              $city_id
- * @property string              $user_id
+ * @property string              $owner_user_id
+ * @property string              $client_user_id
  * @property string              $name
  * @property string              $desc
+ * @property boolean             $is_trigger_launched
+ * @property Carbon              $trigger_refreshed_at
+ * @property Carbon              $start_at
+ * @property Carbon              $end_at
  * @property Carbon              $created_at
  * @property Carbon              $updated_at
  * @property City                $city
- * @property User                $user
+ * @property User                $ownerUser
+ * @property User                $clientUer
  * @property Collection<Account> $accounts
  * @property Collection<Group>   $groups
  */
@@ -36,9 +42,20 @@ class Project extends Model
 
     protected $fillable = [
         'city_id',
-        'user_id',
+        'owner_user_id',
+        'client_user_id',
         'name',
         'desc',
+        'is_trigger_launched',
+        'trigger_refreshed_at',
+        'start_at',
+        'end_at',
+    ];
+
+    protected $dates = [
+        'trigger_refreshed_at',
+        'start_at',
+        'end_at',
     ];
 
     /*
@@ -56,9 +73,17 @@ class Project extends Model
     /**
      * @return BelongsTo
      */
-    public function user(): BelongsTo
+    public function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'owner_user_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'client_user_id');
     }
 
     /**

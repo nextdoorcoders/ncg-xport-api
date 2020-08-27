@@ -19,7 +19,9 @@ class ProjectService
      */
     public function allProjects(UserModel $user)
     {
-        return $user->projects()
+        return ProjectModel::query()
+            ->where('owner_user_id', $user->id)
+            ->orWhere('client_user_id', $user->id)
             ->get();
     }
 
@@ -31,7 +33,7 @@ class ProjectService
     public function createProject(UserModel $user, array $data)
     {
         /** @var ProjectModel $project */
-        $project = $user->projects()
+        $project = $user->ownerProjects()
             ->create($data);
 
         return $this->readProject($project, $user);

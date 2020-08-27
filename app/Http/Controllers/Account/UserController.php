@@ -7,30 +7,31 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\Login as LoginRequest;
 use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
-use App\Http\Resources\Account\User as UserResource;
-use App\Http\Resources\MessageResource;
 use App\Http\Resources\Account\AccessToken as AccessTokenResource;
+use App\Http\Resources\Account\User as UserResource;
+use App\Http\Resources\Account\UserCollection;
+use App\Http\Resources\MessageResource;
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\User as UserModel;
 use App\Models\Geo\Country as CountryModel;
-use App\Services\Account\User as UserService;
+use App\Services\Account\UserService as UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class AccountController extends Controller
+class UserController extends Controller
 {
     protected UserService $userService;
 
     /**
      * UserController constructor.
      *
-     * @param UserService $user
+     * @param UserService $userService
      */
-    public function __construct(UserService $user)
+    public function __construct(UserService $userService)
     {
-        $this->userService = $user;
+        $this->userService = $userService;
     }
 
     /**
@@ -97,17 +98,46 @@ class AccountController extends Controller
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    /**
-     * @param Request $request
-     * @return UserResource
-     */
-    public function user(Request $request)
+    public function forgotSendCode(Request $request)
+    {
+//        $data = $request->all();
+//
+//        $response = $this->userService->forgotSendCode($data);
+    }
+
+    public function forgotConfirmCode(Request $request)
+    {
+//        $data = $request->all();
+//
+//        $response = $this->userService->forgotConfirmCode($data);
+    }
+
+    public function allUsers()
+    {
+        $response = $this->userService->allUsers();
+
+        return new UserCollection($response);
+    }
+
+    public function readUser(UserModel $user)
+    {
+        $response = $this->userService->readUser($user);
+
+        return new UserResource($response);
+    }
+
+    public function readCurrentUser()
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->userService->user($user);
+        $response = $this->userService->readUser($user);
 
         return new UserResource($response);
+    }
+
+    public function updateCurrentUser()
+    {
+
     }
 }
