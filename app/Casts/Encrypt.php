@@ -21,7 +21,11 @@ class Encrypt implements CastsAttributes
      */
     public function get($model, $key, $inputValue, $attributes)
     {
-        $inputValue = json_decode($inputValue, true);
+        $inputValueCheck = json_decode($inputValue, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $inputValue = $inputValueCheck;
+        }
 
         if (is_array($inputValue)) {
             foreach ($inputValue as $key => $value) {

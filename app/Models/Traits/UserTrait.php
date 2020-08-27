@@ -2,6 +2,7 @@
 
 namespace App\Models\Traits;
 
+use App\Casts\Encrypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -17,6 +18,10 @@ trait UserTrait
             'last_login_at',
             'last_seen_at',
         ];
+
+        $this->mergeCasts([
+            'password_reset_code' => Encrypt::class,
+        ]);
     }
 
     /*
@@ -50,13 +55,21 @@ trait UserTrait
     /**
      * @return string
      */
-    public static function getRandomPassword()
+    public static function getRandomPassword(): string
     {
         do {
             preg_match(self::$passwordRegex, Str::random(8), $password);
         } while (empty($password));
 
         return $password[0];
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPasswordResetCode(): string
+    {
+        return Str::random(8);
     }
 
     /**

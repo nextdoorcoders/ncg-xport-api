@@ -7,6 +7,7 @@ use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\User as UserModel;
 use App\Models\Geo\Country as CountryModel;
 use App\Models\Token;
+use App\Services\Sender\EmailService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +16,18 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class UserService
 {
+    protected EmailService $emailService;
+
+    /**
+     * UserService constructor.
+     *
+     * @param EmailService $emailService
+     */
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     /**
      * @param string $email
      * @param string $password
@@ -120,12 +133,59 @@ class UserService
         return $user;
     }
 
+    /**
+     * @param string $email
+     * @throws MessageException
+     */
+    public function forgotSendCode(string $email): void
+    {
+        /** @var UserModel $user */
+        $user = UserModel::query()
+            ->where('email', $email)
+            ->first();
+
+        if (!$user) {
+            throw new MessageException('User is not found');
+        }
+
+        $code = UserModel::getPasswordResetCode();
+
+        $user->password_reset_code = $code;
+        $user->save();
+
+        $this->emailService->passwordReset($user, $code);
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @param string $code
+     * @throws MessageException
+     */
+    public function forgotConfirmCode(string $email, string $password, string $code)
+    {
+        /** @var UserModel $user */
+        $user = UserModel::query()
+            ->where('email', $email)
+            ->first();
+
+        if (!$user) {
+            throw new MessageException('User is not found');
+        }
+
+        if ($user->password_reset_code != $code) {
+            throw new MessageException('The code does not match');
+        }
+
+        $user->password = $password;
+        $user->password_reset_code = null;
+        $user->save();
+    }
+
     public function allUsers()
     {
-        $users = UserModel::query()
+        return UserModel::query()
             ->get();
-
-        return $users;
     }
 
     /**

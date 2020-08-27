@@ -98,18 +98,33 @@ class UserController extends Controller
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
+    /**
+     * @param Request $request
+     * @return MessageResource
+     * @throws MessageException
+     */
     public function forgotSendCode(Request $request)
     {
-//        $data = $request->all();
-//
-//        $response = $this->userService->forgotSendCode($data);
+        $email = $request->get('email');
+
+        $this->userService->forgotSendCode($email);
+
+        return new MessageResource('Success');
     }
 
+    /**
+     * @param Request $request
+     * @return MessageResource
+     */
     public function forgotConfirmCode(Request $request)
     {
-//        $data = $request->all();
-//
-//        $response = $this->userService->forgotConfirmCode($data);
+        $email = $request->get('email');
+        $password = $request->get('password');
+        $code = $request->get('code');
+
+        $this->userService->forgotConfirmCode($email, $password, $code);
+
+        return new MessageResource('Success');
     }
 
     public function allUsers()

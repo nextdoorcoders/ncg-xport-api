@@ -28,6 +28,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string                    $name
  * @property string                    $email
  * @property string                    $password
+ * @property string                    $password_reset_code
  * @property Carbon                    $created_at
  * @property Carbon                    $updated_at
  * @property Carbon                    $last_login_at
@@ -53,6 +54,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'password_reset_code',
         'last_login_at',
         'last_seen_at',
     ];

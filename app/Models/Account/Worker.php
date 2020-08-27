@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $role
  * @property string $email
  * @property string $password
+ * @property string $password_reset_code
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $last_login_at

@@ -16,11 +16,13 @@ class CreateAccountWorkersTable extends Migration
         Schema::create('account_workers', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
 
-            $table->string('name')->nullable();
             $table->string('role')->index()->nullable();
 
+            $table->string('name')->nullable();
             $table->string('email')->index()->unique();
+
             $table->string('password');
+            $table->string('password_reset_code')->nullable();
 
             $table->timestamps();
             $table->timestamp('last_login_at')->nullable();

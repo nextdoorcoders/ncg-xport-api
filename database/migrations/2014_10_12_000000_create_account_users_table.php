@@ -22,6 +22,7 @@ class CreateAccountUsersTable extends Migration
             $table->string('email')->index()->unique();
 
             $table->string('password');
+            $table->string('password_reset_code')->nullable();
 
             $table->timestamps();
             $table->timestamp('last_login_at')->nullable();
