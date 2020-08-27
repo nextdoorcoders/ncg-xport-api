@@ -41,21 +41,23 @@ class ProjectTrigger extends JsonResource
             ];
         }
 
-        /** @var GroupModel $resource */
-        return [
-            'id'    => $resource->id,
-            'name'  => $resource->name,
-            'desc'  => $resource->desc,
-            'type'  => 'group',
-            'cards' => $resource->conditions->map(function (ConditionModel $condition) {
-                return [
-                    'id'       => $condition->id,
-                    'group_id' => $condition->group_id,
-                    'name'     => $condition->vendorLocation->vendor->name,
-                    'desc'     => $condition->vendorLocation->vendor->desc,
-                    'type'     => 'condition',
-                ];
-            }),
-        ];
+        return $resource->map(function ($group) {
+            /** @var GroupModel $group */
+            return [
+                'id'    => $group->id,
+                'name'  => $group->name,
+                'desc'  => $group->desc,
+                'type'  => 'group',
+                'cards' => $group->conditions->map(function (ConditionModel $condition) {
+                    return [
+                        'id'       => $condition->id,
+                        'group_id' => $condition->group_id,
+                        'name'     => $condition->vendorLocation->vendor->name,
+                        'desc'     => $condition->vendorLocation->vendor->desc,
+                        'type'     => 'condition',
+                    ];
+                }),
+            ];
+        });
     }
 }

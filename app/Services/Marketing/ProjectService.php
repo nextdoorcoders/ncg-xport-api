@@ -7,14 +7,15 @@ use App\Models\Marketing\Condition as ConditionModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Models\Marketing\VendorLocation as VendorLocationModel;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as CollectionDatabase;
+use Illuminate\Support\Collection;
 use stdClass;
 
 class ProjectService
 {
     /**
      * @param UserModel $user
-     * @return Collection
+     * @return CollectionDatabase
      */
     public function allProjects(UserModel $user)
     {
@@ -95,10 +96,10 @@ class ProjectService
      */
     public function allTriggers(ProjectModel $project, UserModel $user)
     {
-        $vendorColumn = new stdClass();
-        $vendorColumn->name = 'Vendors in the city';
-        $vendorColumn->desc = 'All triggers available for use in the current project are collected here';
-        $vendorColumn->vendorsLocation = VendorLocationModel::query()
+        $vendorLocationColumn = new stdClass();
+        $vendorLocationColumn->name = 'Vendors in the city';
+        $vendorLocationColumn->desc = 'All triggers available for use in the current project are collected here';
+        $vendorLocationColumn->vendorsLocation = VendorLocationModel::query()
             ->with([
                 'vendor',
             ])
@@ -120,56 +121,55 @@ class ProjectService
             ])
             ->get();
 
-        return $groupColumns->prepend($vendorColumn);
+        $response = collect();
+        $response->put('vendorsLocation', $vendorLocationColumn);
+        $response->put('groups', $groupColumns);
+
+        return $response;
     }
 
     /**
      * @param ProjectModel $project
      * @param UserModel    $user
      * @param array        $data
-     * @return Collection
+     * @return CollectionDatabase
      */
     public function updateTriggers(ProjectModel $project, UserModel $user, array $data)
     {
-        $data = collect($data);
-        $vendorColumn = (object)$data->shift();
-        $groupColumns = $data->map(function ($item) {
-            return (object)$item;
-        });
+        $vendorLocationColumn = $data['vendorsLocation'];
+        $groupColumns = collect($data['groups']);
 
-        foreach ($vendorColumn->cards as $card) {
-            $card = (object)$card;
-
-            if ($card->type === 'condition') {
+        foreach ($vendorLocationColumn['cards'] as $card) {
+            if ($card['type'] === 'condition') {
                 ConditionModel::query()
-                    ->where('id', $card->id)
+                    ->where('id', $card['id'])
                     ->delete();
             }
         }
 
         $groupColumns->each(function ($group) {
-            foreach ($group->cards as $card) {
-                $card = (object)$card;
-
+            foreach ($group['cards'] as $card) {
                 /** @var ConditionModel $condition */
-                if ($card->type === 'vendorLocation') {
+                if ($card['type'] === 'vendorLocation') {
                     $condition = app(ConditionModel::class);
 //                    $condition->fill($data);
-                    $condition->group()->associate($group->id);
-                    $condition->vendorLocation()->associate($card->id);
+                    $condition->group()->associate($group['id']);
+                    $condition->vendorLocation()->associate($card['id']);
                     $condition->save();
                 } else {
-                    if ($group->id !== $card->group_id) {
+                    if ($group['id'] !== $card['group_id']) {
                         $condition = ConditionModel::query()
-                            ->where('id', $card->id)
+                            ->where('id', $card['id'])
                             ->first();
 
-                        $condition->group()->associate($group->id);
+                        $condition->group()->associate($group['id']);
                         $condition->save();
                     }
                 }
             }
         });
+
+//        $project->refreshStatus();
 
         return $this->allTriggers($project, $user);
     }
