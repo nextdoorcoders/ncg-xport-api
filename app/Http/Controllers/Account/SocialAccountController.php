@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Account;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Account\AccessToken;
+use App\Http\Resources\Account\SocialAccountLink;
 use App\Http\Resources\Account\SocialAccountCollection;
+use App\Http\Resources\MessageResource;
 use App\Models\Account\User as UserModel;
 use App\Services\Account\SocialAccountService as SocialAuthService;
 use App\Services\Account\UserService as UserService;
@@ -57,16 +60,18 @@ class SocialAccountController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|object
      */
-    public function redirectToProvider(Request $request)
+    public function linkToProvider(Request $request)
     {
         $response = $this->socialAuthService->redirectToProvider($this->provider, $this->scopes, $this->with);
 
-        return $response->redirect();
+        return new SocialAccountLink([
+            'link' => $response->redirect()->getTargetUrl(),
+        ]);
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return AccessToken|MessageResource
      * @throws MessageException
      */
     public function handleProviderCallback(Request $request)
@@ -90,12 +95,16 @@ class SocialAccountController extends Controller
         try {
             $account = $this->socialAuthService->getOrCreateUser($user, $this->provider, $userData, $locale);
 
-            // Return Bearer token if user are not logged in
-            $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
+            if (!$user) {
+                // Return Bearer token if user are not logged in
+                $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
+
+                return new AccessToken($response, 'Social account is assigned to the profile');
+            }
         } catch (Exception $exception) {
             throw $exception;
         }
 
-        return redirect()->to(env('APP_SPA_URL') . '/auth/social-account/' . $response['token_type'] . '/' . $response['access_token']);
+        return new MessageResource('Social account is assigned to the profile');
     }
 }

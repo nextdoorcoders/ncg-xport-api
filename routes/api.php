@@ -54,19 +54,14 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'social-account',
+        'namespace' => 'SocialAccount',
+        'prefix'    => 'social-account',
     ], function () {
-        Route::get('', 'SocialAccountController@allSocialAccounts')->middleware('auth:api');
+        Route::get('facebook', 'FacebookController@linkToProvider');
+        Route::post('facebook/callback', 'FacebookController@handleProviderCallback');
 
-        Route::group([
-            'namespace' => 'SocialAccount',
-        ], function () {
-            Route::get('facebook', 'FacebookController@redirectToProvider');
-            Route::get('facebook/callback', 'FacebookController@handleProviderCallback');
-
-            Route::get('google', 'GoogleController@redirectToProvider');
-            Route::get('google/callback', 'GoogleController@handleProviderCallback');
-        });
+        Route::get('google', 'GoogleController@linkToProvider');
+        Route::post('google/callback', 'GoogleController@handleProviderCallback');
     });
 });
 
