@@ -3,6 +3,7 @@
 namespace App\Services\Geo;
 
 use App\Models\Geo\Country as CountryModel;
+use App\Models\Geo\State as StateModel;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,5 +28,16 @@ class StateService
     {
         return $country->states()
             ->create($data);
+    }
+
+    /**
+     * @param StateModel $state
+     * @return StateModel
+     */
+    public function readState(StateModel $state)
+    {
+        $state->load('country');
+
+        return $state;
     }
 }

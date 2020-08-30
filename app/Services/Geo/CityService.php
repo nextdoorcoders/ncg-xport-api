@@ -83,4 +83,19 @@ class CityService
             }
         });
     }
+
+    /**
+     * @param CityModel $city
+     * @return CityModel
+     */
+    public function readCity(CityModel $city)
+    {
+        $city->load([
+            'state' => function ($query) {
+                $query->with('country');
+            },
+        ]);
+
+        return $city;
+    }
 }

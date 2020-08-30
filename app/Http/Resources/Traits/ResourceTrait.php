@@ -58,11 +58,11 @@ trait ResourceTrait
             $data['meta'] = $this->meta;
         }
 
-        $data['message'] = [
+        $data['message'] = !empty($this->title) || !empty($this->message) ? [
             'title'   => $this->title,
             'message' => $this->message,
             'type'    => $this->type,
-        ];
+        ] : null;
 
         $data['errors'] = [];
 

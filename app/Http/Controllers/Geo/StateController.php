@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Geo\State as StateResource;
 use App\Http\Resources\Geo\StateCollection;
 use App\Models\Geo\Country as CountryModel;
+use App\Models\Geo\State as StateModel;
 use App\Services\Geo\StateService;
 use Illuminate\Http\Request;
 
@@ -39,11 +40,22 @@ class StateController extends Controller
      * @param CountryModel $country
      * @return StateResource
      */
-    public function create(Request $request, CountryModel $country)
+    public function createState(Request $request, CountryModel $country)
     {
         $data = $request->all();
 
         $response = $this->stateService->createState($country, $data);
+
+        return new StateResource($response);
+    }
+
+    /**
+     * @param StateModel $state
+     * @return StateResource
+     */
+    public function readState(StateModel $state)
+    {
+        $response = $this->stateService->readState($state);
 
         return new StateResource($response);
     }

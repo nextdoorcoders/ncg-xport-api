@@ -189,13 +189,21 @@ Route::group([
     'prefix'     => 'geo',
 ], function () {
     Route::get('countries', 'CountryController@allCountries');
-    Route::post('countries', 'CountryController@create');
+    Route::post('countries', 'CountryController@createCountry');
+
+    Route::get('countries/country-{country}', 'CountryController@readCountry');
+
 
     Route::get('states/country-{country}', 'StateController@allByCountry');
-    Route::post('states/country-{country}', 'StateController@create');
+    Route::post('states/country-{country}', 'StateController@createState');
+
+    Route::get('states/state-{state}', 'StateController@readState');
+
 
     Route::get('cities/state-{state}', 'CityController@allByState');
-    Route::post('cities/state-{state}', 'CityController@create');
+    Route::post('cities/state-{state}', 'CityController@createCity');
+
+    Route::get('cities/city-{city}', 'CityController@readCity');
 });
 
 Route::group([

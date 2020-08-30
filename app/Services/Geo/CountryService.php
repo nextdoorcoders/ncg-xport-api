@@ -25,4 +25,13 @@ class CountryService
         return CountryModel::query()
             ->create($data);
     }
+
+    /**
+     * @param CountryModel $country
+     * @return CountryModel
+     */
+    public function readCountry(CountryModel $country)
+    {
+        return $country;
+    }
 }
