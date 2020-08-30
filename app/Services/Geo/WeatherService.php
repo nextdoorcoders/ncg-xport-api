@@ -6,6 +6,7 @@ use App\Models\Account\Language as LanguageModel;
 use App\Models\Geo\City as CityModel;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class WeatherService
@@ -70,7 +71,7 @@ class WeatherService
             $value = explode('/', $value);
 
             try {
-                $weather = $this->findByName(trim($value[0]) . ',' . mb_strtolower($countryAlpha2), $lang);
+                $weather = $this->findByName(trim(Arr::first($value)) . ',' . mb_strtolower($countryAlpha2), $lang);
 
                 // We only need the first cycle.
                 // The loop will continue if an exception was thrown by API
