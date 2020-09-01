@@ -154,9 +154,12 @@ class ProjectService
                 /** @var ConditionModel $condition */
                 if ($card['type'] === 'vendorLocation') {
                     $condition = app(ConditionModel::class);
-//                    $condition->fill($data);
                     $condition->group()->associate($group['id']);
                     $condition->vendorLocation()->associate($card['id']);
+                    $condition->parameters = [
+                        'min' => 0,
+                        'max' => 100,
+                    ];
                     $condition->save();
                 } else {
                     if ($group['id'] !== $card['group_id']) {

@@ -50,11 +50,12 @@ class ProjectTrigger extends JsonResource
                 'type'  => 'group',
                 'cards' => $group->conditions->map(function (ConditionModel $condition) {
                     return [
-                        'id'       => $condition->id,
-                        'group_id' => $condition->group_id,
-                        'name'     => $condition->vendorLocation->vendor->name,
-                        'desc'     => $condition->vendorLocation->vendor->desc,
-                        'type'     => 'condition',
+                        'id'         => $condition->id,
+                        'group_id'   => $condition->group_id,
+                        'parameters' => $condition->parameters,
+                        'name'       => $condition->vendorLocation->vendor->name,
+                        'desc'       => $condition->vendorLocation->vendor->desc,
+                        'type'       => 'condition',
                     ];
                 }),
             ];
