@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Marketing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Marketing\CampaignCollection;
 use App\Http\Resources\Marketing\Project as ProjectResource;
 use App\Http\Resources\Marketing\ProjectCollection;
 use App\Http\Resources\Marketing\ProjectTriggerCollection;
@@ -114,6 +115,20 @@ class ProjectController extends Controller
         $response = $this->projectService->replicateProject($project, $user);
 
         return new ProjectResource($response);
+    }
+
+    /**
+     * @param ProjectModel $project
+     * @return CampaignCollection
+     */
+    public function allCampaigns(ProjectModel $project)
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->projectService->allCampaigns($project, $user);
+
+        return new CampaignCollection($response);
     }
 
     /**

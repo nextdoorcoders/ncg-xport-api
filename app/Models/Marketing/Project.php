@@ -16,23 +16,24 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class Project
  *
  * @package App\Models\Marketing
- * @property string              $id
- * @property string              $city_id
- * @property string              $owner_user_id
- * @property string              $client_user_id
- * @property string              $name
- * @property string              $desc
- * @property boolean             $is_trigger_launched
- * @property Carbon              $trigger_refreshed_at
- * @property Carbon              $date_start_at
- * @property Carbon              $date_end_at
- * @property Carbon              $created_at
- * @property Carbon              $updated_at
- * @property City                $city
- * @property User                $ownerUser
- * @property User                $clientUer
- * @property Collection<Account> $accounts
- * @property Collection<Group>   $groups
+ * @property string               $id
+ * @property string               $city_id
+ * @property string               $owner_user_id
+ * @property string               $client_user_id
+ * @property string               $name
+ * @property string               $desc
+ * @property boolean              $is_trigger_launched
+ * @property Carbon               $trigger_refreshed_at
+ * @property Carbon               $date_start_at
+ * @property Carbon               $date_end_at
+ * @property Carbon               $created_at
+ * @property Carbon               $updated_at
+ * @property City                 $city
+ * @property User                 $ownerUser
+ * @property User                 $clientUer
+ * @property Collection<Account>  $accounts
+ * @property Collection<Campaign> $campaigns
+ * @property Collection<Group>    $groups
  */
 class Project extends Model
 {
@@ -91,7 +92,7 @@ class Project extends Model
      */
     public function campaigns(): HasMany
     {
-        return $this->hasMany(Campaign::class, 'campaign_id');
+        return $this->hasMany(Campaign::class, 'project_id');
     }
 
     /**

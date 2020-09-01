@@ -94,6 +94,18 @@ class ProjectService
     /**
      * @param ProjectModel $project
      * @param UserModel    $user
+     * @return CollectionDatabase
+     */
+    public function allCampaigns(ProjectModel $project, UserModel $user)
+    {
+        return $project->campaigns()
+            ->with('account')
+            ->get();
+    }
+
+    /**
+     * @param ProjectModel $project
+     * @param UserModel    $user
      * @return Collection
      */
     public function allTriggers(ProjectModel $project, UserModel $user)

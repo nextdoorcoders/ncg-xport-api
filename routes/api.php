@@ -120,6 +120,8 @@ Route::group([
 
             Route::post('replicate', 'ProjectController@replicateProject');
 
+            Route::get('campaigns', 'ProjectController@allCampaigns');
+
             Route::group([
                 'prefix' => 'triggers',
             ], function () {
