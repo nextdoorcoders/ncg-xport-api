@@ -3,7 +3,6 @@
 namespace App\Services\Marketing;
 
 use App\Models\Account\User as UserModel;
-use App\Models\Marketing\Account as AccountModel;
 use App\Models\Marketing\Campaign as CampaignModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -11,26 +10,29 @@ use Illuminate\Database\Eloquent\Collection;
 class CampaignService
 {
     /**
-     * @param AccountModel $account
-     * @param UserModel    $user
+     * @param UserModel $user
      * @return Collection
      */
-    public function allCampaigns(AccountModel $account, UserModel $user)
+    public function allCampaigns(UserModel $user)
     {
-        return $account->campaigns()
+        $accountIds = $user->accounts()
+            ->get()
+            ->pluck('id');
+
+        return CampaignModel::query()
+            ->whereIn('account_id', $accountIds)
             ->get();
     }
 
     /**
-     * @param AccountModel $account
-     * @param UserModel    $user
-     * @param array        $data
+     * @param UserModel $user
+     * @param array     $data
      * @return CampaignModel
      */
-    public function createCampaign(AccountModel $account, UserModel $user, array $data)
+    public function createCampaign(UserModel $user, array $data)
     {
         /** @var CampaignModel $campaign */
-        $campaign = $account->campaigns()
+        $campaign = CampaignModel::query()
             ->create($data);
 
         return $this->readCampaign($campaign, $user);

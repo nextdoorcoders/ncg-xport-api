@@ -54,14 +54,19 @@ Route::group([
     });
 
     Route::group([
-        'namespace' => 'SocialAccount',
-        'prefix'    => 'social-account',
+        'prefix' => 'social-account',
     ], function () {
-        Route::get('facebook', 'FacebookController@linkToProvider');
-        Route::post('facebook/callback', 'FacebookController@handleProviderCallback');
+        Route::get('', 'SocialAccountController@allSocialAccounts')->middleware('auth:api');
 
-        Route::get('google', 'GoogleController@linkToProvider');
-        Route::post('google/callback', 'GoogleController@handleProviderCallback');
+        Route::group([
+            'namespace' => 'SocialAccount',
+        ], function () {
+            Route::get('facebook', 'FacebookController@linkToProvider');
+            Route::post('facebook/callback', 'FacebookController@handleProviderCallback');
+
+            Route::get('google', 'GoogleController@linkToProvider');
+            Route::post('google/callback', 'GoogleController@handleProviderCallback');
+        });
     });
 });
 
@@ -73,29 +78,23 @@ Route::group([
     Route::group([
         'prefix' => 'accounts',
     ], function () {
-        Route::get('', 'UserController@allAccounts');
-        Route::get('social-account-{socialAccount}', 'UserController@allAccountsOfSocialAccount');
-
-        Route::post('', 'UserController@createAccount');
+        Route::get('', 'AccountController@allAccounts');
+        Route::post('', 'AccountController@createAccount');
 
         Route::group([
             'prefix' => 'account-{account}',
         ], function () {
-            Route::get('', 'UserController@readAccount');
-            Route::put('', 'UserController@updateAccount');
-            Route::delete('', 'UserController@deleteAccount');
+            Route::get('', 'AccountController@readAccount');
+            Route::put('', 'AccountController@updateAccount');
+            Route::delete('', 'AccountController@deleteAccount');
         });
     });
 
     Route::group([
         'prefix' => 'campaigns',
     ], function () {
-        Route::group([
-            'prefix' => 'account-{account}',
-        ], function () {
-            Route::get('', 'CampaignController@allCampaigns');
-            Route::post('', 'CampaignController@createCampaign');
-        });
+        Route::get('', 'CampaignController@allCampaigns');
+        Route::post('', 'CampaignController@createCampaign');
 
         Route::group([
             'prefix' => 'campaign-{campaign}',
@@ -212,13 +211,8 @@ Route::group([
     'prefix'     => 'google',
 ], function () {
     Route::group([
-        'namespace' => 'AdWords',
-        'prefix'    => 'adwords',
+        'prefix' => 'campaigns/account-{account}',
     ], function () {
-        Route::group([
-            'prefix' => 'campaigns/account-{account}',
-        ], function () {
-            Route::get('', 'CampaignController@index');
-        });
+        Route::get('', 'CampaignController@allCampaigns');
     });
 });

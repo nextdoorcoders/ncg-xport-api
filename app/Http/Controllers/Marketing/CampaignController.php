@@ -28,32 +28,30 @@ class CampaignController extends Controller
     }
 
     /**
-     * @param AccountModel $account
      * @return CampaignCollection
      */
-    public function allCampaigns(AccountModel $account)
+    public function allCampaigns()
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->campaignService->allCampaigns($account, $user);
+        $response = $this->campaignService->allCampaigns($user);
 
         return new CampaignCollection($response);
     }
 
     /**
      * @param Request $request
-     * @param AccountModel $account
      * @return CampaignResource
      */
-    public function createCampaign(Request $request, AccountModel $account)
+    public function createCampaign(Request $request)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->campaignService->createCampaign($account, $user, $data);
+        $response = $this->campaignService->createCampaign($user, $data);
 
         return new CampaignResource($response);
     }

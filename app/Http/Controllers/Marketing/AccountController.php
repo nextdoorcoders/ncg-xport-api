@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Marketing;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Marketing\Account as AccountResource;
 use App\Http\Resources\Marketing\AccountCollection;
-use App\Models\Account\SocialAccount as SocialAccountModel;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Account as AccountModel;
 use App\Services\Marketing\AccountService;
@@ -36,20 +35,6 @@ class AccountController extends Controller
         $user = auth()->user();
 
         $response = $this->accountService->allAccounts($user);
-
-        return new AccountCollection($response);
-    }
-
-    /**
-     * @param SocialAccountModel $socialAccount
-     * @return AccountCollection
-     */
-    public function allAccountsOfSocialAccount(SocialAccountModel $socialAccount)
-    {
-        /** @var UserModel $user */
-        $user = auth()->user();
-
-        $response = $this->accountService->allAccountsOfSocialAccount($socialAccount, $user);
 
         return new AccountCollection($response);
     }

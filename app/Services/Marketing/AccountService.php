@@ -2,12 +2,10 @@
 
 namespace App\Services\Marketing;
 
-use App\Models\Account\SocialAccount as SocialAccountModel;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Account as AccountModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class AccountService
 {
@@ -18,17 +16,7 @@ class AccountService
     public function allAccounts(UserModel $user)
     {
         return $user->accounts()
-            ->get();
-    }
-
-    /**
-     * @param SocialAccountModel $socialAccount
-     * @param UserModel          $user
-     * @return Collection
-     */
-    public function allAccountsOfSocialAccount(SocialAccountModel $socialAccount, UserModel $user)
-    {
-        return $socialAccount->accounts()
+            ->with('socialAccount')
             ->get();
     }
 
@@ -53,7 +41,7 @@ class AccountService
      */
     public function readAccount(AccountModel $account, UserModel $user)
     {
-        return $account->fresh();
+        return $account->fresh('socialAccount');
     }
 
     /**

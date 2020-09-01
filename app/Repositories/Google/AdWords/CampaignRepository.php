@@ -3,6 +3,7 @@
 namespace App\Repositories\Google\AdWords;
 
 use App\Models\Marketing\Project as CampaignModel;
+use Carbon\Carbon;
 use Google\AdsApi\AdWords\AdWordsSession;
 use Google\AdsApi\AdWords\v201809\cm\AdvertisingChannelType;
 use Google\AdsApi\AdWords\v201809\cm\BiddingStrategyConfiguration;
@@ -44,7 +45,7 @@ class CampaignRepository extends AdWords
 
         // Create selector.
         $selector = new Selector();
-        $selector->setFields(['Id', 'Name', 'Status']);
+        $selector->setFields(['Id', 'Name', 'Status', 'StartDate', 'EndDate']);
         $selector->setOrdering([
             new OrderBy('Name', SortOrder::ASCENDING),
         ]);
@@ -61,10 +62,12 @@ class CampaignRepository extends AdWords
             if ($page->getEntries() !== null) {
                 $totalNumEntries = $page->getTotalNumEntries();
                 foreach ($page->getEntries() as $campaign) {
-                    $campaigns[] = [
-                        'id'     => $campaign->getId(),
-                        'name'   => $campaign->getName(),
-                        'status' => $campaign->getStatus(),
+                    $campaigns[] = (object)[
+                        'id'         => $campaign->getId(),
+                        'name'       => $campaign->getName(),
+                        'status'     => $campaign->getStatus(),
+                        'start_date' => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getStartDate())),
+                        'end_date'   => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getEndDate())),
                     ];
                 }
             }
@@ -73,7 +76,7 @@ class CampaignRepository extends AdWords
             $selector->getPaging()->setStartIndex($selector->getPaging()->getStartIndex() + self::PAGE_LIMIT);
         } while ($selector->getPaging()->getStartIndex() < $totalNumEntries);
 
-        return $campaigns;
+        return collect($campaigns);
     }
 
 //    public function create()

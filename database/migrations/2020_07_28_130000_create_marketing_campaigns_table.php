@@ -20,10 +20,10 @@ class CreateMarketingCampaignsTable extends Migration
 
             $table->string('campaign_id')->index();
             $table->string('name');
-            $table->string('desc');
+            $table->string('desc')->nullable();
 
-            $table->timestamp('start_at')->nullable();
-            $table->timestamp('end_at')->nullable();
+            $table->timestamp('date_start_at')->nullable();
+            $table->timestamp('date_end_at')->nullable();
 
             $table->timestamps();
         });

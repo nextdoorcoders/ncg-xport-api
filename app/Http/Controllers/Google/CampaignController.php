@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Google\AdWords;
+namespace App\Http\Controllers\Google;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Google\Campaign as CampaignResource;
 use App\Models\Marketing\Account;
 use App\Services\Google\AdWords\CampaignService;
-use Illuminate\Http\JsonResponse;
 
 class CampaignController extends Controller
 {
@@ -23,15 +23,14 @@ class CampaignController extends Controller
 
     /**
      * @param Account $account
-     * @return JsonResponse
+     * @return CampaignResource
      * @throws \App\Exceptions\MessageException
      */
-    public function index(Account $account)
+    public function allCampaigns(Account $account)
     {
         $response = $this->campaignService
-            ->index($account);
+            ->allCampaigns($account);
 
-        return response()
-            ->json($response);
+        return new CampaignResource($response);
     }
 }

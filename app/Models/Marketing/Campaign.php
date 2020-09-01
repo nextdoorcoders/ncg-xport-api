@@ -17,8 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string  $campaign_id
  * @property string  $name
  * @property string  $desc
- * @property Carbon  $start_at
- * @property Carbon  $end_at
+ * @property Carbon  $date_start_at
+ * @property Carbon  $date_end_at
  * @property Carbon  $created_at
  * @property Carbon  $updated_at
  * @property Account $account
@@ -36,13 +36,13 @@ class Campaign extends Model
         'campaign_id',
         'name',
         'desc',
-        'start_at',
-        'end_at',
+        'date_start_at',
+        'date_end_at',
     ];
 
     protected $dates = [
-        'start_at',
-        'end_at',
+        'date_start_at',
+        'date_end_at',
     ];
 
     /*

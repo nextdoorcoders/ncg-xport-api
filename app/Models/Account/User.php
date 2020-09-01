@@ -38,6 +38,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Language                  $language
  * @property Collection<Contact>       $contacts
  * @property Collection<SocialAccount> $socialAccounts
+ * @property Collection<Account>       $accounts
  * @property Collection<Project>       $ownerProjects
  * @property Collection<Project>       $clientProjects
  * @property File                      $picture

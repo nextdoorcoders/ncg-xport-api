@@ -24,8 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string              $desc
  * @property boolean             $is_trigger_launched
  * @property Carbon              $trigger_refreshed_at
- * @property Carbon              $start_at
- * @property Carbon              $end_at
+ * @property Carbon              $date_start_at
+ * @property Carbon              $date_end_at
  * @property Carbon              $created_at
  * @property Carbon              $updated_at
  * @property City                $city
@@ -48,14 +48,14 @@ class Project extends Model
         'desc',
         'is_trigger_launched',
         'trigger_refreshed_at',
-        'start_at',
-        'end_at',
+        'date_start_at',
+        'date_end_at',
     ];
 
     protected $dates = [
         'trigger_refreshed_at',
-        'start_at',
-        'end_at',
+        'date_start_at',
+        'date_end_at',
     ];
 
     /*
