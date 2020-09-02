@@ -2,6 +2,7 @@
 
 namespace App\Services\Marketing\Vendor\Classes;
 
+use App\Models\Vendor\Weather;
 use App\Services\Marketing\Vendor\BaseVendor;
 
 class Pressure extends BaseVendor
@@ -9,5 +10,19 @@ class Pressure extends BaseVendor
     public function run()
     {
         // TODO: Implement run() method.
+    }
+
+    public function current($cityId)
+    {
+        /** @var Weather $weather */
+        $weather = Weather::query()
+            ->where('city_id', $cityId)
+            ->first();
+
+        if (!$weather) {
+            return null;
+        }
+
+        return $weather->clouds;
     }
 }

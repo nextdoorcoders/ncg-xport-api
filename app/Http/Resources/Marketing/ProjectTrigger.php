@@ -31,11 +31,12 @@ class ProjectTrigger extends JsonResource
                 'type'  => 'vendor',
                 'cards' => $resource->vendorsLocation->map(function (VendorLocationModel $vendorLocation) {
                     return [
-                        'id'        => $vendorLocation->id,
-                        'vendor_id' => $vendorLocation->vendor_id,
-                        'name'      => $vendorLocation->vendor->name,
-                        'desc'      => $vendorLocation->vendor->desc,
-                        'type'      => 'vendorLocation',
+                        'id'            => $vendorLocation->id,
+                        'vendor_id'     => $vendorLocation->vendor_id,
+                        'name'          => $vendorLocation->vendor->name,
+                        'desc'          => $vendorLocation->vendor->desc,
+                        'type'          => 'vendorLocation',
+                        'current_value' => $vendorLocation->current_value,
                     ];
                 }),
             ];
@@ -50,12 +51,13 @@ class ProjectTrigger extends JsonResource
                 'type'  => 'group',
                 'cards' => $group->conditions->map(function (ConditionModel $condition) {
                     return [
-                        'id'         => $condition->id,
-                        'group_id'   => $condition->group_id,
-                        'parameters' => $condition->parameters,
-                        'name'       => $condition->vendorLocation->vendor->name,
-                        'desc'       => $condition->vendorLocation->vendor->desc,
-                        'type'       => 'condition',
+                        'id'            => $condition->id,
+                        'group_id'      => $condition->group_id,
+                        'parameters'    => $condition->parameters,
+                        'name'          => $condition->vendorLocation->vendor->name,
+                        'desc'          => $condition->vendorLocation->vendor->desc,
+                        'type'          => 'condition',
+                        'current_value' => $condition->current_value,
                     ];
                 }),
             ];

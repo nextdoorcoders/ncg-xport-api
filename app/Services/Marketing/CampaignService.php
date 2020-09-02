@@ -45,7 +45,10 @@ class CampaignService
      */
     public function readCampaign(CampaignModel $campaign, UserModel $user)
     {
-        return $campaign->fresh();
+        return $campaign->fresh([
+            'account',
+            'project',
+        ]);
     }
 
     /**

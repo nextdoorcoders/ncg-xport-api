@@ -4,8 +4,10 @@ namespace App\Services\Marketing;
 
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Condition as ConditionModel;
+use App\Models\Marketing\Group;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Models\Marketing\VendorLocation as VendorLocationModel;
+use App\Services\Marketing\Vendor\BaseVendor;
 use Exception;
 use Illuminate\Database\Eloquent\Collection as CollectionDatabase;
 use Illuminate\Support\Collection;
@@ -123,6 +125,13 @@ class ProjectService
             })
             ->get();
 
+        $vendorLocationColumn->vendorsLocation->each(function (VendorLocationModel $vendorLocation) {
+            /** @var BaseVendor $triggerClass */
+            $triggerClass = app($vendorLocation->vendor->trigger_class);
+
+            $vendorLocation->current_value = $triggerClass->current($vendorLocation->city_id);
+        });
+
         $groupColumns = $project->groups()
             ->with([
                 'conditions' => function ($query) {
@@ -134,6 +143,15 @@ class ProjectService
                 },
             ])
             ->get();
+
+        $groupColumns->each(function (Group $group) {
+            $group->conditions->each(function (ConditionModel $condition) {
+                /** @var BaseVendor $triggerClass */
+                $triggerClass = app($condition->vendorLocation->vendor->trigger_class);
+
+                $condition->current_value = $triggerClass->current($condition->vendorLocation->city_id);
+            });
+        });
 
         $response = collect();
         $response->put('vendorsLocation', $vendorLocationColumn);
