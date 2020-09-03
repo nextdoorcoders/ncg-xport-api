@@ -7,11 +7,6 @@ use App\Services\Marketing\Vendor\BaseVendor;
 
 class Clouds extends BaseVendor
 {
-    public function run()
-    {
-        // TODO: Implement run() method.
-    }
-
     public function current($cityId)
     {
         /** @var Weather $weather */

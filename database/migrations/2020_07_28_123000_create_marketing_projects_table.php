@@ -22,8 +22,9 @@ class CreateMarketingProjectsTable extends Migration
             $table->string('name');
             $table->text('desc')->nullable();
 
-            $table->boolean('is_trigger_launched')->default(false);
+            $table->boolean('is_trigger_enabled')->default(false);
             $table->timestamp('trigger_refreshed_at')->nullable();
+            $table->timestamp('trigger_changed_at')->nullable();
 
             $table->timestamp('date_start_at')->nullable();
             $table->timestamp('date_end_at')->nullable();

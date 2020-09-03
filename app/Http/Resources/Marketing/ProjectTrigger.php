@@ -33,6 +33,7 @@ class ProjectTrigger extends JsonResource
                     return [
                         'id'            => $vendorLocation->id,
                         'vendor_id'     => $vendorLocation->vendor_id,
+                        'parameters'    => $vendorLocation->vendor->default_parameters,
                         'name'          => $vendorLocation->vendor->name,
                         'desc'          => $vendorLocation->vendor->desc,
                         'type'          => 'vendorLocation',

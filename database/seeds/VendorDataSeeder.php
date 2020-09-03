@@ -30,125 +30,153 @@ class VendorDataSeeder extends Seeder
         /** @var VendorModel $vendor */
         $vendor = VendorModel::query()
             ->create([
-                'trigger_class' => Temperature::class,
-                'type'          => VendorModel::TYPE_TEMPERATURE,
-                'name'          => [
+                'trigger_class'      => Temperature::class,
+                'type'               => VendorModel::TYPE_TEMPERATURE,
+                'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Air temperature',
                     LanguageModel::LANGUAGE_RU => 'Температура воздуха',
                     LanguageModel::LANGUAGE_UK => 'Температура повітря',
                 ],
-                'desc'          => [
+                'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Air temperature with reference to the city',
                     LanguageModel::LANGUAGE_RU => 'Температура воздуха с привязкой к городу',
                     LanguageModel::LANGUAGE_UK => 'Температура повітря з прив\'язкою до міста',
                 ],
+                'default_parameters' => [
+                    'min' => '-15',
+                    'max' => '45',
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
 
         $vendor = VendorModel::query()
             ->create([
-                'trigger_class' => Wind::class,
-                'type'          => VendorModel::TYPE_WIND,
-                'name'          => [
-                    LanguageModel::LANGUAGE_EN => 'Wind speed',
-                    LanguageModel::LANGUAGE_RU => 'Скорость ветра',
-                    LanguageModel::LANGUAGE_UK => 'Швидкість вітру',
+                'trigger_class'      => Wind::class,
+                'type'               => VendorModel::TYPE_WIND,
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Wind speed (m/s)',
+                    LanguageModel::LANGUAGE_RU => 'Скорость ветра (m/s)',
+                    LanguageModel::LANGUAGE_UK => 'Швидкість вітру (m/s)',
                 ],
-                'desc'          => [
+                'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Wind speed with reference to the city',
                     LanguageModel::LANGUAGE_RU => 'Скорость ветра с привязкой к городу',
                     LanguageModel::LANGUAGE_UK => 'Швидкість вітру з прив\'язкою до міста',
                 ],
+                'default_parameters' => [
+                    'min' => '0',
+                    'max' => '10',
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
 
         $vendor = VendorModel::query()
             ->create([
-                'trigger_class' => Clouds::class,
-                'type'          => VendorModel::TYPE_CLOUDS,
-                'name'          => [
-                    LanguageModel::LANGUAGE_EN => 'Cloudiness',
-                    LanguageModel::LANGUAGE_RU => 'Облачность',
-                    LanguageModel::LANGUAGE_UK => 'Хмарність',
+                'trigger_class'      => Clouds::class,
+                'type'               => VendorModel::TYPE_CLOUDS,
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Cloudiness (%)',
+                    LanguageModel::LANGUAGE_RU => 'Облачность (%)',
+                    LanguageModel::LANGUAGE_UK => 'Хмарність (%)',
                 ],
-                'desc'          => [
+                'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Cloudiness with reference to the city',
                     LanguageModel::LANGUAGE_RU => 'Облачность с привязкой к городу',
                     LanguageModel::LANGUAGE_UK => 'Хмарність з прив\'язкою до міста',
                 ],
+                'default_parameters' => [
+                    'min' => '0',
+                    'max' => '100',
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
 
         $vendor = VendorModel::query()
             ->create([
-                'trigger_class' => Rain::class,
-                'type'          => VendorModel::TYPE_RAIN,
-                'name'          => [
-                    LanguageModel::LANGUAGE_EN => 'Precipitation (rain)',
-                    LanguageModel::LANGUAGE_RU => 'Осадки (дождь)',
-                    LanguageModel::LANGUAGE_UK => 'Опади (дощ)',
+                'trigger_class'      => Rain::class,
+                'type'               => VendorModel::TYPE_RAIN,
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Precipitation (rain, mm)',
+                    LanguageModel::LANGUAGE_RU => 'Осадки (дождь, mm)',
+                    LanguageModel::LANGUAGE_UK => 'Опади (дощ, mm)',
                 ],
-                'desc'          => [
+                'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Precipitation (rain) with reference to the city',
                     LanguageModel::LANGUAGE_RU => 'Осадки (дождь) с привязкой к городу',
                     LanguageModel::LANGUAGE_UK => 'Опади (дощ) з прив\'язкою до міста',
                 ],
+                'default_parameters' => [
+                    'min' => '0',
+                    'max' => '20',
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
 
         $vendor = VendorModel::query()
             ->create([
-                'trigger_class' => Snow::class,
-                'type'          => VendorModel::TYPE_SNOW,
-                'name'          => [
-                    LanguageModel::LANGUAGE_EN => 'Precipitation (snow)',
-                    LanguageModel::LANGUAGE_RU => 'Осадки (снег)',
-                    LanguageModel::LANGUAGE_UK => 'Опади (сніг)',
+                'trigger_class'      => Snow::class,
+                'type'               => VendorModel::TYPE_SNOW,
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Precipitation (snow, mm)',
+                    LanguageModel::LANGUAGE_RU => 'Осадки (снег, mm)',
+                    LanguageModel::LANGUAGE_UK => 'Опади (сніг, mm)',
                 ],
-                'desc'          => [
+                'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Precipitation (snow) with reference to the city',
                     LanguageModel::LANGUAGE_RU => 'Осадки (снег) с привязкой к городу',
                     LanguageModel::LANGUAGE_UK => 'Опади (сніг) з прив\'язкою до міста',
                 ],
+                'default_parameters' => [
+                    'min' => '0',
+                    'max' => '20',
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
 
         $vendor = VendorModel::query()
             ->create([
-                'trigger_class' => Pressure::class,
-                'type'          => VendorModel::TYPE_PRESSURE,
-                'name'          => [
-                    LanguageModel::LANGUAGE_EN => 'Atmosphere pressure',
-                    LanguageModel::LANGUAGE_RU => 'Атмосферное давление',
-                    LanguageModel::LANGUAGE_UK => 'Атмосферний тиск',
+                'trigger_class'      => Pressure::class,
+                'type'               => VendorModel::TYPE_PRESSURE,
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Atmosphere pressure (hPa)',
+                    LanguageModel::LANGUAGE_RU => 'Атмосферное давление (hPa)',
+                    LanguageModel::LANGUAGE_UK => 'Атмосферний тиск (hPa)',
                 ],
-                'desc'          => [
+                'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Atmosphere pressure with reference to the city',
                     LanguageModel::LANGUAGE_RU => 'Атмосферное давление с привязкой к городу',
                     LanguageModel::LANGUAGE_UK => 'Атмосферний тиск з прив\'язкою до міста',
                 ],
+                'default_parameters' => [
+                    'min' => '854',
+                    'max' => '1086',
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
 
         $vendor = VendorModel::query()
             ->create([
-                'trigger_class' => Humidity::class,
-                'type'          => VendorModel::TYPE_HUMIDITY,
-                'name'          => [
-                    LanguageModel::LANGUAGE_EN => 'Air humidity',
-                    LanguageModel::LANGUAGE_RU => 'Влажность воздуха',
-                    LanguageModel::LANGUAGE_UK => 'Влажність повітря',
+                'trigger_class'      => Humidity::class,
+                'type'               => VendorModel::TYPE_HUMIDITY,
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Air humidity (%)',
+                    LanguageModel::LANGUAGE_RU => 'Влажность воздуха (%)',
+                    LanguageModel::LANGUAGE_UK => 'Влажність повітря (%)',
                 ],
-                'desc'          => [
+                'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Air humidity with reference to the city',
                     LanguageModel::LANGUAGE_RU => 'Влажность воздуха с привязкой к городу',
                     LanguageModel::LANGUAGE_UK => 'Влажність повітря з прив\'язкою до міста',
+                ],
+                'default_parameters' => [
+                    'min' => '0',
+                    'max' => '100',
                 ],
             ]);
 

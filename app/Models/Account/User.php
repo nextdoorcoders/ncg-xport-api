@@ -25,15 +25,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string                    $id
  * @property string                    $country_id
  * @property string                    $language_id
- * @property string                    $name
- * @property string                    $email
- * @property string                    $password
- * @property string                    $password_reset_code
  * @property Carbon                    $created_at
  * @property Carbon                    $updated_at
- * @property Carbon                    $last_login_at
- * @property Carbon                    $last_seen_at
- * @property boolean                   $is_online
  * @property Collection                $country
  * @property Language                  $language
  * @property Collection<Contact>       $contacts
@@ -52,12 +45,6 @@ class User extends Authenticatable
     protected $fillable = [
         'country_id',
         'language_id',
-        'name',
-        'email',
-        'password',
-        'password_reset_code',
-        'last_login_at',
-        'last_seen_at',
     ];
 
     protected $hidden = [

@@ -7,11 +7,6 @@ use App\Services\Marketing\Vendor\BaseVendor;
 
 class Pressure extends BaseVendor
 {
-    public function run()
-    {
-        // TODO: Implement run() method.
-    }
-
     public function current($cityId)
     {
         /** @var Weather $weather */
@@ -23,6 +18,6 @@ class Pressure extends BaseVendor
             return null;
         }
 
-        return $weather->clouds;
+        return $weather->pressure;
     }
 }

@@ -20,6 +20,10 @@ class CreateMarketingGroupsTable extends Migration
             $table->string('name')->nullable();
             $table->text('desc')->nullable();
 
+            $table->boolean('is_trigger_enabled')->default(false);
+            $table->timestamp('trigger_refreshed_at')->nullable();
+            $table->timestamp('trigger_changed_at')->nullable();
+
             $table->timestamps();
         });
     }

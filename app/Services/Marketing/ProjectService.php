@@ -186,10 +186,7 @@ class ProjectService
                     $condition = app(ConditionModel::class);
                     $condition->group()->associate($group['id']);
                     $condition->vendorLocation()->associate($card['id']);
-                    $condition->parameters = [
-                        'min' => 0,
-                        'max' => 100,
-                    ];
+                    $condition->parameters = $condition->vendorLocation->vendor->default_parameters;
                     $condition->save();
                 } else {
                     if ($group['id'] !== $card['group_id']) {

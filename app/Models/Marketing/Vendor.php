@@ -2,7 +2,6 @@
 
 namespace App\Models\Marketing;
 
-use App\Casts\Encrypt;
 use App\Models\Geo\City;
 use App\Models\Traits\TranslatableTrait;
 use App\Models\Traits\UuidTrait;
@@ -20,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property string                $trigger_class
  * @property array                 $name
  * @property array                 $desc
- * @property array                 $parameters
+ * @property array                 $default_parameters
  * @property string                $type
  * @property Carbon                $created_at
  * @property Carbon                $updated_at
@@ -43,7 +42,7 @@ class Vendor extends Model
 
     protected $fillable = [
         'trigger_class',
-        'parameters',
+        'default_parameters',
         'type',
     ];
 
@@ -53,7 +52,7 @@ class Vendor extends Model
     ];
 
     protected $casts = [
-        'parameters' => Encrypt::class,
+        'default_parameters' => 'array',
     ];
 
     /*

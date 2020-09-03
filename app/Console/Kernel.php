@@ -27,6 +27,10 @@ class Kernel extends ConsoleKernel
          $schedule->command('vendor:weather')
              ->everyThirtyMinutes()
              ->withoutOverlapping();
+
+         $schedule->command('trigger:update')
+             ->everyMinute()
+             ->withoutOverlapping();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Models\Marketing;
 
+use App\Models\Traits\TriggerTrait;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class Condition extends Pivot
 {
-    use UuidTrait;
+    use TriggerTrait, UuidTrait;
 
     protected $table = 'marketing_conditions';
 

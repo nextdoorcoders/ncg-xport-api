@@ -4,6 +4,7 @@ namespace App\Models\Marketing;
 
 use App\Models\Account\User;
 use App\Models\Geo\City;
+use App\Models\Traits\TriggerTrait;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,8 +23,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string               $client_user_id
  * @property string               $name
  * @property string               $desc
- * @property boolean              $is_trigger_launched
- * @property Carbon               $trigger_refreshed_at
  * @property Carbon               $date_start_at
  * @property Carbon               $date_end_at
  * @property Carbon               $created_at
@@ -37,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Project extends Model
 {
-    use UuidTrait;
+    use TriggerTrait, UuidTrait;
 
     protected $table = 'marketing_projects';
 
@@ -47,14 +46,11 @@ class Project extends Model
         'client_user_id',
         'name',
         'desc',
-        'is_trigger_launched',
-        'trigger_refreshed_at',
         'date_start_at',
         'date_end_at',
     ];
 
     protected $dates = [
-        'trigger_refreshed_at',
         'date_start_at',
         'date_end_at',
     ];

@@ -3,9 +3,22 @@
 namespace App\Models\Traits;
 
 use App\Casts\Encrypt;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+/**
+ * Trait UserTrait
+ *
+ * @package App\Models\Traits
+ * @property string  $name
+ * @property string  $email
+ * @property string  $password
+ * @property string  $password_reset_code
+ * @property Carbon  $last_login_at
+ * @property Carbon  $last_seen_at
+ * @property boolean $is_online
+ */
 trait UserTrait
 {
     private static string $passwordRegex = '/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/';
@@ -14,10 +27,19 @@ trait UserTrait
 
     protected function initializeUserTrait(): void
     {
-        $this->dates = [
+        $this->mergeFillable([
+            'name',
+            'email',
+            'password',
+            'password_reset_code',
             'last_login_at',
             'last_seen_at',
-        ];
+        ]);
+
+        $this->dates = array_merge($this->dates, [
+            'last_login_at',
+            'last_seen_at',
+        ]);
 
         $this->mergeCasts([
             'password_reset_code' => Encrypt::class,
