@@ -2,10 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\MessageException;
+use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Marketing\Condition as ConditionModel;
 use App\Models\Marketing\Group as GroupModel;
 use App\Models\Marketing\Project as ProjectModel;
+use App\Services\Google\AdWords\CampaignService;
 use App\Services\Marketing\Vendor\BaseVendor;
+use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Illuminate\Console\Command;
 
 class Trigger extends Command
@@ -24,14 +28,18 @@ class Trigger extends Command
      */
     protected $description = 'Command description';
 
+    protected $campaignService;
+
     /**
-     * Create a new command instance.
+     * Campaign constructor.
      *
-     * @return void
+     * @param CampaignService $campaignService
      */
-    public function __construct()
+    public function __construct(CampaignService $campaignService)
     {
         parent::__construct();
+
+        $this->campaignService = $campaignService;
     }
 
     /**
@@ -53,9 +61,9 @@ class Trigger extends Command
          */
         $conditions = ConditionModel::query()
             ->with([
-                'vendorLocation' => function($query) {
+                'vendorLocation' => function ($query) {
                     $query->with('vendor');
-                }
+                },
             ])
             ->get();
 
@@ -135,6 +143,29 @@ class Trigger extends Command
             }
 
             $project->save();
+        });
+
+        /*
+         * Campaigns
+         */
+        $campaigns = CampaignModel::query()
+            ->with([
+                'project',
+                'account',
+            ])
+            ->whereHas('project')
+            ->get();
+
+        $campaigns->each(function (CampaignModel $campaign) {
+            $project = $campaign->project;
+
+            if ($project->is_trigger_enabled) {
+                $status = CampaignStatus::ENABLED;
+            } else {
+                $status = CampaignStatus::PAUSED;
+            }
+
+            $this->campaignService->updateCampaignStatus($campaign, $status);
         });
     }
 }

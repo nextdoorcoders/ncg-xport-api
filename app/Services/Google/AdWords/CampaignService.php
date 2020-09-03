@@ -4,7 +4,7 @@ namespace App\Services\Google\AdWords;
 
 use App\Exceptions\MessageException;
 use App\Models\Marketing\Account as AccountModel;
-use App\Models\Marketing\Campaign;
+use App\Models\Marketing\Campaign as CampaignModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
 
 class CampaignService
@@ -32,7 +32,7 @@ class CampaignService
 
         $campaigns = $this->campaignRepository->paginate();
 
-        $existedCampaigns = Campaign::query()
+        $existedCampaigns = CampaignModel::query()
             ->whereIn('campaign_id', $campaigns->pluck('id'))
             ->get()
             ->pluck('id', 'campaign_id')
@@ -47,5 +47,17 @@ class CampaignService
         });
 
         return $campaigns;
+    }
+
+    /**
+     * @param CampaignModel $campaign
+     * @param string        $status
+     * @throws MessageException
+     */
+    public function updateCampaignStatus(CampaignModel $campaign, string $status)
+    {
+        $this->campaignRepository->setAccount($campaign->account);
+
+        $this->campaignRepository->update($campaign, $status);
     }
 }

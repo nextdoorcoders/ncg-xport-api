@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Google\AdWords;
 
-use App\Models\Marketing\Project as CampaignModel;
+use App\Models\Marketing\Campaign as CampaignModel;
 use Carbon\Carbon;
 use Google\AdsApi\AdWords\AdWordsSession;
 use Google\AdsApi\AdWords\v201809\cm\AdvertisingChannelType;
@@ -195,7 +195,7 @@ class CampaignRepository extends AdWords
 //        }
 //    }
 
-    public function update(CampaignModel $campaignModel)
+    public function update(CampaignModel $campaignModel, string $status)
     {
         /** @var AdWordsSession $session */
         $session = $this->sessionBuilder->build();
@@ -206,7 +206,7 @@ class CampaignRepository extends AdWords
         // Create a campaign with PAUSED status.
         $campaign = new Campaign();
         $campaign->setId($campaignModel->campaign_id);
-        $campaign->setStatus(CampaignStatus::ENABLED);
+        $campaign->setStatus($status);
 
         // Create a campaign operation and add it to the list.
         $operation = new CampaignOperation();
