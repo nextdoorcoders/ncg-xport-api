@@ -27,18 +27,16 @@ class Register extends FormRequest
     public function rules()
     {
         return [
-            'country_id' => [
-                'nullable',
-                Rule::exists('geo_countries'),
-            ],
-            'name'       => 'required',
-            'email'      => [
+            'name'     => 'required',
+            'email'    => [
                 'required',
+                'email',
                 Rule::unique('account_users'),
             ],
-            'password'   => [
+            'password' => [
                 'required',
                 'between:8,32',
+                'confirmed',
             ],
         ];
     }
