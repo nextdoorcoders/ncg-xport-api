@@ -83,28 +83,33 @@ class SocialAccountController extends Controller
         /** @var UserModel $user */
         $user = auth()->user();
 
-        /** @var FacebookProvider|GoogleProvider $driver */
-        $driver = Socialite::driver($this->provider);
-        $driver->stateless();
-
-        /** @var UserSocialite $userData */
-        $userData = $driver->user();
-
-        $locale = app()->getLocale();
 
         try {
-            $account = $this->socialAuthService->getOrCreateUser($user, $this->provider, $userData, $locale);
+            /** @var FacebookProvider|GoogleProvider $driver */
+            $driver = Socialite::driver($this->provider);
+            $driver->stateless();
 
-            if (!$user) {
-                // Return Bearer token if user are not logged in
-                $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
+            /** @var UserSocialite $userData */
+            $userData = $driver->user();
 
-                return new AccessToken($response, 'Social account is assigned to the profile');
+            $locale = app()->getLocale();
+
+            try {
+                $account = $this->socialAuthService->getOrCreateUser($user, $this->provider, $userData, $locale);
+
+                if (!$user) {
+                    // Return Bearer token if user are not logged in
+                    $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
+
+                    return new AccessToken($response, 'Social account is assigned to the profile');
+                }
+            } catch (Exception $exception) {
+                throw $exception;
             }
-        } catch (Exception $exception) {
-            throw $exception;
-        }
 
-        return new MessageResource('Social account is assigned to the profile');
+            return new MessageResource('Social account is assigned to the profile');
+        } catch (Exception $exception) {
+            throw new MessageException('Something happened', 'Failed to get profile information. Please try again later');
+        }
     }
 }
