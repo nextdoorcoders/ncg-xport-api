@@ -7,7 +7,6 @@ use App\Models\Marketing\Group as GroupModel;
 use App\Models\Marketing\VendorLocation as VendorLocationModel;
 use App\Models\Traits\UuidTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
-use stdClass;
 
 class ProjectTrigger extends JsonResource
 {
@@ -23,45 +22,36 @@ class ProjectTrigger extends JsonResource
     {
         $resource = $this->resource;
 
-        if ($resource instanceof stdClass) {
-            /** @var stdClass $resource */
-            return [
-                'name'  => $resource->name,
-                'desc'  => $resource->desc,
-                'type'  => 'vendor',
-                'cards' => $resource->vendorsLocation->map(function (VendorLocationModel $vendorLocation) {
-                    return [
-                        'id'            => $vendorLocation->id,
-                        'vendor_id'     => $vendorLocation->vendor_id,
-                        'parameters'    => $vendorLocation->vendor->default_parameters,
-                        'name'          => $vendorLocation->vendor->name,
-                        'desc'          => $vendorLocation->vendor->desc,
-                        'type'          => 'vendorLocation',
-                        'current_value' => $vendorLocation->current_value,
-                    ];
-                }),
-            ];
-        }
-
-        return $resource->map(function ($group) {
-            /** @var GroupModel $group */
-            return [
-                'id'    => $group->id,
-                'name'  => $group->name,
-                'desc'  => $group->desc,
-                'type'  => 'group',
-                'cards' => $group->conditions->map(function (ConditionModel $condition) {
-                    return [
-                        'id'            => $condition->id,
-                        'group_id'      => $condition->group_id,
-                        'parameters'    => $condition->parameters,
-                        'name'          => $condition->vendorLocation->vendor->name,
-                        'desc'          => $condition->vendorLocation->vendor->desc,
-                        'type'          => 'condition',
-                        'current_value' => $condition->current_value,
-                    ];
-                }),
-            ];
+        return $resource->map(function ($model) {
+            if ($model instanceof VendorLocationModel) {
+                /** @var VendorLocationModel $model */
+                return [
+                    'id'         => $model->id,
+                    'vendor_id'  => $model->vendor_id,
+                    'name'       => $model->vendor->name,
+                    'parameters' => $model->vendor->default_parameters,
+                ];
+            } else {
+                /** @var GroupModel $model */
+                return [
+                    'id'         => $model->id,
+                    'name'       => $model->name,
+                    'desc'       => $model->desc,
+                    'type'       => 'group',
+                    'conditions' => $model->conditions->map(function (ConditionModel $condition) {
+                        return [
+                            'id'            => $condition->id,
+                            'group_id'      => $condition->group_id,
+                            'parameters'    => $condition->parameters,
+                            'name'          => $condition->vendorLocation->vendor->name,
+                            'desc'          => $condition->vendorLocation->vendor->desc,
+                            'type'          => 'condition',
+                            'settings'      => $condition->vendorLocation->vendor->settings,
+                            'current_value' => $condition->current_value,
+                        ];
+                    }),
+                ];
+            }
         });
     }
 }

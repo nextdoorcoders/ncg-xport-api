@@ -46,6 +46,10 @@ class VendorDataSeeder extends Seeder
                     'min' => '-15',
                     'max' => '45',
                 ],
+                'settings'           => [
+                    'color' => '#3699FF',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/temperature.svg')),
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
@@ -67,6 +71,10 @@ class VendorDataSeeder extends Seeder
                 'default_parameters' => [
                     'min' => '0',
                     'max' => '10',
+                ],
+                'settings'           => [
+                    'color' => '#3699FF',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/wind.svg')),
                 ],
             ]);
 
@@ -90,6 +98,10 @@ class VendorDataSeeder extends Seeder
                     'min' => '0',
                     'max' => '100',
                 ],
+                'settings'           => [
+                    'color' => '#3699FF',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/clouds.svg')),
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
@@ -111,6 +123,10 @@ class VendorDataSeeder extends Seeder
                 'default_parameters' => [
                     'min' => '0',
                     'max' => '20',
+                ],
+                'settings'           => [
+                    'color' => '#3699FF',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/rain.svg')),
                 ],
             ]);
 
@@ -134,6 +150,10 @@ class VendorDataSeeder extends Seeder
                     'min' => '0',
                     'max' => '20',
                 ],
+                'settings'           => [
+                    'color' => '#3699FF',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/snow.svg')),
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
@@ -156,6 +176,10 @@ class VendorDataSeeder extends Seeder
                     'min' => '854',
                     'max' => '1086',
                 ],
+                'settings'           => [
+                    'color' => '#3699FF',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/pressure.svg')),
+                ],
             ]);
 
         $vendor->cities()->sync($cities);
@@ -177,6 +201,10 @@ class VendorDataSeeder extends Seeder
                 'default_parameters' => [
                     'min' => '0',
                     'max' => '100',
+                ],
+                'settings'           => [
+                    'color' => '#3699FF',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/humidity.svg')),
                 ],
             ]);
 

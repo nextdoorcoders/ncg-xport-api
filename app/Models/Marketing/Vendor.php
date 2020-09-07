@@ -19,8 +19,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property string                $trigger_class
  * @property array                 $name
  * @property array                 $desc
- * @property array                 $default_parameters
  * @property string                $type
+ * @property array                 $default_parameters
+ * @property array                 $settings
  * @property Carbon                $created_at
  * @property Carbon                $updated_at
  * @property Collection<Condition> $conditions
@@ -42,8 +43,9 @@ class Vendor extends Model
 
     protected $fillable = [
         'trigger_class',
-        'default_parameters',
         'type',
+        'default_parameters',
+        'settings',
     ];
 
     protected $translatable = [
@@ -53,6 +55,7 @@ class Vendor extends Model
 
     protected $casts = [
         'default_parameters' => 'array',
+        'settings'           => 'array',
     ];
 
     /*

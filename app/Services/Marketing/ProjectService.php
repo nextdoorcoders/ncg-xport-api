@@ -11,7 +11,6 @@ use App\Services\Marketing\Vendor\BaseVendor;
 use Exception;
 use Illuminate\Database\Eloquent\Collection as CollectionDatabase;
 use Illuminate\Support\Collection;
-use stdClass;
 
 class ProjectService
 {
@@ -112,10 +111,7 @@ class ProjectService
      */
     public function allTriggers(ProjectModel $project, UserModel $user)
     {
-        $vendorLocationColumn = new stdClass();
-        $vendorLocationColumn->name = 'Vendors in the city';
-        $vendorLocationColumn->desc = 'All triggers available for use in the current project are collected here';
-        $vendorLocationColumn->vendorsLocation = VendorLocationModel::query()
+        $vendorColumn = VendorLocationModel::query()
             ->with([
                 'vendor',
             ])
@@ -124,13 +120,6 @@ class ProjectService
                 $query->where('project_id', $project->id);
             })
             ->get();
-
-        $vendorLocationColumn->vendorsLocation->each(function (VendorLocationModel $vendorLocation) {
-            /** @var BaseVendor $triggerClass */
-            $triggerClass = app($vendorLocation->vendor->trigger_class);
-
-            $vendorLocation->current_value = $triggerClass->current($vendorLocation->city_id);
-        });
 
         $groupColumns = $project->groups()
             ->with([
@@ -154,7 +143,7 @@ class ProjectService
         });
 
         $response = collect();
-        $response->put('vendorsLocation', $vendorLocationColumn);
+        $response->put('vendors', $vendorColumn);
         $response->put('groups', $groupColumns);
 
         return $response;
@@ -168,19 +157,10 @@ class ProjectService
      */
     public function updateTriggers(ProjectModel $project, UserModel $user, array $data)
     {
-        $vendorLocationColumn = $data['vendorsLocation'];
-        $groupColumns = collect($data['groups']);
-
-        foreach ($vendorLocationColumn['cards'] as $card) {
-            if ($card['type'] === 'condition') {
-                ConditionModel::query()
-                    ->where('id', $card['id'])
-                    ->delete();
-            }
-        }
+        $groupColumns = collect($data);
 
         $groupColumns->each(function ($group) {
-            foreach ($group['cards'] as $card) {
+            foreach ($group['conditions'] as $card) {
                 /** @var ConditionModel $condition */
                 if ($card['type'] === 'vendorLocation') {
                     $condition = app(ConditionModel::class);

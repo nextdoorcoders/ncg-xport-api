@@ -16,9 +16,10 @@ class CreateMarketingVendorsTable extends Migration
         Schema::create('marketing_vendors', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->string('trigger_class');
-            $table->json('default_parameters')->nullable();
-
             $table->string('type')->index()->nullable();
+
+            $table->json('default_parameters')->nullable();
+            $table->json('settings')->nullable();
 
             $table->timestamps();
         });
