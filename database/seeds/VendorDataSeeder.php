@@ -33,9 +33,9 @@ class VendorDataSeeder extends Seeder
                 'trigger_class'      => Temperature::class,
                 'type'               => VendorModel::TYPE_TEMPERATURE,
                 'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'Air temperature',
-                    LanguageModel::LANGUAGE_RU => 'Температура воздуха',
-                    LanguageModel::LANGUAGE_UK => 'Температура повітря',
+                    LanguageModel::LANGUAGE_EN => 'Air temperature (С°)',
+                    LanguageModel::LANGUAGE_RU => 'Температура воздуха (С°)',
+                    LanguageModel::LANGUAGE_UK => 'Температура повітря (С°)',
                 ],
                 'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Air temperature with reference to the city',
@@ -111,9 +111,9 @@ class VendorDataSeeder extends Seeder
                 'trigger_class'      => Rain::class,
                 'type'               => VendorModel::TYPE_RAIN,
                 'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'Precipitation (rain, mm)',
-                    LanguageModel::LANGUAGE_RU => 'Осадки (дождь, mm)',
-                    LanguageModel::LANGUAGE_UK => 'Опади (дощ, mm)',
+                    LanguageModel::LANGUAGE_EN => 'Rain precipitation (mm)',
+                    LanguageModel::LANGUAGE_RU => 'Дождь осадки (mm)',
+                    LanguageModel::LANGUAGE_UK => 'Дощ опади (mm)',
                 ],
                 'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Precipitation (rain) with reference to the city',
@@ -137,9 +137,9 @@ class VendorDataSeeder extends Seeder
                 'trigger_class'      => Snow::class,
                 'type'               => VendorModel::TYPE_SNOW,
                 'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'Precipitation (snow, mm)',
-                    LanguageModel::LANGUAGE_RU => 'Осадки (снег, mm)',
-                    LanguageModel::LANGUAGE_UK => 'Опади (сніг, mm)',
+                    LanguageModel::LANGUAGE_EN => 'Snow precipitation (mm)',
+                    LanguageModel::LANGUAGE_RU => 'Снег осадки (mm)',
+                    LanguageModel::LANGUAGE_UK => 'Сніг опади (mm)',
                 ],
                 'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Precipitation (snow) with reference to the city',

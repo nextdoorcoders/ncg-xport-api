@@ -4,7 +4,7 @@ namespace App\Services\Marketing;
 
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Condition as ConditionModel;
-use App\Models\Marketing\Group;
+use App\Models\Marketing\Group as GroupModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Models\Marketing\VendorLocation as VendorLocationModel;
 use App\Services\Marketing\Vendor\BaseVendor;
@@ -85,11 +85,27 @@ class ProjectService
      */
     public function replicateProject(ProjectModel $project, UserModel $user)
     {
-        $replicate = $project->replicate();
-        $replicate->desc = sprintf('(replicated %s) - %s', now()->format('H:i:s, d.m.Y'), $replicate->desc);
-        $replicate->push();
+        $replicateProject = $project->replicate();
+        $replicateProject->desc = sprintf('(replicated %s) - %s', now()->format('H:i:s, d.m.Y'), $replicateProject->desc);
+        $replicateProject->push();
 
-        return $this->readProject($replicate, $user);
+        $groups = $project->groups()->get();
+
+        $groups->each(function (GroupModel $group) use ($replicateProject) {
+            $replicateGroup = $group->replicate();
+            $replicateGroup->project()->associate($replicateProject);
+            $replicateGroup->push();
+
+            $conditions = $group->conditions()->get();
+
+            $conditions->each(function (ConditionModel $condition) use ($replicateGroup) {
+                $replicateCondition = $condition->replicate();
+                $replicateCondition->group()->associate($replicateGroup);
+                $replicateCondition->push();
+            });
+        });
+
+        return $this->readProject($replicateProject, $user);
     }
 
     /**
@@ -133,7 +149,7 @@ class ProjectService
             ])
             ->get();
 
-        $groupColumns->each(function (Group $group) {
+        $groupColumns->each(function (GroupModel $group) {
             $group->conditions->each(function (ConditionModel $condition) {
                 /** @var BaseVendor $triggerClass */
                 $triggerClass = app($condition->vendorLocation->vendor->trigger_class);
