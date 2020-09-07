@@ -10,7 +10,7 @@ trait ResourceTrait
 {
     protected ?string $title;
 
-    protected ?string $message;
+    protected ?string $description;
 
     protected string $type;
 
@@ -21,13 +21,13 @@ trait ResourceTrait
      *
      * @param mixed       $resource
      * @param string|null $title
-     * @param string|null $message
+     * @param string|null $description
      * @param string      $type
      */
-    public function __construct($resource, string $title = null, string $message = null, string $type = 'success')
+    public function __construct($resource, string $title = null, string $description = null, string $type = 'success')
     {
         $this->title = $title;
-        $this->message = $message;
+        $this->description = $description;
         $this->type = $type;
 
         if ($resource instanceof LengthAwarePaginator || $resource instanceof LengthAwarePaginatorInterface) {
@@ -58,11 +58,11 @@ trait ResourceTrait
             $data['meta'] = $this->meta;
         }
 
-        $data['message'] = !empty($this->title) || !empty($this->message) ? [
-            'title'   => $this->title,
-            'message' => $this->message,
-            'type'    => $this->type,
-        ] : null;
+        $data['message'] = [
+            'title'       => $this->title,
+            'description' => $this->description,
+            'type'        => $this->type,
+        ];
 
         $data['errors'] = [];
 

@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Throwable;
 
@@ -61,21 +62,71 @@ class Handler extends ExceptionHandler
             return parent::render($request, $exception);
         }
 
-        if ($exception instanceof MessageException) {
-            $title = $exception->getTitle();
-            $description = $exception->getDescription();
-        } else {
-            $title = 'Something happened';
-            $description = $exception->getMessage();
+        $title = 'Something happened';
+        $description = $exception->getMessage();
+        $code = Response::HTTP_UNPROCESSABLE_ENTITY;
+
+        $data = [];
+
+        switch (get_class($exception)) {
+            case MessageException::class:
+                /** @var MessageException $exception */
+                $title = $exception->getTitle();
+                $description = $exception->getDescription();
+                $code = $exception->getCode();
+                break;
+
+            case AuthenticationException::class:
+                /** @var AuthenticationException $exception */
+                $code = Response::HTTP_UNAUTHORIZED;
+                break;
+
+            case AuthorizationException::class:
+                /** @var AuthorizationException $exception */
+                $code = Response::HTTP_FORBIDDEN;
+                break;
+
+            case MethodNotAllowedHttpException::class:
+                /** @var MethodNotAllowedHttpException $exception */
+                $code = Response::HTTP_METHOD_NOT_ALLOWED;
+                break;
+
+            case ModelNotFoundException::class:
+            case NotFoundHttpException::class:
+            case RouteNotFoundException::class:
+                /** @var ModelNotFoundException|NotFoundHttpException|RouteNotFoundException $exception */
+                $description = 'Resource not found';
+                $code = Response::HTTP_NOT_FOUND;
+                break;
+
+            case HttpException::class:
+                /** @var HttpException $exception */
+                $code = $exception->getStatusCode();
+                break;
+
+            case QueryException::class:
+                /** @var QueryException $exception */
+                $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+                break;
+
+            case ValidationException::class:
+                /** @var ValidationException $exception */
+                $code = $exception->status;
+
+                $data = array_merge($data, [
+                    'errors' => $exception->errors(),
+                ]);
+
+                break;
         }
 
-        $data = [
+        $data = array_merge($data, [
             'message' => [
                 'title'       => $title,
                 'description' => $description,
                 'type'        => 'danger',
             ],
-        ];
+        ]);
 
         if (config('app.debug', false) && !$exception instanceof MessageException && !$exception instanceof ValidationException) {
             $data = array_merge($data, [
@@ -84,40 +135,6 @@ class Handler extends ExceptionHandler
             ]);
         }
 
-        if ($exception instanceof MessageException) {
-            return response($data, $exception->getCode());
-        }
-
-        if ($exception instanceof AuthenticationException) {
-            return response($data, Response::HTTP_UNAUTHORIZED);
-        }
-
-        if ($exception instanceof AuthorizationException) {
-            return response($data, Response::HTTP_FORBIDDEN);
-        }
-
-        if ($exception instanceof MethodNotAllowedHttpException) {
-            return response($data, Response::HTTP_METHOD_NOT_ALLOWED);
-        }
-
-        if ($exception instanceof HttpException) {
-            return response($data, $exception->getStatusCode());
-        }
-
-        if ($exception instanceof ModelNotFoundException || $exception instanceof RouteNotFoundException) {
-            return response($data, Response::HTTP_NOT_FOUND);
-        }
-
-        if ($exception instanceof QueryException) {
-            return response($data, Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
-        if ($exception instanceof ValidationException) {
-            return response(array_merge($data, [
-                'errors' => $exception->errors(),
-            ]), $exception->status);
-        }
-
-        return parent::render($request, $exception);
+        return response($data, $code);
     }
 }

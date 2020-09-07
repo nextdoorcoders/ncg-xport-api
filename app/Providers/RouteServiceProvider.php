@@ -9,7 +9,6 @@ class RouteServiceProvider extends ServiceProvider
 {
     /**
      * This namespace is applied to your controller routes.
-     *
      * In addition, it is set as the URL generator's root namespace.
      *
      * @var string
@@ -23,6 +22,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/home';
 
+    public const UUID_PATTERN = '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}';
+
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -30,7 +31,28 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $params = [
+            // Account
+            'user',
+
+            // Marketing
+            'account',
+            'campaign',
+            'condition',
+            'group',
+            'project',
+            'vendor',
+            'vendorLocation',
+
+            // Geo
+            'country',
+            'state',
+            'city',
+        ];
+
+        foreach ($params as $key) {
+            Route::pattern($key, self::UUID_PATTERN);
+        }
 
         parent::boot();
     }
@@ -51,7 +73,6 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Define the "web" routes for the application.
-     *
      * These routes all receive session state, CSRF protection, etc.
      *
      * @return void
@@ -65,7 +86,6 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Define the "api" routes for the application.
-     *
      * These routes are typically stateless.
      *
      * @return void
