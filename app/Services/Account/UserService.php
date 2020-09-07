@@ -4,6 +4,7 @@ namespace App\Services\Account;
 
 use App\Exceptions\MessageException;
 use App\Models\Account\Language as LanguageModel;
+use App\Models\Account\SocialAccount as SocialAccountModel;
 use App\Models\Account\User as UserModel;
 use App\Models\Geo\Country as CountryModel;
 use App\Models\Token;
@@ -145,7 +146,17 @@ class UserService
             ->first();
 
         if (!$user) {
-            throw new MessageException('User is not found');
+            /** @var SocialAccountModel $socialAccount */
+            $socialAccount = SocialAccountModel::query()
+                ->with('user')
+                ->where('email', $email)
+                ->first();
+
+            if (!$socialAccount) {
+                throw new MessageException('User is not found', 'Please check your email and try again');
+            }
+
+            $user = $socialAccount->user;
         }
 
         $code = UserModel::getPasswordResetCode();
@@ -170,11 +181,21 @@ class UserService
             ->first();
 
         if (!$user) {
-            throw new MessageException('User is not found');
+            /** @var SocialAccountModel $socialAccount */
+            $socialAccount = SocialAccountModel::query()
+                ->with('user')
+                ->where('email', $email)
+                ->first();
+
+            if (!$socialAccount) {
+                throw new MessageException('User is not found', 'Please check your email and try again');
+            }
+
+            $user = $socialAccount->user;
         }
 
         if ($user->password_reset_code != $code) {
-            throw new MessageException('The code does not match');
+            throw new MessageException('The code does not match', 'Please check code from the email and try again');
         }
 
         $user->password = $password;

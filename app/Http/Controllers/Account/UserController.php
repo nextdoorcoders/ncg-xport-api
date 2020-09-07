@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Account;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Account\ForgotConfirmCode as ForgotConfirmCodeRequest;
+use App\Http\Requests\Account\ForgotSendCode as ForgotSendCodeRequest;
 use App\Http\Requests\Account\Login as LoginRequest;
 use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
@@ -99,11 +101,11 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ForgotSendCodeRequest $request
      * @return MessageResource
      * @throws MessageException
      */
-    public function forgotSendCode(Request $request)
+    public function forgotSendCode(ForgotSendCodeRequest $request)
     {
         $email = $request->get('email');
 
@@ -113,10 +115,11 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ForgotConfirmCodeRequest $request
      * @return MessageResource
+     * @throws MessageException
      */
-    public function forgotConfirmCode(Request $request)
+    public function forgotConfirmCode(ForgotConfirmCodeRequest $request)
     {
         $email = $request->get('email');
         $password = $request->get('password');
