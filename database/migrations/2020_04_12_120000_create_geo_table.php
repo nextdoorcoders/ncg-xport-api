@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGeoCountriesTable extends Migration
+class CreateGeoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,20 @@ class CreateGeoCountriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('geo_countries', function (Blueprint $table) {
+        Schema::create('geo_locations', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
 
-            $table->string('alpha2')->index();
-            $table->string('alpha3')->index();
+            $table->string('type')->default('country'); // TODO set const
 
-            $table->string('phone_mask');
+            $table->bigInteger('parent_id')->nullable();
+            $table->bigInteger('nested_left');
+            $table->bigInteger('nested_right');
+            $table->bigInteger('nested_depth');
 
             $table->timestamps();
         });
 
-        Schema::create('geo_countries_translate', function (Blueprint  $table) {
+        Schema::create('geo_locations_translate', function (Blueprint  $table) {
             $table->uuid('language_id')->index();
             $table->uuid('translatable_id')->index();
 
@@ -43,6 +45,7 @@ class CreateGeoCountriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('geo_countries');
+        Schema::dropIfExists('geo_locations_translate');
+        Schema::dropIfExists('geo_locations');
     }
 }

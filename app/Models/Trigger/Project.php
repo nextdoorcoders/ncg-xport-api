@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Marketing;
+namespace App\Models\Trigger;
 
 use App\Models\Account\User;
 use App\Models\Geo\City;

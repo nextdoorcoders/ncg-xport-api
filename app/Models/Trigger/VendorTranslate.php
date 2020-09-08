@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Marketing;
+namespace App\Models\Trigger;
 
 use App\Models\Traits\TranslateTrait;
 use Carbon\Carbon;

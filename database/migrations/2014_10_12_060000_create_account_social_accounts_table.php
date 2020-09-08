@@ -15,8 +15,8 @@ class CreateAccountSocialAccountsTable extends Migration
     {
         Schema::create('account_social_accounts', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-
             $table->uuid('user_id')->index();
+
             $table->string('provider_id')->index();
             $table->string('provider_name')->index();
 

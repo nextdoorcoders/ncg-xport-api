@@ -15,7 +15,7 @@ class CreateAccountUsersTable extends Migration
     {
         Schema::create('account_users', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('country_id')->index()->nullable();
+            $table->uuid('location_id')->index()->nullable();
             $table->uuid('language_id')->index();
 
             $table->string('name')->nullable();

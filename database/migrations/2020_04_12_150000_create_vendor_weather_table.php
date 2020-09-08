@@ -15,7 +15,7 @@ class CreateVendorWeatherTable extends Migration
     {
         Schema::create('vendor_weather', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('city_id')->index();
+            $table->uuid('location_id')->index();
 
             $table->timestamp('datetime_at')->index()->nullable();
 
