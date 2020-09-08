@@ -16,6 +16,18 @@ class CreateMarketingTable extends Migration
         Schema::create('marketing_organizations', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('user_id')->index();
+            $table->uuid('location_id')->index();
+
+            $table->string('name');
+            $table->string('zip')->nullable();
+
+            $table->string('email')->nullable();
+            $table->json('phones')->nullable();
+
+            $table->text('address')->nullable();
+            $table->json('working_hours')->nullable();
+
+            $table->json('social_networks')->nullable();
 
             $table->timestamps();
         });
