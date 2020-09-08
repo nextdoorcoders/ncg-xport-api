@@ -48,6 +48,7 @@ class ProjectTrigger extends JsonResource
                             'type'          => 'condition',
                             'settings'      => $condition->vendorLocation->vendor->settings,
                             'current_value' => $condition->current_value,
+                            'is_enabled'    => $condition->is_trigger_enabled,
                         ];
                     }),
                 ];
