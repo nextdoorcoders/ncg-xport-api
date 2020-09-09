@@ -135,6 +135,7 @@ class ProjectService
             ->whereDoesntHave('groups', function ($query) use ($project) {
                 $query->where('project_id', $project->id);
             })
+            ->orderBy('id', 'asc')
             ->get();
 
         $groupColumns = $project->groups()
@@ -144,9 +145,11 @@ class ProjectService
                         'vendorLocation' => function ($query) {
                             $query->with('vendor');
                         },
-                    ]);
+                    ])
+                        ->orderBy('created_at', 'asc');
                 },
             ])
+            ->orderBy('created_at', 'asc')
             ->get();
 
         $groupColumns->each(function (GroupModel $group) {
