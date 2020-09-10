@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\MessageException;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Marketing\Condition as ConditionModel;
 use App\Models\Marketing\Group as GroupModel;

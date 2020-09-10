@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Marketing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Marketing\Project as ProjectRequest;
 use App\Http\Resources\Marketing\CampaignCollection;
 use App\Http\Resources\Marketing\Project as ProjectResource;
 use App\Http\Resources\Marketing\ProjectCollection;
@@ -42,10 +43,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ProjectRequest $request
      * @return ProjectResource
      */
-    public function createProject(Request $request)
+    public function createProject(ProjectRequest $request)
     {
         /** @var UserModel $user */
         $user = auth()->user();
@@ -72,11 +73,11 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param Request      $request
-     * @param ProjectModel $project
+     * @param ProjectRequest $request
+     * @param ProjectModel   $project
      * @return ProjectResource
      */
-    public function updateProject(Request $request, ProjectModel $project)
+    public function updateProject(ProjectRequest $request, ProjectModel $project)
     {
         /** @var UserModel $user */
         $user = auth()->user();

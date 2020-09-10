@@ -12,6 +12,7 @@ class Clouds extends BaseVendor
         /** @var Weather $weather */
         $weather = Weather::query()
             ->where('city_id', $cityId)
+            ->orderBy('created_at', 'desc')
             ->first();
 
         if (!$weather) {
