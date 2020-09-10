@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Account\AccessToken;
 use App\Http\Resources\Account\SocialAccountLink;
 use App\Http\Resources\Account\SocialAccountCollection;
+use App\Http\Resources\DataResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Account\User as UserModel;
 use App\Services\Account\SocialAccountService as SocialAuthService;
@@ -17,6 +18,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\User as UserSocialite;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class SocialAccountController extends Controller
 {
@@ -64,14 +66,14 @@ class SocialAccountController extends Controller
     {
         $response = $this->socialAuthService->redirectToProvider($this->provider, $this->scopes, $this->with);
 
-        return new SocialAccountLink([
+        return new DataResource([
             'link' => $response->redirect()->getTargetUrl(),
         ]);
     }
 
     /**
      * @param Request $request
-     * @return AccessToken|MessageResource
+     * @return DataResource|MessageResource
      * @throws MessageException
      */
     public function handleProviderCallback(Request $request)
@@ -101,7 +103,7 @@ class SocialAccountController extends Controller
                     // Return Bearer token if user are not logged in
                     $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
 
-                    return new AccessToken($response, 'Social account is assigned to the profile');
+                    return new DataResource($response, 'Social account is assigned to the profile');
                 }
             } catch (Exception $exception) {
                 throw $exception;

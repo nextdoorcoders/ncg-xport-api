@@ -17,13 +17,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @package App\Models\Trigger
  * @property string                $id
  * @property string                $trigger_class
- * @property array                 $name
- * @property array                 $desc
  * @property string                $type
  * @property array                 $default_parameters
  * @property array                 $settings
  * @property Carbon                $created_at
  * @property Carbon                $updated_at
+ * @property array                 $name
+ * @property array                 $desc
  * @property Collection<Condition> $conditions
  * @property Collection<Location>  $locations
  */

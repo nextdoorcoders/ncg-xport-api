@@ -15,7 +15,7 @@ class CampaignService
      */
     public function allCampaigns(UserModel $user)
     {
-        $accountIds = $user->accounts()
+        $accountIds = $user->projects()
             ->get()
             ->pluck('id');
 

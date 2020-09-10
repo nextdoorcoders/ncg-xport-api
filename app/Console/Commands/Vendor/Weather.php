@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Vendor;
 
-use App\Services\Geo\CityService;
+use App\Services\Geo\LocationService;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -22,18 +22,18 @@ class Weather extends Command
      */
     protected $description = 'Update information about current weather in each city';
 
-    protected CityService $cityService;
+    protected LocationService $locationService;
 
     /**
      * Create a new command instance.
      *
-     * @param CityService $cityService
+     * @param LocationService $locationService
      */
-    public function __construct(CityService $cityService)
+    public function __construct(LocationService $locationService)
     {
         parent::__construct();
 
-        $this->cityService = $cityService;
+        $this->locationService = $locationService;
     }
 
     /**
@@ -44,6 +44,6 @@ class Weather extends Command
      */
     public function handle()
     {
-        $this->cityService->updateWeatherInformation();
+        $this->locationService->updateWeatherInformation();
     }
 }

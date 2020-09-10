@@ -93,11 +93,10 @@ class UserService
     }
 
     /**
-     * @param string            $email
-     * @param string            $password
-     * @param string            $name
-     * @param CountryModel|null $country
-     * @param LanguageModel     $language
+     * @param string        $email
+     * @param string        $password
+     * @param string        $name
+     * @param LanguageModel $language
      * @return UserModel
      * @throws Exception
      */
@@ -105,8 +104,7 @@ class UserService
         string $email,
         string $password,
         string $name,
-        LanguageModel $language,
-        CountryModel $country = null
+        LanguageModel $language
     ) {
         try {
             DB::beginTransaction();
@@ -115,7 +113,6 @@ class UserService
             $user = app(UserModel::class);
 
             $user->fill([
-                'country_id'  => $country->id ?? null,
                 'language_id' => $language->id ?? null,
                 'name'        => $name,
                 'email'       => $email,

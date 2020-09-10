@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Account;
+namespace App\Http\Resources\Geo;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Language extends JsonResource
+class Location extends JsonResource
 {
     use ResourceTrait;
 

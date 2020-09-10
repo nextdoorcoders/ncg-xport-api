@@ -1,16 +1,14 @@
 <?php
 
 use App\Models\Account\Language as LanguageModel;
-use App\Models\Geo\City as CityModel;
-use App\Models\Marketing\Vendor as VendorModel;
-use App\Services\Marketing\Vendor\Classes\Clouds;
-use App\Services\Marketing\Vendor\Classes\Humidity;
-use App\Services\Marketing\Vendor\Classes\Pressure;
-use App\Services\Marketing\Vendor\Classes\Rain;
-use App\Services\Marketing\Vendor\Classes\Snow;
-use App\Services\Marketing\Vendor\Classes\Temperature;
-use App\Services\Marketing\Vendor\Classes\Wind;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Trigger\Vendor as VendorModel;
+use App\Services\Trigger\Vendor\Classes\Clouds;
+use App\Services\Trigger\Vendor\Classes\Humidity;
+use App\Services\Trigger\Vendor\Classes\Pressure;
+use App\Services\Trigger\Vendor\Classes\Rain;
+use App\Services\Trigger\Vendor\Classes\Snow;
+use App\Services\Trigger\Vendor\Classes\Temperature;
+use App\Services\Trigger\Vendor\Classes\Wind;
 use Illuminate\Database\Seeder;
 
 class VendorDataSeeder extends Seeder
@@ -22,13 +20,7 @@ class VendorDataSeeder extends Seeder
      */
     public function run()
     {
-        /** @var Collection $cities */
-        $cities = CityModel::query()
-            ->whereNotNull('owm_id')
-            ->get();
-
-        /** @var VendorModel $vendor */
-        $vendor = VendorModel::query()
+        VendorModel::query()
             ->create([
                 'trigger_class'      => Temperature::class,
                 'type'               => VendorModel::TYPE_TEMPERATURE,
@@ -52,9 +44,7 @@ class VendorDataSeeder extends Seeder
                 ],
             ]);
 
-        $vendor->cities()->sync($cities);
-
-        $vendor = VendorModel::query()
+        VendorModel::query()
             ->create([
                 'trigger_class'      => Wind::class,
                 'type'               => VendorModel::TYPE_WIND,
@@ -78,9 +68,7 @@ class VendorDataSeeder extends Seeder
                 ],
             ]);
 
-        $vendor->cities()->sync($cities);
-
-        $vendor = VendorModel::query()
+        VendorModel::query()
             ->create([
                 'trigger_class'      => Clouds::class,
                 'type'               => VendorModel::TYPE_CLOUDS,
@@ -104,9 +92,7 @@ class VendorDataSeeder extends Seeder
                 ],
             ]);
 
-        $vendor->cities()->sync($cities);
-
-        $vendor = VendorModel::query()
+        VendorModel::query()
             ->create([
                 'trigger_class'      => Rain::class,
                 'type'               => VendorModel::TYPE_RAIN,
@@ -130,9 +116,7 @@ class VendorDataSeeder extends Seeder
                 ],
             ]);
 
-        $vendor->cities()->sync($cities);
-
-        $vendor = VendorModel::query()
+        VendorModel::query()
             ->create([
                 'trigger_class'      => Snow::class,
                 'type'               => VendorModel::TYPE_SNOW,
@@ -156,9 +140,7 @@ class VendorDataSeeder extends Seeder
                 ],
             ]);
 
-        $vendor->cities()->sync($cities);
-
-        $vendor = VendorModel::query()
+        VendorModel::query()
             ->create([
                 'trigger_class'      => Pressure::class,
                 'type'               => VendorModel::TYPE_PRESSURE,
@@ -182,9 +164,7 @@ class VendorDataSeeder extends Seeder
                 ],
             ]);
 
-        $vendor->cities()->sync($cities);
-
-        $vendor = VendorModel::query()
+        VendorModel::query()
             ->create([
                 'trigger_class'      => Humidity::class,
                 'type'               => VendorModel::TYPE_HUMIDITY,
@@ -207,7 +187,5 @@ class VendorDataSeeder extends Seeder
                     'icon'  => file_get_contents(resource_path('images/vendor-icons/humidity.svg')),
                 ],
             ]);
-
-        $vendor->cities()->sync($cities);
     }
 }

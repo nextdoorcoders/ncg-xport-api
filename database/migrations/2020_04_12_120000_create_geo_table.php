@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Geo\Location as LocationModel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,12 +17,12 @@ class CreateGeoTable extends Migration
         Schema::create('geo_locations', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
 
-            $table->string('type')->default('country'); // TODO set const
+            $table->string('type')->default(LocationModel::TYPE_COUNTRY);
 
-            $table->bigInteger('parent_id')->nullable();
-            $table->bigInteger('nested_left');
-            $table->bigInteger('nested_right');
-            $table->bigInteger('nested_depth');
+            $table->uuid('parent_id')->nullable();
+            $table->bigInteger('nest_left')->nullable();
+            $table->bigInteger('nest_right')->nullable();
+            $table->bigInteger('nest_depth')->nullable();
 
             $table->timestamps();
         });

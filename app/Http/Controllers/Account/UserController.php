@@ -9,17 +9,15 @@ use App\Http\Requests\Account\ForgotSendCode as ForgotSendCodeRequest;
 use App\Http\Requests\Account\Login as LoginRequest;
 use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
-use App\Http\Resources\Account\AccessToken as AccessTokenResource;
 use App\Http\Resources\Account\User as UserResource;
 use App\Http\Resources\Account\UserCollection;
+use App\Http\Resources\DataResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\User as UserModel;
-use App\Models\Geo\Country as CountryModel;
 use App\Services\Account\UserService as UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
@@ -52,7 +50,7 @@ class UserController extends Controller
 
         $response = $this->userService->login($email, $password, $ip, $agent, $abilities);
 
-        return new AccessTokenResource($response);
+        return new DataResource($response);
     }
 
     /**
@@ -84,17 +82,12 @@ class UserController extends Controller
         $countryId = $request->get('country_id', null);
         $languageCode = app()->getLocale() ?? LanguageModel::LANGUAGE_BY_DEFAULT;
 
-        /** @var CountryModel $country */
-        $country = CountryModel::query()
-            ->where('id', $countryId)
-            ->first();
-
         /** @var LanguageModel $language */
         $language = LanguageModel::query()
             ->where('code', $languageCode)
             ->first();
 
-        $this->userService->register($email, $password, $name, $language, $country);
+        $this->userService->register($email, $password, $name, $language);
 
         return (new MessageResource('Регистрация завершена', 'Воспользуйтесь формой входа что-бы войти в систему'))
             ->setStatusCode(Response::HTTP_CREATED);

@@ -72,21 +72,42 @@ Route::group([
 
 Route::group([
     'middleware' => 'auth:api',
+    'namespace'  => 'Geo',
+    'prefix'     => 'geo',
+], function () {
+    Route::group([
+        'prefix' => 'locations'
+    ], function () {
+        Route::get('', 'LocationController@allLocations');
+        Route::post('', 'LocationController@createLocation');
+
+        Route::group([
+            'prefix' => 'location-{location}',
+        ], function () {
+            Route::get('', 'LocationController@readLocation');
+            Route::put('', 'LocationController@updateLocation');
+            Route::delete('', 'LocationController@deleteLocation');
+        });
+    });
+});
+
+Route::group([
+    'middleware' => 'auth:api',
     'namespace'  => 'Marketing',
     'prefix'     => 'marketing',
 ], function () {
     Route::group([
-        'prefix' => 'accounts',
+        'prefix' => 'projects',
     ], function () {
-        Route::get('', 'AccountController@allAccounts');
-        Route::post('', 'AccountController@createAccount');
+        Route::get('', 'ProjectController@allProjects');
+        Route::post('', 'ProjectController@createProject');
 
         Route::group([
-            'prefix' => 'account-{account}',
+            'prefix' => 'project-{project}',
         ], function () {
-            Route::get('', 'AccountController@readAccount');
-            Route::put('', 'AccountController@updateAccount');
-            Route::delete('', 'AccountController@deleteAccount');
+            Route::get('', 'ProjectController@readProject');
+            Route::put('', 'ProjectController@updateProject');
+            Route::delete('', 'ProjectController@deleteProject');
         });
     });
 
@@ -104,30 +125,27 @@ Route::group([
             Route::delete('', 'CampaignController@deleteCampaign');
         });
     });
+});
 
+Route::group([
+    'middleware' => 'auth:api',
+    'namespace'  => 'Trigger',
+    'prefix'     => 'trigger',
+], function () {
     Route::group([
-        'prefix' => 'projects',
+        'prefix' => 'maps',
     ], function () {
-        Route::get('', 'ProjectController@allProjects');
-        Route::post('', 'ProjectController@createProject');
+        Route::get('', 'MapController@allMaps');
+        Route::post('', 'MapController@createMap');
 
         Route::group([
-            'prefix' => 'project-{project}',
+            'prefix' => 'map-{map}',
         ], function () {
-            Route::get('', 'ProjectController@readProject');
-            Route::put('', 'ProjectController@updateProject');
-            Route::delete('', 'ProjectController@deleteProject');
+            Route::get('', 'MapController@readMap');
+            Route::put('', 'MapController@updateMap');
+            Route::delete('', 'MapController@deleteMap');
 
-            Route::post('replicate', 'ProjectController@replicateProject');
-
-            Route::get('campaigns', 'ProjectController@allCampaigns');
-
-            Route::group([
-                'prefix' => 'triggers',
-            ], function () {
-                Route::get('', 'ProjectController@allTriggers');
-                Route::put('', 'ProjectController@updateTriggers');
-            });
+            Route::post('replicate', 'MapController@replicateMap');
         });
     });
 
@@ -135,7 +153,7 @@ Route::group([
         'prefix' => 'groups',
     ], function () {
         Route::group([
-            'prefix' => 'project-{project}',
+            'prefix' => '',
         ], function () {
             Route::get('', 'GroupController@allGroups');
             Route::post('', 'GroupController@createGroup');
@@ -153,9 +171,8 @@ Route::group([
     Route::group([
         'prefix' => 'conditions',
     ], function () {
-        Route::get('group-{group}', 'ConditionController@allByGroup');
-        Route::get('vendor-{vendor}', 'ConditionController@allByVendor');
-        Route::post('group-{group}/vendor-location-{vendorLocation}', 'ConditionController@createCondition');
+        Route::get('', 'ConditionController@allByGroup');
+        Route::post('', 'ConditionController@createCondition');
 
         Route::group([
             'prefix' => 'condition-{condition}',
@@ -171,40 +188,6 @@ Route::group([
     ], function () {
         Route::get('', 'VendorController@allVendors');
     });
-
-    Route::group([
-        'prefix' => 'vendors-location',
-    ], function () {
-        Route::group([
-            'prefix' => 'project-{project}',
-        ], function () {
-            Route::get('free', 'VendorLocationController@freeProjectVendorsLocation');
-            Route::get('busy', 'VendorLocationController@busyProjectVendorsLocation');
-        });
-    });
-});
-
-Route::group([
-    'middleware' => 'auth:api',
-    'namespace'  => 'Geo',
-    'prefix'     => 'geo',
-], function () {
-    Route::get('countries', 'CountryController@allCountries');
-    Route::post('countries', 'CountryController@createCountry');
-
-    Route::get('countries/country-{country}', 'CountryController@readCountry');
-
-
-    Route::get('states/country-{country}', 'StateController@allByCountry');
-    Route::post('states/country-{country}', 'StateController@createState');
-
-    Route::get('states/state-{state}', 'StateController@readState');
-
-
-    Route::get('cities/state-{state}', 'CityController@allByState');
-    Route::post('cities/state-{state}', 'CityController@createCity');
-
-    Route::get('cities/city-{city}', 'CityController@readCity');
 });
 
 Route::group([

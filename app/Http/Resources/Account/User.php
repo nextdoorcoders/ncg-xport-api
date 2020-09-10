@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Account;
 
-use App\Http\Resources\Account\Language;
-use App\Http\Resources\Geo\Country;
+use App\Http\Resources\Geo\Location;
+use App\Http\Resources\Marketing\OrganizationCollection;
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Models\Account\User as UserModel;
 use Illuminate\Http\Request;
@@ -33,15 +33,21 @@ class User extends JsonResource
             'last_seen'  => $resource->last_seen_at,
         ];
 
-        if ($resource->relationLoaded('country')) {
+        if ($resource->relationLoaded('location')) {
             $response = array_merge($response, [
-                'country' => new Country($resource->country),
+                'location' => new Location($resource->location),
             ]);
         }
 
         if ($resource->relationLoaded('language')) {
             $response = array_merge($response, [
                 'language' => new Language($resource->language),
+            ]);
+        }
+
+        if ($resource->relationLoaded('organizations')) {
+            $response = array_merge($response, [
+                'organizations' => new OrganizationCollection($resource->organizations),
             ]);
         }
 

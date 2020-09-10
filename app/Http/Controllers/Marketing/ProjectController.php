@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Marketing;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Marketing\Project as ProjectRequest;
-use App\Http\Resources\Marketing\CampaignCollection;
 use App\Http\Resources\Marketing\Project as ProjectResource;
 use App\Http\Resources\Marketing\ProjectCollection;
-use App\Http\Resources\Marketing\ProjectTriggerCollection;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Services\Marketing\ProjectService;
@@ -43,10 +40,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param ProjectRequest $request
+     * @param Request $request
      * @return ProjectResource
      */
-    public function createProject(ProjectRequest $request)
+    public function createProject(Request $request)
     {
         /** @var UserModel $user */
         $user = auth()->user();
@@ -59,107 +56,49 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param ProjectModel $project
+     * @param ProjectModel $account
      * @return ProjectResource
      */
-    public function readProject(ProjectModel $project)
+    public function readProject(ProjectModel $account)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->projectService->readProject($project, $user);
+        $response = $this->projectService->readProject($account, $user);
 
         return new ProjectResource($response);
-    }
-
-    /**
-     * @param ProjectRequest $request
-     * @param ProjectModel   $project
-     * @return ProjectResource
-     */
-    public function updateProject(ProjectRequest $request, ProjectModel $project)
-    {
-        /** @var UserModel $user */
-        $user = auth()->user();
-
-        $data = $request->all();
-
-        $response = $this->projectService->updateProject($project, $user, $data);
-
-        return new ProjectResource($response);
-    }
-
-    /**
-     * @param ProjectModel $project
-     * @return Response
-     * @throws Exception
-     */
-    public function deleteProject(ProjectModel $project)
-    {
-        /** @var UserModel $user */
-        $user = auth()->user();
-
-        $this->projectService->deleteProject($project, $user);
-
-        return response()->noContent();
-    }
-
-    /**
-     * @param ProjectModel $project
-     * @return ProjectResource
-     */
-    public function replicateProject(ProjectModel $project)
-    {
-        /** @var UserModel $user */
-        $user = auth()->user();
-
-        $response = $this->projectService->replicateProject($project, $user);
-
-        return new ProjectResource($response);
-    }
-
-    /**
-     * @param ProjectModel $project
-     * @return CampaignCollection
-     */
-    public function allCampaigns(ProjectModel $project)
-    {
-        /** @var UserModel $user */
-        $user = auth()->user();
-
-        $response = $this->projectService->allCampaigns($project, $user);
-
-        return new CampaignCollection($response);
-    }
-
-    /**
-     * @param ProjectModel $project
-     * @return ProjectTriggerCollection
-     */
-    public function allTriggers(ProjectModel $project)
-    {
-        /** @var UserModel $user */
-        $user = auth()->user();
-
-        $response = $this->projectService->allTriggers($project, $user);
-
-        return new ProjectTriggerCollection($response);
     }
 
     /**
      * @param Request      $request
-     * @param ProjectModel $project
-     * @return ProjectTriggerCollection
+     * @param ProjectModel $account
+     * @return ProjectResource
      */
-    public function updateTriggers(Request $request, ProjectModel $project)
+    public function updateProject(Request $request, ProjectModel $account)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->projectService->updateTriggers($project, $user, $data);
+        $response = $this->projectService->updateProject($account, $user, $data);
 
-        return new ProjectTriggerCollection($response);
+        return new ProjectResource($response);
+    }
+
+    /**
+     * @param ProjectModel $account
+     * @return Response
+     * @throws Exception
+     */
+    public function deleteProject(ProjectModel $account)
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+
+        $this->projectService->deleteProject($account, $user);
+
+        return response()->noContent();
     }
 }

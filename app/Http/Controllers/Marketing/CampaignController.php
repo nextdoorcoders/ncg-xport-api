@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Marketing\Campaign as CampaignResource;
 use App\Http\Resources\Marketing\CampaignCollection;
 use App\Models\Account\User as UserModel;
-use App\Models\Marketing\Account as AccountModel;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Services\Marketing\CampaignService;
 use Exception;

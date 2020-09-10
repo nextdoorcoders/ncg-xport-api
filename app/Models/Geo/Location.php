@@ -3,6 +3,7 @@
 namespace App\Models\Geo;
 
 use App\Models\Account\User;
+use App\Models\Traits\NestedTreeTrait;
 use App\Models\Traits\TranslatableTrait;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Vendor;
@@ -21,9 +22,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string              $id
  * @property string              $type
  * @property string              $parent_id
- * @property integer             $nested_left
- * @property integer             $nested_right
- * @property integer             $nested_depth
+ * @property integer             $nest_left
+ * @property integer             $nest_right
+ * @property integer             $nest_depth
  * @property array               $name
  * @property Collection<User>    $users
  * @property Collection<Weather> $weathers
@@ -32,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Location extends Model
 {
-    use TranslatableTrait, UuidTrait;
+    use NestedTreeTrait, TranslatableTrait, UuidTrait;
 
     const TYPE_COUNTRY = 'country';
     const TYPE_STATE = 'state';
@@ -49,9 +50,9 @@ class Location extends Model
     protected $fillable = [
         'type',
         'parent_id',
-        'nested_left',
-        'nested_right',
-        'nested_depth',
+        'nest_left',
+        'nest_right',
+        'nest_depth',
     ];
 
     protected $translatable = [

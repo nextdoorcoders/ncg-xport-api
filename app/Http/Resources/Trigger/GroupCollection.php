@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Resources\Account;
+namespace App\Http\Resources\Trigger;
 
 use App\Http\Resources\Traits\ResourceTrait;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class Language extends JsonResource
+class GroupCollection extends ResourceCollection
 {
     use ResourceTrait;
 
     /**
-     * Transform the resource into an array.
+     * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
