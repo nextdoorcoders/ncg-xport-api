@@ -3,6 +3,7 @@
 namespace App\Models\Traits;
 
 use App\Models\Account\Language;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -10,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Trait TranslateTrait
  *
  * @package App\Models\Traits
+ * @property string   $language_id
+ * @property string   $translatable_id
+ * @property Carbon   $created_at
+ * @property Carbon   $updated_at
  * @property Model    $translatable
  * @property Language $language
  */

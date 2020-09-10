@@ -2,19 +2,19 @@
 
 namespace App\Models\Trigger;
 
-use App\Models\Geo\City;
+use App\Models\Geo\Location;
 use App\Models\Traits\TranslatableTrait;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * Class Vendor
  *
- * @package App\Models\Marketing
+ * @package App\Models\Trigger
  * @property string                $id
  * @property string                $trigger_class
  * @property array                 $name
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property Carbon                $created_at
  * @property Carbon                $updated_at
  * @property Collection<Condition> $conditions
- * @property Collection<City>      $cities
+ * @property Collection<Location>  $locations
  */
 class Vendor extends Model
 {
@@ -39,7 +39,7 @@ class Vendor extends Model
     const TYPE_PRESSURE = 'pressure';
     const TYPE_HUMIDITY = 'humidity';
 
-    protected $table = 'marketing_vendors';
+    protected $table = 'trigger_vendors';
 
     protected $fillable = [
         'trigger_class',
@@ -63,19 +63,19 @@ class Vendor extends Model
      */
 
     /**
-     * @return BelongsToMany
+     * @return MorphMany
      */
-    public function cities(): BelongsToMany
+    public function conditions(): MorphMany
     {
-        return $this->belongsToMany(City::class, 'marketing_vendors_location', 'vendor_id', 'city_id')
-            ->using(VendorLocation::class);
+        return $this->morphMany(Condition::class, 'vendor');
     }
 
     /**
-     * @return HasManyThrough
+     * @return BelongsToMany
      */
-    public function conditions(): HasManyThrough
+    public function locations(): BelongsToMany
     {
-        return $this->hasManyThrough(Condition::class, VendorLocation::class, 'vendor_id', 'vendor_location_id');
+        return $this->belongsToMany(Location::class, 'trigger_vendors_location', 'vendor_id', 'location_id')
+            ->using(VendorLocation::class);
     }
 }

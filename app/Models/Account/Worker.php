@@ -31,19 +31,6 @@ class Worker extends Model
     protected $table = 'account_workers';
 
     protected $fillable = [
-        'name',
         'role',
-        'email',
-        'password',
-        'last_login_at',
-        'last_seen_at',
-    ];
-
-    protected $hidden = [
-        'password',
-    ];
-
-    protected $appends = [
-        'is_online',
     ];
 }

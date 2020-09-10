@@ -5,11 +5,11 @@ namespace App\Models\Marketing;
 use App\Casts\Encrypt;
 use App\Models\Account\SocialAccount;
 use App\Models\Traits\UuidTrait;
+use App\Models\Trigger\Map;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -18,17 +18,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @package App\Models\Marketing
  * @property string               $id
  * @property string               $social_account_id
- * @property string               $project_id
- * @property string               $campaign_id
+ * @property string               $organization_id
+ * @property string               $map_id
  * @property string               $name
+ * @property string               $desc
  * @property array                $parameters
+ * @property Carbon               $date_start_at
+ * @property Carbon               $date_end_at
  * @property Carbon               $created_at
  * @property Carbon               $updated_at
  * @property SocialAccount        $socialAccount
+ * @property Organization         $organization
  * @property Collection<Campaign> $campaigns
- * @property Collection<Project>  $projects
+ * @property Collection<Map>      $maps
  */
-class Account extends Model
+class Project extends Model
 {
     use UuidTrait;
 
@@ -36,10 +40,13 @@ class Account extends Model
 
     protected $fillable = [
         'social_account_id',
-        'project_id',
-        'campaign_id',
+        'organization_id',
+        'map_id',
         'name',
+        'desc',
         'parameters',
+        'date_start_at',
+        'date_end_at',
     ];
 
     protected $casts = [
@@ -59,6 +66,14 @@ class Account extends Model
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'organization_id');
+    }
+
+    /**
      * @return HasMany
      */
     public function campaigns(): HasMany
@@ -67,11 +82,10 @@ class Account extends Model
     }
 
     /**
-     * @return BelongsToMany
+     * @return BelongsTo
      */
-    public function projects(): BelongsToMany
+    public function map(): BelongsTo
     {
-        return $this->belongsToMany(Project::class, 'marketing_campaigns', 'account_id', 'project_id')
-            ->using(Campaign::class);
+        return $this->belongsTo(Map::class, 'map_id');
     }
 }

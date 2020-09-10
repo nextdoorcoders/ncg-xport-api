@@ -106,7 +106,7 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('marketing_digital_campaigns', function (Blueprint $table) {
+        Schema::table('marketing_campaigns', function (Blueprint $table) {
             $table->foreign('project_id')
                 ->references('id')
                 ->on('marketing_projects')

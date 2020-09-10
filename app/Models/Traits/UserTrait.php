@@ -44,6 +44,15 @@ trait UserTrait
         $this->mergeCasts([
             'password_reset_code' => Encrypt::class,
         ]);
+
+        $this->setHidden([
+            'password',
+            'password_reset_code',
+        ]);
+
+        $this->setAppends([
+            'is_online',
+        ]);
     }
 
     /*

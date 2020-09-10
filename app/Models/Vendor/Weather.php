@@ -2,7 +2,7 @@
 
 namespace App\Models\Vendor;
 
-use App\Models\Geo\City;
+use App\Models\Geo\Location;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @package App\Models\Vendor
  * @property string  $id
- * @property string  $city_id
+ * @property string  $location_id
  * @property Carbon  $datetime_at
  * @property integer $temp
  * @property integer $wind
@@ -53,8 +53,8 @@ class Weather extends Model
     /**
      * @return BelongsTo
      */
-    public function city()
+    public function location()
     {
-        return $this->belongsTo(City::class, 'city_id');
+        return $this->belongsTo(Location::class, 'location_id');
     }
 }

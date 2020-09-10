@@ -23,8 +23,8 @@ class CreateMarketingTable extends Migration
 
             $table->string('email')->nullable();
             $table->json('phones')->nullable();
+            $table->json('addresses')->nullable();
 
-            $table->text('address')->nullable();
             $table->json('working_hours')->nullable();
 
             $table->json('social_networks')->nullable();
@@ -48,7 +48,7 @@ class CreateMarketingTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('marketing_digital_campaigns', function (Blueprint $table) {
+        Schema::create('marketing_campaigns', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('project_id')->index();
 
@@ -66,7 +66,7 @@ class CreateMarketingTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('marketing_digital_campaigns');
+        Schema::dropIfExists('marketing_campaigns');
         Schema::dropIfExists('marketing_projects');
         Schema::dropIfExists('marketing_organizations');
     }

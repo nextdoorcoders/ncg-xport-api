@@ -3,11 +3,12 @@
 namespace App\Models\Account;
 
 use App\Models\File;
-use App\Models\Geo\Country;
-use App\Models\Marketing\Account;
+use App\Models\Geo\Location;
+use App\Models\Marketing\Organization;
 use App\Models\Marketing\Project;
 use App\Models\Traits\UserTrait;
 use App\Models\Traits\UuidTrait;
+use App\Models\Trigger\Map;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,17 +24,17 @@ use Laravel\Sanctum\HasApiTokens;
  *
  * @package App\Models\Account
  * @property string                    $id
- * @property string                    $country_id
+ * @property string                    $location_id
  * @property string                    $language_id
  * @property Carbon                    $created_at
  * @property Carbon                    $updated_at
- * @property Collection                $country
+ * @property Location                  $location
  * @property Language                  $language
  * @property Collection<Contact>       $contacts
  * @property Collection<SocialAccount> $socialAccounts
- * @property Collection<Account>       $accounts
- * @property Collection<Project>       $ownerProjects
- * @property Collection<Project>       $clientProjects
+ * @property Collection<Project>       $projects
+ * @property Collection<Map>           $maps
+ * @property Collection<Organization>  $organizations
  * @property File                      $picture
  */
 class User extends Authenticatable
@@ -43,16 +44,8 @@ class User extends Authenticatable
     protected $table = 'account_users';
 
     protected $fillable = [
-        'country_id',
+        'location_id',
         'language_id',
-    ];
-
-    protected $hidden = [
-        'password',
-    ];
-
-    protected $appends = [
-        'is_online',
     ];
 
     /*
@@ -62,9 +55,9 @@ class User extends Authenticatable
     /**
      * @return BelongsTo
      */
-    public function country(): BelongsTo
+    public function location(): BelongsTo
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        return $this->belongsTo(Location::class, 'location_id');
     }
 
     /**
@@ -94,25 +87,25 @@ class User extends Authenticatable
     /**
      * @return HasManyThrough
      */
-    public function accounts(): HasManyThrough
+    public function projects(): HasManyThrough
     {
-        return $this->hasManyThrough(Account::class, SocialAccount::class, 'user_id', 'social_account_id');
+        return $this->hasManyThrough(Project::class, SocialAccount::class, 'user_id', 'social_account_id');
     }
 
     /**
      * @return HasMany
      */
-    public function ownerProjects(): HasMany
+    public function maps(): HasMany
     {
-        return $this->hasMany(Project::class, 'owner_user_id');
+        return $this->hasMany(Map::class, 'user_id');
     }
 
     /**
      * @return HasMany
      */
-    public function clientProjects(): HasMany
+    public function organizations(): HasMany
     {
-        return $this->hasMany(Project::class, 'client_user_id');
+        return $this->hasMany(Organization::class, 'user_id');
     }
 
     /**

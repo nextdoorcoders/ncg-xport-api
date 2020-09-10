@@ -65,6 +65,8 @@ class CreateTriggerTable extends Migration
             $table->string('name')->nullable();
             $table->text('desc')->nullable();
 
+            $table->bigInteger('order_index')->default(0);
+
             $table->boolean('is_enabled')->default(false);
             $table->timestamp('refreshed_at')->nullable();
             $table->timestamp('changed_at')->nullable();
@@ -80,6 +82,7 @@ class CreateTriggerTable extends Migration
             $table->uuid('vendor_id')->index()->nullable();
 
             $table->json('parameters')->nullable();
+            $table->bigInteger('order_index')->default(0);
 
             $table->boolean('is_enabled')->default(false);
             $table->timestamp('refreshed_at')->nullable();

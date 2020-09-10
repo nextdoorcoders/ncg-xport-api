@@ -3,7 +3,7 @@
 namespace App\Models\Account;
 
 use App\Casts\Encrypt;
-use App\Models\Marketing\Account;
+use App\Models\Marketing\Project;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon              $updated_at
  * @property Carbon              $last_login_at
  * @property User                $user
- * @property Collection<Account> $accounts
+ * @property Collection<Project> $projects
  */
 class SocialAccount extends Model
 {
@@ -73,8 +73,8 @@ class SocialAccount extends Model
     /**
      * @return HasMany
      */
-    public function accounts(): HasMany
+    public function projects(): HasMany
     {
-        return $this->hasMany(Account::class, 'social_account_id');
+        return $this->hasMany(Project::class, 'social_account_id');
     }
 }

@@ -2,34 +2,33 @@
 
 namespace App\Models\Trigger;
 
-use App\Models\Geo\City;
+use App\Models\Geo\Location;
 use App\Models\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class VendorLocation
  *
- * @package App\Models\Marketing
+ * @package App\Models\Trigger
  * @property string                $id
- * @property string                $city_id
+ * @property string                $location_id
  * @property string                $vendor_id
- * @property City                  $city
+ * @property Location              $location
  * @property Vendor                $vendor
- * @property Collection<Condition> $condition
+ * @property Collection<Condition> $conditions
  */
 class VendorLocation extends Pivot
 {
     use UuidTrait;
 
-    protected $table = 'marketing_vendors_location';
+    protected $table = 'trigger_vendors_location';
 
     protected $fillable = [
-        'city_id',
-        'group_id',
+        'location_id',
+        'vendor_id',
     ];
 
     public $timestamps = false;
@@ -41,9 +40,9 @@ class VendorLocation extends Pivot
     /**
      * @return BelongsTo
      */
-    public function city(): BelongsTo
+    public function location(): BelongsTo
     {
-        return $this->belongsTo(City::class, 'city_id');
+        return $this->belongsTo(Location::class, 'location_id');
     }
 
     /**
@@ -55,19 +54,10 @@ class VendorLocation extends Pivot
     }
 
     /**
-     * @return HasMany
+     * @return MorphMany
      */
-    public function conditions(): HasMany
+    public function conditions(): MorphMany
     {
-        return $this->hasMany(Condition::class, 'vendor_location_id');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function groups(): BelongsToMany
-    {
-        return $this->belongsToMany(Group::class, 'marketing_conditions', 'vendor_location_id', 'group_id')
-            ->using(Condition::class);
+        return $this->morphMany(Condition::class, 'vendor');
     }
 }
