@@ -22,6 +22,10 @@ trait TranslatableTrait
     public static function bootTranslatableTrait(): void
     {
         static::addGlobalScope('translations', function (Builder $builder) {
+            /*
+             * Для всех переводимых моделей автоматически будут подгружены переводы,
+             * во избежание отправки дополнительных запросов в БД в будущем
+             */
             $builder->with([
                 'translations' => function ($query) {
                     $query->with('language');
@@ -59,6 +63,11 @@ trait TranslatableTrait
      */
     protected static function purgeableTranslationAttributes(self $model): void
     {
+        /*
+         * Удаляем переводимые поля из модели, сохраняем их во временное
+         * хранилище из которого будем читать их при сохранении переводов
+         */
+
         $translatable = $model->getTranslatable();
         $attributes = $model->getAttributes();
 
@@ -83,6 +92,10 @@ trait TranslatableTrait
             ->get();
 
         foreach ($languages as $language) {
+            /*
+             * Читаем список полей из временного хранилища согласно текущему языку
+             * в цикле. Обновляем или создаём перевод
+             */
             $translationAttributes = $model->translationAttributes[$language->code] ?? null;
 
             if ($translationAttributes) {
@@ -102,8 +115,13 @@ trait TranslatableTrait
     {
         collect($model->getTranslatable())
             ->each(function ($columnName) use ($model) {
+                /*
+                 * У корневой (переводимой) модели каждое переводимое поле - это массив.
+                 * Где ключ - это код языка (en, ru, uk), а значение - это перевод поля
+                 */
                 $columnValues = $model->translations->pluck($columnName, 'language.code');
 
+                // Полученный массив добавляем в список атрибутов корневой (переводимой) модели
                 $model->setAttribute($columnName, $columnValues);
             });
     }
@@ -113,7 +131,37 @@ trait TranslatableTrait
      */
     public function translations(): HasMany
     {
-        return $this->hasMany($this->getTranslateClass(), 'translatable_id');
+        /*
+         * Создание анонимного класса позволяет не создавать
+         * отделюную модель для каждой таблицы с переводами
+         */
+        $translateModel = new class extends Model {
+            use TranslateTrait;
+        };
+
+        $related = get_class($translateModel);
+        $foreignKey = 'translatable_id';
+        $localKey = null;
+
+        /*
+         * Модифицированное отношение hasMany.
+         * Стандартный метод hasMany не позволяет передавать экземпляр класса
+         * с модифицированными свойствами, по этому мы передаем путь к классу,
+         * полученый экземпляр модифицируем и дальше работает стандартный код
+         * метода hasMany без изменений
+         */
+        $instance = $this->newRelatedInstance($related);
+
+        // Проводим модификацию экземпляра модели
+        $instance->setTable($this->table . '_translate');
+        $instance->mergeFillable($this->getTranslatable());
+
+        // Далее стандартный код метода hasMany
+        $foreignKey = $foreignKey ?: $this->getForeignKey();
+
+        $localKey = $localKey ?: $this->getKeyName();
+
+        return $this->newHasMany($instance->newQuery(), $this, $instance->getTable() . '.' . $foreignKey, $localKey);
     }
 
     /**
@@ -122,13 +170,5 @@ trait TranslatableTrait
     public function getTranslatable(): array
     {
         return $this->translatable;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTranslateClass(): string
-    {
-        return get_class($this) . 'Translate';
     }
 }
