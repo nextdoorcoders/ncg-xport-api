@@ -3,9 +3,6 @@
 namespace App\Http\Resources\Trigger;
 
 use App\Http\Resources\Traits\ResourceTrait;
-use App\Models\Trigger\Condition as ConditionModel;
-use App\Models\Trigger\Group as GroupModel;
-use App\Models\Trigger\VendorLocation as VendorLocationModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Map extends JsonResource

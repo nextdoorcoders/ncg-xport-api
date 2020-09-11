@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Vendor
@@ -63,11 +63,11 @@ class Vendor extends Model
      */
 
     /**
-     * @return MorphMany
+     * @return HasMany
      */
-    public function conditions(): MorphMany
+    public function conditions(): HasMany
     {
-        return $this->morphMany(Condition::class, 'vendor');
+        return $this->hasMany(Condition::class, 'vendor_id');
     }
 
     /**

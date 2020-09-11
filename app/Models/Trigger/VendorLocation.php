@@ -6,7 +6,7 @@ use App\Models\Geo\Location;
 use App\Models\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
@@ -54,10 +54,10 @@ class VendorLocation extends Pivot
     }
 
     /**
-     * @return MorphMany
+     * @return HasMany
      */
-    public function conditions(): MorphMany
+    public function conditions(): HasMany
     {
-        return $this->morphMany(Condition::class, 'vendor');
+        return $this->hasMany(Condition::class, 'vendor_location_id');
     }
 }

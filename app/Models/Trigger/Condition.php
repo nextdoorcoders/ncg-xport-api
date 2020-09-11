@@ -6,25 +6,25 @@ use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class Condition
  *
  * @package App\Models\Trigger
- * @property string                $id
- * @property string                $group_id
- * @property string                $vendor_type
- * @property string                $vendor_id
- * @property array                 $parameters
- * @property integer               $order_index
- * @property boolean               $is_enabled
- * @property Carbon                $refreshed_at
- * @property Carbon                $changed_at
- * @property Carbon                $created_at
- * @property Carbon                $updated_at
- * @property Group                 $group
- * @property Vendor|VendorLocation $vendor
+ * @property string         $id
+ * @property string         $group_id
+ * @property string         $vendor_id
+ * @property string         $vendor_location_id
+ * @property array          $parameters
+ * @property integer        $order_index
+ * @property boolean        $is_enabled
+ * @property Carbon         $refreshed_at
+ * @property Carbon         $changed_at
+ * @property Carbon         $created_at
+ * @property Carbon         $updated_at
+ * @property Group          $group
+ * @property Vendor         $vendor
+ * @property VendorLocation $vendorLocation
  */
 class Condition extends Model
 {
@@ -65,10 +65,18 @@ class Condition extends Model
     }
 
     /**
-     * @return MorphTo
+     * @return BelongsTo
      */
-    public function vendor(): MorphTo
+    public function vendor(): BelongsTo
     {
-        return $this->morphTo('vendor');
+        return $this->belongsTo(Vendor::class, 'vendor_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function vendorLocation(): BelongsTo
+    {
+        return $this->belongsTo(VendorLocation::class, 'vendor_location_id');
     }
 }

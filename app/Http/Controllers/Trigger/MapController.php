@@ -56,61 +56,61 @@ class MapController extends Controller
     }
 
     /**
-     * @param MapModel $project
+     * @param MapModel $map
      * @return MapResource
      */
-    public function readMap(MapModel $project)
+    public function readMap(MapModel $map)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->mapService->readMap($project, $user);
+        $response = $this->mapService->readMap($map, $user);
 
         return new MapResource($response);
     }
 
     /**
      * @param MapRequest $request
-     * @param MapModel   $project
+     * @param MapModel   $map
      * @return MapResource
      */
-    public function updateMap(MapRequest $request, MapModel $project)
+    public function updateMap(MapRequest $request, MapModel $map)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->mapService->updateMap($project, $user, $data);
+        $response = $this->mapService->updateMap($map, $user, $data);
 
         return new MapResource($response);
     }
 
     /**
-     * @param MapModel $project
+     * @param MapModel $map
      * @return Response
      * @throws Exception
      */
-    public function deleteMap(MapModel $project)
+    public function deleteMap(MapModel $map)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $this->mapService->deleteMap($project, $user);
+        $this->mapService->deleteMap($map, $user);
 
         return response()->noContent();
     }
 
     /**
-     * @param MapModel $project
+     * @param MapModel $map
      * @return MapResource
      */
-    public function replicateMap(MapModel $project)
+    public function replicateMap(MapModel $map)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->mapService->replicateMap($project, $user);
+        $response = $this->mapService->replicateMap($map, $user);
 
         return new MapResource($response);
     }

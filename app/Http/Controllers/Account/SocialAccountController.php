@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Account;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Account\AccessToken;
-use App\Http\Resources\Account\SocialAccountLink;
 use App\Http\Resources\Account\SocialAccountCollection;
 use App\Http\Resources\DataResource;
 use App\Http\Resources\MessageResource;
@@ -18,7 +16,6 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\User as UserSocialite;
-use Symfony\Component\VarDumper\Cloner\Data;
 
 class SocialAccountController extends Controller
 {

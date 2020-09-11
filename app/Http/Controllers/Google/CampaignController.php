@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Google;
 
+use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Google\Campaign as CampaignResource;
-use App\Models\Marketing\Account;
+use App\Http\Resources\Google\Campaign as GoogleCampaignResource;
+use App\Models\Marketing\Project as ProjectModel;
 use App\Services\Google\AdWords\CampaignService;
 
 class CampaignController extends Controller
@@ -22,15 +23,15 @@ class CampaignController extends Controller
     }
 
     /**
-     * @param Account $account
-     * @return CampaignResource
-     * @throws \App\Exceptions\MessageException
+     * @param ProjectModel $project
+     * @return GoogleCampaignResource
+     * @throws MessageException
      */
-    public function allCampaigns(Account $account)
+    public function allCampaigns(ProjectModel $project)
     {
         $response = $this->campaignService
-            ->allCampaigns($account);
+            ->allCampaigns($project);
 
-        return new CampaignResource($response);
+        return new GoogleCampaignResource($response);
     }
 }

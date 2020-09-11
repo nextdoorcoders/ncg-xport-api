@@ -4,6 +4,8 @@ namespace App\Models\Traits;
 
 use App\Models\Account\Language;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,14 +22,36 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 trait TranslateTrait
 {
-    protected function initializeTranslateTrait()
+    protected array $compositePrimaryKey = [
+        'language_id',
+        'translatable_id',
+    ];
+
+    protected function initializeTranslateTrait(): void
     {
         $this->setIncrementing(false);
-        $this->setKeyType(null);
 
-        $this->mergeFillable([
-            'language_id',
-        ]);
+        $this->mergeFillable($this->compositePrimaryKey);
+    }
+
+    /**
+     * Composite primary key
+     *
+     * @param Builder $query
+     * @return Builder
+     * @throws Exception
+     */
+    protected function setKeysForSaveQuery(Builder $query): Builder
+    {
+        foreach ($this->compositePrimaryKey as $key) {
+            if (isset($this->$key)) {
+                $query->where($key, '=', $this->$key);
+            } else {
+                throw new Exception(__METHOD__ . 'Missing part of the primary key: ' . $key);
+            }
+        }
+
+        return $query;
     }
 
     /**

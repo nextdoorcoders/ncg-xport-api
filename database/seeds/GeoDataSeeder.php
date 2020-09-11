@@ -28,13 +28,18 @@ class GeoDataSeeder extends Seeder
     {
         $locations = [
             [
-                'type'     => LocationModel::TYPE_COUNTRY,
-                'name'     => [
+                'type'       => LocationModel::TYPE_COUNTRY,
+                'name'       => [
                     LanguageModel::LANGUAGE_EN => 'Ukraine',
                     LanguageModel::LANGUAGE_RU => 'Украина',
                     LanguageModel::LANGUAGE_UK => 'Україна',
                 ],
-                'children' => [
+                'parameters' => [
+                    'alpha2'     => 'UA',
+                    'alpha3'     => 'UKR',
+                    'phone_mask' => '380 (##) ##-##-###',
+                ],
+                'children'   => [
                     [
                         'type'     => LocationModel::TYPE_STATE,
                         'name'     => [

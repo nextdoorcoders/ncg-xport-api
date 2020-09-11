@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Trigger\Vendor;
+namespace App\Services\Vendor\Classes;
 
 use App\Models\Trigger\Condition as ConditionModel;
 

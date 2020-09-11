@@ -29,7 +29,7 @@ class CreateTriggerTable extends Migration
             $table->uuid('translatable_id')->index();
 
             $table->string('name');
-            $table->text('desc');
+            $table->text('desc')->nullable();
 
             $table->timestamps();
 
@@ -41,7 +41,7 @@ class CreateTriggerTable extends Migration
             $table->uuid('location_id')->index();
             $table->uuid('vendor_id')->index();
 
-            $table->unique(['location_id', 'vendor_id'], 'location_vendor_key');
+            $table->unique(['location_id', 'vendor_id'], 'composite_primary_key');
         });
 
         Schema::create('trigger_maps', function (Blueprint $table) {
@@ -77,9 +77,8 @@ class CreateTriggerTable extends Migration
         Schema::create('trigger_conditions', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('group_id')->index();
-
-            $table->string('vendor_type')->index();
-            $table->uuid('vendor_id')->index()->nullable();
+            $table->uuid('vendor_id')->index();
+            $table->uuid('vendor_location_id')->index()->nullable();
 
             $table->json('parameters')->nullable();
             $table->bigInteger('order_index')->default(0);

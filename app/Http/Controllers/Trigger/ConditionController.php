@@ -8,7 +8,6 @@ use App\Http\Resources\Trigger\ConditionCollection;
 use App\Models\Account\User;
 use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
-use App\Models\Trigger\Vendor as VendorModel;
 use App\Models\Trigger\VendorLocation;
 use App\Services\Trigger\ConditionService;
 use Exception;
@@ -33,24 +32,11 @@ class ConditionController extends Controller
      * @param GroupModel $group
      * @return ConditionCollection
      */
-    public function allByGroup(GroupModel $group) {
+    public function allConditions(GroupModel $group) {
         /** @var User $user */
         $user = auth()->user();
 
         $response = $this->conditionService->allByGroup($group, $user);
-
-        return new ConditionCollection($response);
-    }
-
-    /**
-     * @param VendorModel $vendor
-     * @return ConditionCollection
-     */
-    public function allByVendor(VendorModel $vendor) {
-        /** @var User $user */
-        $user = auth()->user();
-
-        $response = $this->conditionService->allByVendor($vendor, $user);
 
         return new ConditionCollection($response);
     }

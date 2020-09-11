@@ -80,6 +80,16 @@ class CreateForeignKeyRelations extends Migration
                 ->references('id')
                 ->on('trigger_groups')
                 ->onDelete('cascade');
+
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('trigger_vendors')
+                ->onDelete('cascade');
+
+            $table->foreign('vendor_location_id')
+                ->references('id')
+                ->on('trigger_vendors_location')
+                ->onDelete('cascade');
         });
 
         Schema::table('marketing_organizations', function (Blueprint $table) {

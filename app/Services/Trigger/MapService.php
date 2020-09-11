@@ -6,11 +6,24 @@ use App\Models\Account\User as UserModel;
 use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
 use App\Models\Trigger\Map as MapModel;
+use App\Services\Marketing\ProjectService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection as CollectionDatabase;
 
 class MapService
 {
+    protected ProjectService $projectService;
+
+    /**
+     * MapService constructor.
+     *
+     * @param ProjectService $projectService
+     */
+    public function __construct(ProjectService $projectService)
+    {
+        $this->projectService = $projectService;
+    }
+
     /**
      * @param UserModel $user
      * @return CollectionDatabase
@@ -37,8 +50,8 @@ class MapService
     }
 
     /**
-     * @param MapModel $map
-     * @param UserModel    $user
+     * @param MapModel  $map
+     * @param UserModel $user
      * @return MapModel|null
      */
     public function readMap(MapModel $map, UserModel $user)
@@ -47,9 +60,9 @@ class MapService
     }
 
     /**
-     * @param MapModel $map
-     * @param UserModel    $user
-     * @param array        $data
+     * @param MapModel  $map
+     * @param UserModel $user
+     * @param array     $data
      * @return MapModel|null
      */
     public function updateMap(MapModel $map, UserModel $user, array $data)
@@ -61,8 +74,8 @@ class MapService
     }
 
     /**
-     * @param MapModel $map
-     * @param UserModel    $user
+     * @param MapModel  $map
+     * @param UserModel $user
      * @throws Exception
      */
     public function deleteMap(MapModel $map, UserModel $user)
@@ -75,8 +88,8 @@ class MapService
     }
 
     /**
-     * @param MapModel $map
-     * @param UserModel    $user
+     * @param MapModel  $map
+     * @param UserModel $user
      * @return MapModel|null
      */
     public function replicateMap(MapModel $map, UserModel $user)
@@ -102,6 +115,63 @@ class MapService
         });
 
         return $this->readMap($replicateMap, $user);
+    }
+
+    /**
+     * @throws \App\Exceptions\MessageException
+     */
+    public function updateAllStatuses(): void
+    {
+        $maps = MapModel::query()
+            ->with('groups')
+            ->get();
+
+        $maps->each(function (MapModel $map) {
+            $this->updateStatus($map);
+        });
+
+        $this->projectService->updateAllStatuses();
+    }
+
+    /**
+     * Проверка текущего состояние триггера
+     *
+     * @param MapModel $map
+     * @param bool     $checkParent
+     * @throws \App\Exceptions\MessageException
+     */
+    public function updateStatus(MapModel $map, bool $checkParent = false): void
+    {
+        $totalCountOfGroups = $map->groups
+            ->count();
+
+        $countOfEnabledGroups = $map->groups
+            ->where('is_enabled', true)
+            ->count();
+
+        if ($totalCountOfGroups > 0 && $totalCountOfGroups === $countOfEnabledGroups) {
+            $map->is_enabled = true;
+        } else {
+            $map->is_enabled = false;
+        }
+
+        $map->refreshed_at = now();
+
+        $isEnabledSwitched = $map->isDirty('is_enabled');
+
+        if ($isEnabledSwitched || $map->changed_at == null) {
+            $map->changed_at = now();
+        }
+
+        $map->save();
+
+        if ($checkParent && $isEnabledSwitched) {
+            $projects = $map->projects()->get();
+
+            $projects->each(function ($project) {
+                $this->projectService->updateStatus($project);
+            });
+        }
     }
 
 //    /**

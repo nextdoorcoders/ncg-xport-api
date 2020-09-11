@@ -2,13 +2,13 @@
 
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Trigger\Vendor as VendorModel;
-use App\Services\Trigger\Vendor\Classes\Clouds;
-use App\Services\Trigger\Vendor\Classes\Humidity;
-use App\Services\Trigger\Vendor\Classes\Pressure;
-use App\Services\Trigger\Vendor\Classes\Rain;
-use App\Services\Trigger\Vendor\Classes\Snow;
-use App\Services\Trigger\Vendor\Classes\Temperature;
-use App\Services\Trigger\Vendor\Classes\Wind;
+use App\Services\Vendor\Classes\Weather\Clouds;
+use App\Services\Vendor\Classes\Weather\Humidity;
+use App\Services\Vendor\Classes\Weather\Pressure;
+use App\Services\Vendor\Classes\Weather\Rain;
+use App\Services\Vendor\Classes\Weather\Snow;
+use App\Services\Vendor\Classes\Weather\Temperature;
+use App\Services\Vendor\Classes\Weather\Wind;
 use Illuminate\Database\Seeder;
 
 class VendorDataSeeder extends Seeder
@@ -50,8 +50,8 @@ class VendorDataSeeder extends Seeder
                 'type'               => VendorModel::TYPE_WIND,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Wind speed (m/s)',
-                    LanguageModel::LANGUAGE_RU => 'Скорость ветра (m/s)',
-                    LanguageModel::LANGUAGE_UK => 'Швидкість вітру (m/s)',
+                    LanguageModel::LANGUAGE_RU => 'Скорость ветра (м/с)',
+                    LanguageModel::LANGUAGE_UK => 'Швидкість вітру (м/с)',
                 ],
                 'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Wind speed with reference to the city',
@@ -98,8 +98,8 @@ class VendorDataSeeder extends Seeder
                 'type'               => VendorModel::TYPE_RAIN,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Rain precipitation (mm)',
-                    LanguageModel::LANGUAGE_RU => 'Дождь осадки (mm)',
-                    LanguageModel::LANGUAGE_UK => 'Дощ опади (mm)',
+                    LanguageModel::LANGUAGE_RU => 'Дождь осадки (мм)',
+                    LanguageModel::LANGUAGE_UK => 'Дощ опади (мм)',
                 ],
                 'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Precipitation (rain) with reference to the city',
@@ -122,8 +122,8 @@ class VendorDataSeeder extends Seeder
                 'type'               => VendorModel::TYPE_SNOW,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Snow precipitation (mm)',
-                    LanguageModel::LANGUAGE_RU => 'Снег осадки (mm)',
-                    LanguageModel::LANGUAGE_UK => 'Сніг опади (mm)',
+                    LanguageModel::LANGUAGE_RU => 'Снег осадки (мм)',
+                    LanguageModel::LANGUAGE_UK => 'Сніг опади (мм)',
                 ],
                 'desc'               => [
                     LanguageModel::LANGUAGE_EN => 'Precipitation (snow) with reference to the city',

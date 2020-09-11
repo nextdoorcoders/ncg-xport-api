@@ -36,7 +36,7 @@ class Project extends Model
 {
     use UuidTrait;
 
-    protected $table = 'marketing_accounts';
+    protected $table = 'marketing_projects';
 
     protected $fillable = [
         'social_account_id',

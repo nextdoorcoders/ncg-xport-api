@@ -17,12 +17,14 @@ class CreateGeoTable extends Migration
         Schema::create('geo_locations', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
 
-            $table->string('type')->default(LocationModel::TYPE_COUNTRY);
+            $table->string('type')->default(LocationModel::TYPE_COUNTRY)->index();
 
-            $table->uuid('parent_id')->nullable();
-            $table->bigInteger('nest_left')->nullable();
-            $table->bigInteger('nest_right')->nullable();
-            $table->bigInteger('nest_depth')->nullable();
+            $table->uuid('parent_id')->index()->nullable();
+            $table->bigInteger('nest_left')->index()->nullable();
+            $table->bigInteger('nest_right')->index()->nullable();
+            $table->bigInteger('nest_depth')->index()->nullable();
+
+            $table->json('parameters')->nullable();
 
             $table->timestamps();
         });
@@ -35,7 +37,7 @@ class CreateGeoTable extends Migration
 
             $table->timestamps();
 
-            $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
+            $table->primary(['language_id', 'translatable_id'], 'composite_primary_key');
         });
     }
 

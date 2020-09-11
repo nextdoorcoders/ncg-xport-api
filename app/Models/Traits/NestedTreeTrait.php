@@ -443,8 +443,7 @@ trait NestedTreeTrait
      */
     public function scopeParents($query, $includeSelf = false)
     {
-        $query
-            ->where($this->getLeftColumnName(), '<=', $this->getLeft())
+        $query->where($this->getLeftColumnName(), '<=', $this->getLeft())
             ->where($this->getRightColumnName(), '>=', $this->getRight());
 
         return $includeSelf ? $query : $query->withoutSelf();

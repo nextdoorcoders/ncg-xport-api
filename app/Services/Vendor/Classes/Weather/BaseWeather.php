@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Services\Trigger\Vendor;
+namespace App\Services\Vendor\Classes\Weather;
 
 use App\Models\Trigger\Condition as ConditionModel;
+use App\Services\Vendor\Classes\BaseVendor;
 
-abstract class BaseVendor implements VendorInterface
+abstract class BaseWeather extends BaseVendor
 {
     /**
      * @param ConditionModel $condition
@@ -14,7 +15,7 @@ abstract class BaseVendor implements VendorInterface
     {
         $parameters = (object)$condition->parameters;
 
-        $current = $this->current($condition->vendorLocation->city_id);
+        $current = $this->current($condition->vendorLocation->location_id);
 
         if (is_null($current)) {
             return false;

@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property integer             $nest_left
  * @property integer             $nest_right
  * @property integer             $nest_depth
+ * @property array               $parameters
  * @property array               $name
  * @property Collection<User>    $users
  * @property Collection<Weather> $weathers
@@ -53,6 +54,11 @@ class Location extends Model
         'nest_left',
         'nest_right',
         'nest_depth',
+        'parameters',
+    ];
+
+    protected $casts = [
+        'parameters' => 'array',
     ];
 
     protected $translatable = [

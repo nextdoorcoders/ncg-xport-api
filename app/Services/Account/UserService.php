@@ -6,7 +6,6 @@ use App\Exceptions\MessageException;
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\SocialAccount as SocialAccountModel;
 use App\Models\Account\User as UserModel;
-use App\Models\Geo\Country as CountryModel;
 use App\Models\Token;
 use App\Services\Sender\EmailService;
 use Exception;

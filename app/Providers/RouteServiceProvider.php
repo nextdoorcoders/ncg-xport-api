@@ -35,19 +35,18 @@ class RouteServiceProvider extends ServiceProvider
             // Account
             'user',
 
+            // Geo
+            'location',
+
             // Marketing
-            'account',
+            'project',
             'campaign',
+
+            // Trigger
             'condition',
             'group',
-            'project',
+            'map',
             'vendor',
-            'vendorLocation',
-
-            // Geo
-            'country',
-            'state',
-            'city',
         ];
 
         foreach ($params as $key) {

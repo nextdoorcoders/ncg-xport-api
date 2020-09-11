@@ -3,8 +3,8 @@
 namespace App\Repositories\Google\AdWords;
 
 use App\Exceptions\MessageException;
-use App\Models\Account\SocialAccount as SocialAccountModel;
-use App\Models\Marketing\Account as AccountModel;
+use App\Models\Account\SocialAccount as SocialProjectModel;
+use App\Models\Marketing\Project as ProjectModel;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
 use Google\AdsApi\Common\AdsBuilder;
@@ -28,25 +28,25 @@ abstract class AdWords
     }
 
     /**
-     * @param AccountModel $account
+     * @param ProjectModel $project
      * @throws MessageException
      */
-    public function setAccount(AccountModel $account)
+    public function setAccount(ProjectModel $project)
     {
-        if ($account->socialAccount->provider_name != SocialAccountModel::PROVIDER_NAME_GOOGLE) {
+        if ($project->socialAccount->provider_name != SocialProjectModel::PROVIDER_NAME_GOOGLE) {
             throw new MessageException('This social account does not support here');
         }
 
-        $this->sessionBuilder = $this->getSessionBuilder($account);
+        $this->sessionBuilder = $this->getSessionBuilder($project);
     }
 
     /**
-     * @param AccountModel $campaign
+     * @param ProjectModel $project
      * @return AdWordsSessionBuilder|AdsBuilder
      */
-    private function getSessionBuilder(AccountModel $campaign)
+    private function getSessionBuilder(ProjectModel $project)
     {
-        $configuration = $this->getConfiguration($campaign);
+        $configuration = $this->getConfiguration($project);
 
         // Generate a refreshable OAuth2 credential for authentication.
         $oAuth2Credential = (new OAuth2TokenBuilder())
@@ -61,10 +61,10 @@ abstract class AdWords
     }
 
     /**
-     * @param AccountModel $account
+     * @param ProjectModel $account
      * @return Configuration
      */
-    protected function getConfiguration(AccountModel $account)
+    protected function getConfiguration(ProjectModel $account)
     {
         $configuration = [
             'ADWORDS' => [

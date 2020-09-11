@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services\Trigger\Vendor\Classes;
+namespace App\Services\Vendor\Classes\Weather;
 
 use App\Models\Vendor\Weather;
-use App\Services\Trigger\Vendor\BaseVendor;
 
-class Wind extends BaseVendor
+class Temperature extends BaseWeather
 {
     public function current($cityId)
     {
@@ -19,6 +18,6 @@ class Wind extends BaseVendor
             return null;
         }
 
-        return $weather->wind;
+        return $weather->temp;
     }
 }

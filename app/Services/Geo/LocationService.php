@@ -3,6 +3,7 @@
 namespace App\Services\Geo;
 
 use App\Models\Geo\Location as LocationModel;
+use App\Services\Vendor\WeatherService;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 

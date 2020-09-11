@@ -76,7 +76,7 @@ Route::group([
     'prefix'     => 'geo',
 ], function () {
     Route::group([
-        'prefix' => 'locations'
+        'prefix' => 'locations',
     ], function () {
         Route::get('', 'LocationController@allLocations');
         Route::post('', 'LocationController@createLocation');
@@ -153,7 +153,7 @@ Route::group([
         'prefix' => 'groups',
     ], function () {
         Route::group([
-            'prefix' => '',
+            'prefix' => 'map-{map}',
         ], function () {
             Route::get('', 'GroupController@allGroups');
             Route::post('', 'GroupController@createGroup');
@@ -171,8 +171,12 @@ Route::group([
     Route::group([
         'prefix' => 'conditions',
     ], function () {
-        Route::get('', 'ConditionController@allByGroup');
-        Route::post('', 'ConditionController@createCondition');
+        Route::group([
+            'prefix' => 'group-{group}',
+        ], function () {
+            Route::get('', 'ConditionController@allConditions');
+            Route::post('', 'ConditionController@createCondition');
+        });
 
         Route::group([
             'prefix' => 'condition-{condition}',
@@ -187,6 +191,15 @@ Route::group([
         'prefix' => 'vendors',
     ], function () {
         Route::get('', 'VendorController@allVendors');
+        Route::post('', 'VendorController@createVendor');
+
+        Route::group([
+            'prefix' => 'vendor-{vendor}',
+        ], function () {
+            Route::get('', 'VendorController@readVendor');
+            Route::put('', 'VendorController@updateVendor');
+            Route::delete('', 'VendorController@deleteVendor');
+        });
     });
 });
 

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Trigger;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Map extends FormRequest
+class Vendor extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,11 @@ class Map extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name'               => 'required',
+            'trigger_class'      => 'required',
+            'type'               => 'required',
+            'default_parameters' => 'sometimes',
+            'settings'           => 'sometimes',
         ];
     }
 }

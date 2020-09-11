@@ -3,9 +3,10 @@
 namespace App\Services\Google\AdWords;
 
 use App\Exceptions\MessageException;
-use App\Models\Marketing\Account as AccountModel;
 use App\Models\Marketing\Campaign as CampaignModel;
+use App\Models\Marketing\Project as ProjectModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
+use Illuminate\Support\Collection;
 
 class CampaignService
 {
@@ -22,13 +23,13 @@ class CampaignService
     }
 
     /**
-     * @param AccountModel $account
-     * @return \Illuminate\Support\Collection
+     * @param ProjectModel $project
+     * @return Collection
      * @throws MessageException
      */
-    public function allCampaigns(AccountModel $account)
+    public function allCampaigns(ProjectModel $project)
     {
-        $this->campaignRepository->setAccount($account);
+        $this->campaignRepository->setAccount($project);
 
         $campaigns = $this->campaignRepository->paginate();
 
@@ -56,7 +57,7 @@ class CampaignService
      */
     public function updateCampaignStatus(CampaignModel $campaign, string $status)
     {
-        $this->campaignRepository->setAccount($campaign->account);
+        $this->campaignRepository->setAccount($campaign->project);
 
         $this->campaignRepository->update($campaign, $status);
     }

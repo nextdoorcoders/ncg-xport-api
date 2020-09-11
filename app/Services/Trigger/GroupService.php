@@ -11,6 +11,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class GroupService
 {
+    protected MapService $mapService;
+
+    /**
+     * GroupService constructor.
+     *
+     * @param MapService $mapService
+     */
+    public function __construct(MapService $mapService)
+    {
+        $this->mapService = $mapService;
+    }
+
     /**
      * @param MapModel  $project
      * @param UserModel $user
@@ -84,6 +96,62 @@ class GroupService
             $group->delete();
         } catch (Exception $exception) {
             throw $exception;
+        }
+    }
+
+    /**
+     * @throws \App\Exceptions\MessageException
+     */
+    public function updateAllStatuses(): void
+    {
+        $groups = GroupModel::query()
+            ->with('conditions')
+            ->get();
+
+        $groups->each(function (GroupModel $group) {
+            $this->updateStatus($group);
+        });
+
+        $this->mapService->updateAllStatuses();
+    }
+
+    /**
+     * Проверка текущего состояние триггера
+     *
+     * @param GroupModel $group
+     * @param bool       $checkParent
+     * @throws \App\Exceptions\MessageException
+     */
+    public function updateStatus(GroupModel $group, bool $checkParent = false): void
+    {
+        $totalCountOfConditions = $group->conditions
+            ->count();
+
+        $countOfEnabledConditions = $group->conditions
+            ->where('is_enabled', true)
+            ->count();
+
+        if ($totalCountOfConditions == 0 || $countOfEnabledConditions > 0) {
+            $group->is_enabled = true;
+        } else {
+            $group->is_enabled = false;
+        }
+
+        $group->refreshed_at = now();
+
+        $isEnabledSwitch = $group->isDirty('is_enabled');
+
+        if ($isEnabledSwitch || $group->changed_at == null) {
+            $group->changed_at = now();
+        }
+
+        $group->save();
+
+        if ($checkParent && $isEnabledSwitch) {
+            /** @var MapModel $map */
+            $map = $group->map()->first();
+
+            $this->mapService->updateStatus($map, true);
         }
     }
 }

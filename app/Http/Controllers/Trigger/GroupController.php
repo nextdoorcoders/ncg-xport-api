@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Trigger\Group as GroupResource;
 use App\Http\Resources\Trigger\GroupCollection;
 use App\Models\Account\User;
-use App\Models\Marketing\Project as MapModel;
 use App\Models\Trigger\Group as GroupModel;
+use App\Models\Trigger\Map as MapModel;
 use App\Services\Trigger\GroupService;
 use Exception;
 use Illuminate\Http\Request;
@@ -37,7 +37,7 @@ class GroupController extends Controller
     }
 
     /**
-     * @param Request      $request
+     * @param Request  $request
      * @param MapModel $map
      * @return GroupResource
      */

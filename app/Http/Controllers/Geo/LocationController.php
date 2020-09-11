@@ -66,7 +66,7 @@ class LocationController extends Controller
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->locationService->deleteLocation($location);
+        $this->locationService->deleteLocation($location);
 
         return response()->noContent();
     }
