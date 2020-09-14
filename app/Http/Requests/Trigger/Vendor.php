@@ -25,7 +25,7 @@ class Vendor extends FormRequest
     {
         return [
             'name'               => 'required',
-            'trigger_class'      => 'required',
+            'callback'      => 'required',
             'type'               => 'required',
             'default_parameters' => 'sometimes',
             'settings'           => 'sometimes',

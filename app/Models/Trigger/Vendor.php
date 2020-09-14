@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @package App\Models\Trigger
  * @property string                $id
- * @property string                $trigger_class
+ * @property string                $callback
  * @property string                $type
  * @property array                 $default_parameters
  * @property array                 $settings
@@ -31,18 +31,24 @@ class Vendor extends Model
 {
     use TranslatableTrait, UuidTrait;
 
-    const TYPE_TEMPERATURE = 'temperature';
-    const TYPE_WIND = 'wind';
-    const TYPE_CLOUDS = 'clouds';
-    const TYPE_RAIN = 'rain';
-    const TYPE_SNOW = 'snow';
-    const TYPE_PRESSURE = 'pressure';
-    const TYPE_HUMIDITY = 'humidity';
+    const TYPE_WEATHER_TEMPERATURE = 'weather_temperature';
+    const TYPE_WEATHER_WIND = 'weather_wind';
+    const TYPE_WEATHER_CLOUDS = 'weather_clouds';
+    const TYPE_WEATHER_RAIN = 'weather_rain';
+    const TYPE_WEATHER_SNOW = 'weather_snow';
+    const TYPE_WEATHER_PRESSURE = 'weather_pressure';
+    const TYPE_WEATHER_HUMIDITY = 'weather_humidity';
+
+    const TYPE_CURRENCY_EXCHANGE = 'currency_exchange';
+    const TYPE_CURRENCY_NATIONAL = 'currency_national';
+    const TYPE_CURRENCY_INTERBANK = 'currency_interbank';
+
+    const TYPE_CALENDAR = 'calendar';
 
     protected $table = 'trigger_vendors';
 
     protected $fillable = [
-        'trigger_class',
+        'callback',
         'type',
         'default_parameters',
         'settings',

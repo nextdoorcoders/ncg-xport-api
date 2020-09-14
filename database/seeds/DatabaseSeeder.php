@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(LanguageDataSeeder::class);
         $this->call(GeoDataSeeder::class);
+        $this->call(TriggerDataSeeder::class);
         $this->call(VendorDataSeeder::class);
     }
 }

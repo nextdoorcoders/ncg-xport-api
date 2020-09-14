@@ -146,6 +146,13 @@ Route::group([
             Route::delete('', 'MapController@deleteMap');
 
             Route::post('replicate', 'MapController@replicateMap');
+
+            Route::group([
+                'prefix' => 'conditions'
+            ], function() {
+                Route::get('', 'MapController@readConditions');
+                Route::put('', 'MapController@updateConditions');
+            });
         });
     });
 

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string  $id
  * @property string  $location_id
  * @property Carbon  $datetime_at
- * @property integer $temp
+ * @property integer $temperature
  * @property integer $wind
  * @property integer $pressure
  * @property integer $humidity
@@ -33,7 +33,7 @@ class Weather extends Model
 
     protected $fillable = [
         'datetime_at',
-        'temp',
+        'temperature',
         'wind',
         'pressure',
         'humidity',

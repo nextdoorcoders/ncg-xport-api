@@ -140,7 +140,7 @@ class ConditionService
         $vendor = $condition->vendor;
 
         /** @var BaseVendor $triggerClass */
-        $triggerClass = app($vendor->trigger_class);
+        $triggerClass = app($vendor->callback);
         $isEnabled = $triggerClass->run($condition);
 
         $condition->is_enabled = $isEnabled;

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Trigger;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Trigger\Map as MapRequest;
+use App\Http\Resources\Trigger\GroupCollection;
 use App\Http\Resources\Trigger\Map as MapResource;
 use App\Http\Resources\Trigger\MapCollection;
 use App\Models\Account\User as UserModel;
 use App\Models\Trigger\Map as MapModel;
 use App\Services\Trigger\MapService;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class MapController extends Controller
@@ -113,5 +115,34 @@ class MapController extends Controller
         $response = $this->mapService->replicateMap($map, $user);
 
         return new MapResource($response);
+    }
+
+    /**
+     * @param MapModel $map
+     * @return GroupCollection
+     */
+    public function readConditions(MapModel $map) {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->mapService->readConditions($map, $user);
+
+        return new GroupCollection($response);
+    }
+
+    /**
+     * @param Request  $request
+     * @param MapModel $map
+     * @return GroupCollection
+     */
+    public function updateConditions(Request $request, MapModel $map) {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $data = $request->all();
+
+        $response = $this->mapService->updateConditions($map, $user, $data);
+
+        return new GroupCollection($response);
     }
 }

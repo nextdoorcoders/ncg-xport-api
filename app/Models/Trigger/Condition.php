@@ -3,6 +3,7 @@
 namespace App\Models\Trigger;
 
 use App\Models\Traits\UuidTrait;
+use App\Services\Vendor\Classes\BaseVendor;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,6 +53,10 @@ class Condition extends Model
         'changed_at',
     ];
 
+    protected $appends = [
+        'current_value',
+    ];
+
     /*
      * Relations
      */
@@ -78,5 +83,20 @@ class Condition extends Model
     public function vendorLocation(): BelongsTo
     {
         return $this->belongsTo(VendorLocation::class, 'vendor_location_id');
+    }
+
+    /*
+     * Accessors
+     */
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentValueAttribute()
+    {
+        /** @var BaseVendor $vendorInstance */
+        $vendorInstance = app($this->vendor->callback);
+
+        return $vendorInstance->getCurrentValue($this);
     }
 }

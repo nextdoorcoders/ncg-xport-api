@@ -43,6 +43,10 @@ trait TranslateTrait
      */
     protected function setKeysForSaveQuery(Builder $query): Builder
     {
+        /*
+         * ORM Laravel не позволяет использовать первичный композитный ключ. Для этого
+         * мы переопределяем метод модели с модификацией запроса на сохранение
+         */
         foreach ($this->compositePrimaryKey as $key) {
             if (isset($this->$key)) {
                 $query->where($key, '=', $this->$key);

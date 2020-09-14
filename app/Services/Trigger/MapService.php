@@ -8,7 +8,7 @@ use App\Models\Trigger\Group as GroupModel;
 use App\Models\Trigger\Map as MapModel;
 use App\Services\Marketing\ProjectService;
 use Exception;
-use Illuminate\Database\Eloquent\Collection as CollectionDatabase;
+use Illuminate\Database\Eloquent\Collection;
 
 class MapService
 {
@@ -26,7 +26,7 @@ class MapService
 
     /**
      * @param UserModel $user
-     * @return CollectionDatabase
+     * @return Collection
      */
     public function allMaps(UserModel $user)
     {
@@ -174,88 +174,57 @@ class MapService
         }
     }
 
-//    /**
-//     * @param MapModel $map
-//     * @param UserModel    $user
-//     * @return Collection
-//     */
-//    public function allTriggers(MapModel $map, UserModel $user)
-//    {
-//        $vendorColumn = VendorLocationModel::query()
-//            ->with([
-//                'vendor',
-//            ])
-//            ->where('city_id', $map->city_id)
-//            ->whereDoesntHave('groups', function ($query) use ($map) {
-//                $query->where('map_id', $map->id);
-//            })
-//            ->orderBy('id', 'asc')
-//            ->get();
-//
-//        $groupColumns = $map->groups()
-//            ->with([
-//                'conditions' => function ($query) {
-//                    $query->with([
-//                        'vendorLocation' => function ($query) {
-//                            $query->with('vendor');
-//                        },
-//                    ])
-//                        ->orderBy('created_at', 'asc');
-//                },
-//            ])
-//            ->orderBy('created_at', 'asc')
-//            ->get();
-//
-//        $groupColumns->each(function (GroupModel $group) {
-//            $group->conditions->each(function (ConditionModel $condition) {
-//                /** @var BaseVendor $triggerClass */
-//                $triggerClass = app($condition->vendorLocation->vendor->trigger_class);
-//
-//                $condition->current_value = $triggerClass->current($condition->vendorLocation->city_id);
-//            });
-//        });
-//
-//        $response = collect();
-//        $response->put('vendors', $vendorColumn);
-//        $response->put('groups', $groupColumns);
-//
-//        return $response;
-//    }
-//
-//    /**
-//     * @param MapModel $map
-//     * @param UserModel    $user
-//     * @param array        $data
-//     * @return CollectionDatabase
-//     */
-//    public function updateTriggers(MapModel $map, UserModel $user, array $data)
-//    {
-//        $groupColumns = collect($data);
-//
-//        $groupColumns->each(function ($group) {
-//            foreach ($group['conditions'] as $card) {
-//                /** @var ConditionModel $condition */
-//                if ($card['type'] === 'vendorLocation') {
-//                    $condition = app(ConditionModel::class);
-//                    $condition->group()->associate($group['id']);
-//                    $condition->vendorLocation()->associate($card['id']);
-//                    $condition->parameters = $condition->vendorLocation->vendor->default_parameters;
-//                    $condition->save();
-//                } else {
-//                    if ($group['id'] !== $card['group_id']) {
-//                        $condition = ConditionModel::query()
-//                            ->where('id', $card['id'])
-//                            ->first();
-//
-//                        $condition->group()->associate($group['id']);
-//                        $condition->save();
-//                    }
-//                }
-//            }
-//        });
-//
-////        $map->refreshStatus();
-//
-//        return $this->allTriggers($map, $user);
-//    }
+    /**
+     * Получение списка групп и всех вложенных сущностей
+     *
+     * @param MapModel  $map
+     * @param UserModel $user
+     * @return Collection
+     */
+    public function readConditions(MapModel $map, UserModel $user)
+    {
+        return $map->groups()
+            ->with([
+                'conditions' => function ($query) {
+                    $query->with([
+                        'vendor',
+                        'vendorLocation',
+                    ])
+                        ->orderBy('created_at', 'asc');
+                },
+            ])
+            ->orderBy('created_at', 'asc')
+            ->get();
+    }
+
+    /**
+     * Метод позволяет перемещать состояния между группами. Обновление
+     * параметров состояний происходит непосредственно через обновление
+     * состояния
+     *
+     * @param MapModel  $map
+     * @param UserModel $user
+     * @param array     $data
+     * @return Collection
+     */
+    public function updateConditions(MapModel $map, UserModel $user, array $data)
+    {
+        $groups = collect($data);
+
+        $groups->each(function ($group) {
+            foreach ($group['conditions'] as $card) {
+                /** @var ConditionModel $condition */
+                if ($group['id'] !== $card['group_id']) {
+                    $condition = ConditionModel::query()
+                        ->where('id', $card['id'])
+                        ->first();
+
+                    $condition->group()->associate($group['id']);
+                    $condition->save();
+                }
+            }
+        });
+
+        return $this->readConditions($map, $user);
+    }
 }

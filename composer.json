@@ -17,6 +17,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "googleads/googleads-php-lib": "^47.0",
         "guzzlehttp/guzzle": "^6.5",
+        "imangazaliev/didom": "^1.16",
         "laravel/framework": "^7.0",
         "laravel/horizon": "^4.3",
         "laravel/sanctum": "^2.4",

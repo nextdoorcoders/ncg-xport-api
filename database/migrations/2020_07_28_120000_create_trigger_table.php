@@ -15,7 +15,7 @@ class CreateTriggerTable extends Migration
     {
         Schema::create('trigger_vendors', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->string('trigger_class');
+            $table->string('callback');
             $table->string('type')->index()->nullable();
 
             $table->json('default_parameters')->nullable();
