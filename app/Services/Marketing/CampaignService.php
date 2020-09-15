@@ -2,75 +2,86 @@
 
 namespace App\Services\Marketing;
 
+use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Campaign as CampaignModel;
+use App\Models\Marketing\Project as ProjectModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 class CampaignService
 {
     /**
-     * @param UserModel $user
+     * @param ProjectModel $project
+     * @param UserModel    $user
      * @return Collection
      */
-    public function allCampaigns(UserModel $user)
+    public function allCampaigns(ProjectModel $project, UserModel $user)
     {
-        $accountIds = $user->projects()
-            ->get()
-            ->pluck('id');
-
-        return CampaignModel::query()
-            ->whereIn('account_id', $accountIds)
+        return $project->campaigns()
             ->get();
     }
 
     /**
-     * @param UserModel $user
-     * @param array     $data
-     * @return CampaignModel
+     * @param ProjectModel $project
+     * @param UserModel    $user
+     * @param array        $data
+     * @return CampaignModel|null
+     * @throws MessageException
      */
-    public function createCampaign(UserModel $user, array $data)
+    public function createCampaign(ProjectModel $project, UserModel $user, array $data)
     {
-        /** @var CampaignModel $campaign */
         $campaign = CampaignModel::query()
+            ->where('project_id', $project->id)
+            ->where('campaign_id', $data['campaign_id'])
+            ->first();
+
+        if ($campaign) {
+            throw new MessageException('Campaign already imported to the project');
+        }
+
+        /** @var CampaignModel $campaign */
+        $campaign = $project->campaigns()
             ->create($data);
 
-        return $this->readCampaign($campaign, $user);
+        return $this->readCampaign($project, $campaign, $user);
     }
 
     /**
+     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @return CampaignModel|null
      */
-    public function readCampaign(CampaignModel $campaign, UserModel $user)
+    public function readCampaign(ProjectModel $project, CampaignModel $campaign, UserModel $user)
     {
         return $campaign->fresh([
-            'account',
             'project',
         ]);
     }
 
     /**
+     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @param array         $data
      * @return CampaignModel|null
      */
-    public function updateCampaign(CampaignModel $campaign, UserModel $user, array $data)
+    public function updateCampaign(ProjectModel $project, CampaignModel $campaign, UserModel $user, array $data)
     {
         $campaign->fill($data);
         $campaign->save();
 
-        return $this->readCampaign($campaign, $user);
+        return $this->readCampaign($project, $campaign, $user);
     }
 
     /**
+     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @throws Exception
      */
-    public function deleteCampaign(CampaignModel $campaign, UserModel $user)
+    public function deleteCampaign(ProjectModel $project, CampaignModel $campaign, UserModel $user)
     {
         try {
             $campaign->delete();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Google\AdWords;
+namespace App\Services\Google;
 
 use App\Exceptions\MessageException;
 use App\Models\Marketing\Campaign as CampaignModel;
@@ -33,18 +33,13 @@ class CampaignService
 
         $campaigns = $this->campaignRepository->paginate();
 
-        $existedCampaigns = CampaignModel::query()
-            ->whereIn('campaign_id', $campaigns->pluck('id'))
+        $existedCampaigns = $project->campaigns()
             ->get()
             ->pluck('id', 'campaign_id')
             ->toArray();
 
         $campaigns->each(function ($campaign) use ($existedCampaigns) {
             $campaign->campaign_imported = array_key_exists($campaign->id, $existedCampaigns);
-
-            if ($campaign->campaign_imported === true) {
-                $campaign->xport_campaign_id = $existedCampaigns[$campaign->id];
-            }
         });
 
         return $campaigns;

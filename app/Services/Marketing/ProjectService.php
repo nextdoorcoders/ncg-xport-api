@@ -5,7 +5,7 @@ namespace App\Services\Marketing;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Marketing\Project as ProjectModel;
-use App\Services\Google\AdWords\CampaignService as GoogleCampaignService;
+use App\Services\Google\CampaignService as GoogleCampaignService;
 use Exception;
 use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Illuminate\Database\Eloquent\Collection;
@@ -56,7 +56,11 @@ class ProjectService
      */
     public function readProject(ProjectModel $project, UserModel $user)
     {
-        return $project->fresh('socialAccount');
+        return $project->fresh([
+            'socialAccount',
+            'organization',
+            'map',
+        ]);
     }
 
     /**

@@ -49,8 +49,15 @@ class Project extends Model
         'date_end_at',
     ];
 
+//    protected $dates = [
+//        'date_start_at',
+//        'date_end_at',
+//    ];
+
     protected $casts = [
-        'parameters' => Encrypt::class,
+        'parameters'    => Encrypt::class,
+        'date_start_at' => 'date:Y-m-d',
+        'date_end_at'   => 'date:Y-m-d',
     ];
 
     /*
@@ -78,7 +85,7 @@ class Project extends Model
      */
     public function campaigns(): HasMany
     {
-        return $this->hasMany(Campaign::class, 'account_id');
+        return $this->hasMany(Campaign::class, 'project_id');
     }
 
     /**

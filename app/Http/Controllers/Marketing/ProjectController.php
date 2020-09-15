@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Marketing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Marketing\Project as ProjectRequest;
 use App\Http\Resources\Marketing\Project as ProjectResource;
 use App\Http\Resources\Marketing\ProjectCollection;
 use App\Models\Account\User as UserModel;
@@ -40,10 +41,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ProjectRequest $request
      * @return ProjectResource
      */
-    public function createProject(Request $request)
+    public function createProject(ProjectRequest $request)
     {
         /** @var UserModel $user */
         $user = auth()->user();
@@ -56,48 +57,48 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param ProjectModel $account
+     * @param ProjectModel $project
      * @return ProjectResource
      */
-    public function readProject(ProjectModel $account)
+    public function readProject(ProjectModel $project)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->projectService->readProject($account, $user);
+        $response = $this->projectService->readProject($project, $user);
 
         return new ProjectResource($response);
     }
 
     /**
-     * @param Request      $request
-     * @param ProjectModel $account
+     * @param ProjectRequest $request
+     * @param ProjectModel   $project
      * @return ProjectResource
      */
-    public function updateProject(Request $request, ProjectModel $account)
+    public function updateProject(ProjectRequest $request, ProjectModel $project)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->projectService->updateProject($account, $user, $data);
+        $response = $this->projectService->updateProject($project, $user, $data);
 
         return new ProjectResource($response);
     }
 
     /**
-     * @param ProjectModel $account
+     * @param ProjectModel $project
      * @return Response
      * @throws Exception
      */
-    public function deleteProject(ProjectModel $account)
+    public function deleteProject(ProjectModel $project)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
 
-        $this->projectService->deleteProject($account, $user);
+        $this->projectService->deleteProject($project, $user);
 
         return response()->noContent();
     }

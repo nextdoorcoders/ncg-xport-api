@@ -118,6 +118,16 @@ class MapService
     }
 
     /**
+     * @param MapModel  $map
+     * @param UserModel $user
+     * @return Collection
+     */
+    public function readProjects(MapModel $map, UserModel $user) {
+        return $map->projects()
+            ->get();
+    }
+
+    /**
      * @throws \App\Exceptions\MessageException
      */
     public function updateAllStatuses(): void

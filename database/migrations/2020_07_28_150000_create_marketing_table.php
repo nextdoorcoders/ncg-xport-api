@@ -42,8 +42,8 @@ class CreateMarketingTable extends Migration
             $table->string('desc')->nullable();
 
             $table->json('parameters');
-            $table->timestamp('date_start_at')->nullable();
-            $table->timestamp('date_end_at')->nullable();
+            $table->date('date_start_at')->nullable();
+            $table->date('date_end_at')->nullable();
 
             $table->timestamps();
         });

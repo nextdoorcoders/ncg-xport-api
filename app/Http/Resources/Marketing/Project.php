@@ -6,6 +6,7 @@ use App\Http\Resources\Account\SocialAccount;
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Http\Resources\Trigger\Map;
 use App\Models\Marketing\Project as ProjectModel;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Project extends JsonResource
@@ -26,8 +27,12 @@ class Project extends JsonResource
         $response = [
             'id'                => $resource->id,
             'social_account_id' => $resource->social_account_id,
+            'organization_id'   => $resource->organization_id,
+            'map_id'            => $resource->map_id,
             'name'              => $resource->name,
             'parameters'        => $resource->parameters,
+            'date_start_at'     => Carbon::parse($resource->date_start_at)->toDateString(),
+            'date_end_at'       => Carbon::parse($resource->date_end_at)->toDateString(),
         ];
 
         if ($resource->relationLoaded('map')) {

@@ -64,7 +64,7 @@ class CampaignRepository extends AdWords
                 foreach ($page->getEntries() as $campaign) {
                     $campaigns[] = (object)[
                         'id'         => $campaign->getId(),
-                        'name'       => $campaign->getName(),
+                        'name'       => str_replace('_', ' ', $campaign->getName()),
                         'status'     => $campaign->getStatus(),
                         'start_date' => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getStartDate())),
                         'end_date'   => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getEndDate())),

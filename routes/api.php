@@ -108,21 +108,36 @@ Route::group([
             Route::get('', 'ProjectController@readProject');
             Route::put('', 'ProjectController@updateProject');
             Route::delete('', 'ProjectController@deleteProject');
+
+            Route::group([
+                'prefix' => 'campaigns',
+            ], function () {
+                Route::get('', 'CampaignController@allCampaigns');
+                Route::post('', 'CampaignController@createCampaign');
+
+                Route::group([
+                    'prefix' => 'campaign-{campaign}',
+                ], function () {
+                    Route::get('', 'CampaignController@readCampaign');
+                    Route::put('', 'CampaignController@updateCampaign');
+                    Route::delete('', 'CampaignController@deleteCampaign');
+                });
+            });
         });
     });
 
     Route::group([
-        'prefix' => 'campaigns',
+        'prefix' => 'organizations',
     ], function () {
-        Route::get('', 'CampaignController@allCampaigns');
-        Route::post('', 'CampaignController@createCampaign');
+        Route::get('', 'OrganizationController@allOrganizations');
+        Route::post('', 'OrganizationController@createOrganization');
 
         Route::group([
-            'prefix' => 'campaign-{campaign}',
+            'prefix' => 'organization-{organization}',
         ], function () {
-            Route::get('', 'CampaignController@readCampaign');
-            Route::put('', 'CampaignController@updateCampaign');
-            Route::delete('', 'CampaignController@deleteCampaign');
+            Route::get('', 'OrganizationController@readOrganization');
+            Route::put('', 'OrganizationController@updateOrganization');
+            Route::delete('', 'OrganizationController@deleteOrganization');
         });
     });
 });
@@ -147,9 +162,11 @@ Route::group([
 
             Route::post('replicate', 'MapController@replicateMap');
 
+            Route::get('projects', 'MapController@readProjects');
+
             Route::group([
-                'prefix' => 'conditions'
-            ], function() {
+                'prefix' => 'conditions',
+            ], function () {
                 Route::get('', 'MapController@readConditions');
                 Route::put('', 'MapController@updateConditions');
             });
@@ -211,13 +228,12 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'auth:api',
-    'namespace'  => 'Google',
-    'prefix'     => 'google',
+    'namespace' => 'Google',
+    'prefix'    => 'google',
 ], function () {
     Route::group([
-        'prefix' => 'campaigns/account-{account}',
+        'prefix' => 'project-{project}'
     ], function () {
-        Route::get('', 'CampaignController@allCampaigns');
+        Route::get('campaigns', 'CampaignController@allGoogleCampaigns');
     });
 });
