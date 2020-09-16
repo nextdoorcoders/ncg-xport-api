@@ -473,25 +473,19 @@ class GeoDataSeeder extends Seeder
                             [
                                 'type' => LocationModel::TYPE_CITY,
                                 'name' => [
-                                    'name' => [
-                                        LanguageModel::LANGUAGE_RU => 'Ирпень',
-                                    ],
+                                    LanguageModel::LANGUAGE_RU => 'Ирпень',
                                 ],
                             ],
                             [
                                 'type' => LocationModel::TYPE_CITY,
                                 'name' => [
-                                    'name' => [
-                                        LanguageModel::LANGUAGE_RU => 'Киев',
-                                    ],
+                                    LanguageModel::LANGUAGE_RU => 'Киев',
                                 ],
                             ],
                             [
                                 'type' => LocationModel::TYPE_CITY,
                                 'name' => [
-                                    'name' => [
-                                        LanguageModel::LANGUAGE_RU => 'Славутич',
-                                    ],
+                                    LanguageModel::LANGUAGE_RU => 'Славутич',
                                 ],
                             ],
                         ],
