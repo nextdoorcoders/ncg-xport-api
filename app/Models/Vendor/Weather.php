@@ -12,18 +12,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class Weather
  *
  * @package App\Models\Vendor
- * @property string  $id
- * @property string  $location_id
- * @property Carbon  $datetime_at
- * @property integer $temperature
- * @property integer $wind
- * @property integer $pressure
- * @property integer $humidity
- * @property integer $clouds
- * @property integer $rain
- * @property integer $snow
- * @property Carbon  $created_at
- * @property Carbon  $updated_at
+ * @property string   $id
+ * @property string   $location_id
+ * @property Carbon   $datetime_at
+ * @property integer  $temperature
+ * @property integer  $wind
+ * @property integer  $pressure
+ * @property integer  $humidity
+ * @property integer  $clouds
+ * @property integer  $rain
+ * @property integer  $snow
+ * @property Carbon   $created_at
+ * @property Carbon   $updated_at
+ * @property Location $location
  */
 class Weather extends Model
 {

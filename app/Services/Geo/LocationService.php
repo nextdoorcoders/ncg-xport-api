@@ -2,7 +2,10 @@
 
 namespace App\Services\Geo;
 
+use App\Models\Account\User as UserModel;
 use App\Models\Geo\Location as LocationModel;
+use App\Models\Trigger\Vendor as VendorModel;
+use App\Models\Trigger\VendorLocation as VendorLocationModel;
 use App\Services\Vendor\WeatherService;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -78,6 +81,32 @@ class LocationService
         } catch (Exception $exception) {
             throw $exception;
         }
+    }
+
+    /**
+     * @param LocationModel|null $location
+     * @param UserModel          $user
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function readVendors(LocationModel $location = null, UserModel $user)
+    {
+        $vendors = VendorModel::query()
+            ->whereDoesntHave('locations')
+            ->get();
+
+        if ($location instanceof LocationModel) {
+            $parents = $location->getParentsAndSelf();
+            $parentIds = $parents->pluck('id');
+
+            $locationVendors = VendorLocationModel::query()
+                ->with('vendor')
+                ->whereIn('location_id', $parentIds)
+                ->get();
+
+            $vendors->push(...$locationVendors);
+        }
+
+        return $vendors;
     }
 
     /*

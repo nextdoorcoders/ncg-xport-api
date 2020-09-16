@@ -4,6 +4,10 @@ namespace App\Services\Trigger;
 
 use App\Models\Account\User as UserModel;
 use App\Models\Trigger\Vendor as VendorModel;
+use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
+use App\Models\Vendor\Weather as WeatherModel;
+use App\Services\Vendor\Classes\Currency;
+use App\Services\Vendor\Classes\Weather;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -68,5 +72,40 @@ class VendorService
         } catch (Exception $exception) {
             throw $exception;
         }
+    }
+
+    public function updateAllLocations()
+    {
+        /*
+         * Weather
+         */
+        $triggers = VendorModel::query()
+            ->where('callback', Weather::class)
+            ->get();
+
+        $locationIds = WeatherModel::query()
+            ->get()
+            ->pluck('location_id')
+            ->unique();
+
+        $triggers->each(function (VendorModel $vendor) use ($locationIds) {
+            $vendor->locations()->sync($locationIds);
+        });
+
+        /*
+         * Currency
+         */
+        $triggers = VendorModel::query()
+            ->where('callback', Currency::class)
+            ->get();
+
+        $locationIds = CurrencyRateModel::query()
+            ->get()
+            ->pluck('location_id')
+            ->unique();
+
+        $triggers->each(function (VendorModel $vendor) use ($locationIds) {
+            $vendor->locations()->sync($locationIds);
+        });
     }
 }

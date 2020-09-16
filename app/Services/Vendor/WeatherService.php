@@ -134,13 +134,13 @@ class WeatherService
                         ->updateOrCreate([
                             'datetime_at' => Carbon::createFromTimestamp($weather['dt']) ?? null,
                         ], [
-                            'temp'     => round($weather['main']['temp'] ?? null, 1),
-                            'wind'     => round($weather['wind']['speed'] ?? null, 1),
-                            'pressure' => round($weather['main']['pressure'] ?? null),
-                            'humidity' => round($weather['main']['humidity'] ?? null),
-                            'clouds'   => round($weather['clouds']['all'] ?? null),
-                            'rain'     => round($weather['rain']['1h'] ?? null),
-                            'snow'     => round($weather['snow']['1h'] ?? null),
+                            'temperature' => round($weather['main']['temp'] ?? null, 1),
+                            'wind'        => round($weather['wind']['speed'] ?? null, 1),
+                            'pressure'    => round($weather['main']['pressure'] ?? null),
+                            'humidity'    => round($weather['main']['humidity'] ?? null),
+                            'clouds'      => round($weather['clouds']['all'] ?? null),
+                            'rain'        => round($weather['rain']['1h'] ?? null),
+                            'snow'        => round($weather['snow']['1h'] ?? null),
                         ]);
                 }
             } catch (Exception $exception) {

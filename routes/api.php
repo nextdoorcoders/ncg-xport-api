@@ -87,7 +87,11 @@ Route::group([
             Route::get('', 'LocationController@readLocation');
             Route::put('', 'LocationController@updateLocation');
             Route::delete('', 'LocationController@deleteLocation');
+
+            Route::get('vendors', 'LocationController@readVendors');
         });
+
+        Route::get('vendors', 'LocationController@readVendors');
     });
 });
 

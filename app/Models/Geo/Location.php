@@ -99,7 +99,7 @@ class Location extends Model
      */
     public function vendors(): BelongsToMany
     {
-        return $this->belongsToMany(Vendor::class, 'marketing_vendors_has_geo_cities', 'location_id', 'vendor_id')
+        return $this->belongsToMany(Vendor::class, 'trigger_vendors_location', 'location_id', 'vendor_id')
             ->using(VendorLocation::class);
     }
 }
