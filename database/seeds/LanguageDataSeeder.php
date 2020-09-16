@@ -16,15 +16,18 @@ class LanguageDataSeeder extends Seeder
             [
                 'name'       => 'English',
                 'code'       => LanguageModel::LANGUAGE_EN,
+                'priority'   => [LanguageModel::LANGUAGE_RU, LanguageModel::LANGUAGE_UK],
                 'is_primary' => true,
             ],
             [
-                'name' => 'Русский язык',
-                'code' => LanguageModel::LANGUAGE_RU,
+                'name'     => 'Русский язык',
+                'code'     => LanguageModel::LANGUAGE_RU,
+                'priority' => [LanguageModel::LANGUAGE_EN, LanguageModel::LANGUAGE_UK],
             ],
             [
-                'name' => 'Українська мова',
-                'code' => LanguageModel::LANGUAGE_UK,
+                'name'     => 'Українська мова',
+                'code'     => LanguageModel::LANGUAGE_UK,
+                'priority' => [LanguageModel::LANGUAGE_RU, LanguageModel::LANGUAGE_EN],
             ],
         ]);
 

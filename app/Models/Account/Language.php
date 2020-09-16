@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string  $id
  * @property string  $name
  * @property string  $code
+ * @property array   $priority
  * @property boolean $is_primary
  * @property Carbon  $created_at
  * @property Carbon  $updated_at
@@ -32,6 +33,11 @@ class Language extends Model
     protected $fillable = [
         'name',
         'code',
+        'priority',
         'is_primary',
+    ];
+
+    protected $casts = [
+        'priority' => 'array',
     ];
 }

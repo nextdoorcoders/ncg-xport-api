@@ -49,7 +49,9 @@ class LocationService
      */
     public function readLocation(LocationModel $location)
     {
-        return $location->fresh();
+        return $location->fresh([
+            'children',
+        ]);
     }
 
     /**
