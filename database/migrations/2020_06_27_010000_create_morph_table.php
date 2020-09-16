@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMorphTokensTable extends Migration
+class CreateMorphTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,6 +13,20 @@ class CreateMorphTokensTable extends Migration
      */
     public function up()
     {
+        Schema::create('morph_files', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
+            $table->string('fileable_type')->index()->nullable();
+            $table->uuid('fileable_id')->index()->nullable();
+
+            $table->string('field')->index();
+            $table->string('name');
+            $table->integer('size', false, true);
+            $table->string('type');
+            $table->string('disk_name');
+
+            $table->timestamps();
+        });
+
         Schema::create('morph_tokens', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->string('tokenable_type')->index();
@@ -37,5 +51,6 @@ class CreateMorphTokensTable extends Migration
     public function down()
     {
         Schema::dropIfExists('morph_tokens');
+        Schema::dropIfExists('morph_files');
     }
 }
