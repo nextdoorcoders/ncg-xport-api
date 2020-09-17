@@ -20,7 +20,7 @@ class Currency extends BaseVendor
             return false;
         }
 
-        if ($parameters->min <= $current && $current <= $parameters->max) {
+        if ($parameters->rate_min <= $current && $current <= $parameters->rate_max) {
             return true;
         }
 
@@ -50,19 +50,11 @@ class Currency extends BaseVendor
             ->orderBy('created_at', 'desc')
             ->first();
 
-
-        $currencyRateS = CurrencyRate::query()
-            ->where('location_id', $condition->vendorLocation->location_id)
-            ->where('from_currency_id', $formCurrencyId)
-            ->where('to_currency_id', $toCurrencyId)
-            ->where('type', $type)
-            ->orderBy('created_at', 'desc')
-            ->toSql();
-
         return $currencyRate;
     }
 
-    public function currency_exchange(ConditionModel $condition) {
+    public function currency_exchange(ConditionModel $condition)
+    {
         $currencyRate = $this->getVendor($condition);
 
         if (!$currencyRate) {
@@ -71,22 +63,49 @@ class Currency extends BaseVendor
 
         $parameters = $condition->parameters;
 
+        $rate = $currencyRate->rate;
         $rateType = $parameters['rate_type'];
+
+        return $rate[$rateType] ?? null;
     }
 
-    public function currency_national(ConditionModel $condition) {
+    /**
+     * @param ConditionModel $condition
+     * @return mixed|null
+     */
+    public function currency_national(ConditionModel $condition)
+    {
         $currencyRate = $this->getVendor($condition);
 
         if (!$currencyRate) {
             return null;
         }
+
+        $parameters = $condition->parameters;
+
+        $rate = $currencyRate->rate;
+        $rateType = $parameters['rate_type'];
+
+        return $rate[$rateType] ?? null;
     }
 
-    public function currency_interbank(ConditionModel $condition) {
+    /**
+     * @param ConditionModel $condition
+     * @return mixed|null
+     */
+    public function currency_interbank(ConditionModel $condition)
+    {
         $currencyRate = $this->getVendor($condition);
 
         if (!$currencyRate) {
             return null;
         }
+
+        $parameters = $condition->parameters;
+
+        $rate = $currencyRate->rate;
+        $rateType = $parameters['rate_type'];
+
+        return $rate[$rateType] ?? null;
     }
 }

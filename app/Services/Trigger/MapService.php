@@ -198,7 +198,9 @@ class MapService
                 'conditions' => function ($query) {
                     $query->with([
                         'vendor',
-                        'vendorLocation',
+                        'vendorLocation' => function ($query) {
+                            $query->with('location');
+                        },
                     ])
                         ->orderBy('created_at', 'asc');
                 },

@@ -4,6 +4,8 @@ namespace App\Http\Resources\Trigger;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Models\Trigger\Condition as ConditionModel;
+use App\Models\Vendor\Currency as CurrencyModel;
+use App\Services\Vendor\Classes\Currency;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Condition extends JsonResource
@@ -44,6 +46,23 @@ class Condition extends JsonResource
             $response = array_merge($response, [
                 'vendor' => new Vendor($resource->vendor),
             ]);
+
+            if ($resource->vendor->callback === Currency::class) {
+                // TODO: Change DB structure and remove this shit!!!
+
+                $fromCurrency = CurrencyModel::query()
+                    ->where('id', $resource->parameters['from_currency_id'])
+                    ->first();
+
+                $toCurrency = CurrencyModel::query()
+                    ->where('id', $resource->parameters['to_currency_id'])
+                    ->first();
+
+                $response = array_merge($response, [
+                    'fromCurrency' => $fromCurrency,
+                    'toCurrency'   => $toCurrency,
+                ]);
+            }
         }
 
         if ($resource->relationLoaded('vendorLocation')) {

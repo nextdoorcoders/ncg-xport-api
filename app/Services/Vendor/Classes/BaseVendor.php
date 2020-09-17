@@ -17,6 +17,7 @@ abstract class BaseVendor
             'vendorLocation',
         ]);
 
+        /** @var Calendar|Currency|Weather $instance */
         $instance = app($condition->vendor->callback);
 
         return $instance->{$condition->vendor->type}($condition);
@@ -35,6 +36,7 @@ abstract class BaseVendor
 
         $currentValue = self::getCurrentValue($condition);
 
+        /** @var Calendar|Currency|Weather $instance */
         $instance = app($condition->vendor->callback);
 
         return $instance->check($condition, $currentValue);

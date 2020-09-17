@@ -36,7 +36,7 @@ class CurrencyRate extends Model
     const TYPE_NATIONAL_RATE = 'national';
 
     const TYPE_OF_RATE_MIN = 'min';
-    const TYPE_OF_RATE_AVG = 'avg';
+    const TYPE_OF_RATE_AVG = 'average';
     const TYPE_OF_RATE_MAX = 'max';
 
     protected $table = 'vendor_currency_rate';

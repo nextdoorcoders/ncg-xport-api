@@ -82,7 +82,7 @@ class ConditionService
 
             $data = [
                 'group_id'           => $group->id,
-                'vendor_id'          => $vendorLocation->vendor->id,
+                'vendor_id'          => $vendorLocation->vendor_id,
                 'vendor_location_id' => $vendorLocation->id,
                 'parameters'         => $vendorLocation->vendor->default_parameters,
             ];
@@ -92,10 +92,15 @@ class ConditionService
 
         $condition = app(ConditionModel::class);
         $condition->fill($data);
-        $condition->group()->associate($group);
+
+        $isNeedCheckStatus = false;
+        if ($condition->isDirty('parameters')) {
+            $isNeedCheckStatus = true;
+        }
+
         $condition->save();
 
-        if ($condition->isDirty('parameters')) {
+        if ($isNeedCheckStatus == true) {
             $this->updateStatus($condition, true);
         }
 
@@ -122,9 +127,15 @@ class ConditionService
     public function updateCondition(ConditionModel $condition, UserModel $user, array $data)
     {
         $condition->fill($data);
+
+        $isNeedCheckStatus = false;
+        if ($condition->isDirty('parameters')) {
+            $isNeedCheckStatus = true;
+        }
+
         $condition->save();
 
-        if ($condition->isDirty('parameters')) {
+        if ($isNeedCheckStatus == true) {
             $this->updateStatus($condition, true);
         }
 
