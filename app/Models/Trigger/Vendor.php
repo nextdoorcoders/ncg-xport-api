@@ -31,6 +31,9 @@ class Vendor extends Model
 {
     use TranslatableTrait, UuidTrait;
 
+    const LOCATION_GLOBAL = 'global';
+    const LOCATION_LOCAL = 'local';
+
     const TYPE_WEATHER_TEMPERATURE = 'weather_temperature';
     const TYPE_WEATHER_WIND = 'weather_wind';
     const TYPE_WEATHER_CLOUDS = 'weather_clouds';

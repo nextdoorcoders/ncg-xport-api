@@ -47,13 +47,13 @@ class ConditionController extends Controller
      * @param VendorLocation $vendorLocation
      * @return ConditionResponse
      */
-    public function createCondition(Request $request, GroupModel $group, VendorLocation $vendorLocation) {
+    public function createCondition(Request $request, GroupModel $group) {
         /** @var User $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->conditionService->createCondition($group, $vendorLocation, $user, $data);
+        $response = $this->conditionService->createCondition($group, $user, $data);
 
         return new ConditionResponse($response);
     }

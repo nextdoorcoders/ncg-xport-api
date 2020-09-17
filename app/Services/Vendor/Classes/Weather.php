@@ -46,7 +46,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function temperature(ConditionModel $condition)
+    public function weather_temperature(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 
@@ -61,7 +61,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function wind(ConditionModel $condition)
+    public function weather_wind(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 
@@ -76,7 +76,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function pressure(ConditionModel $condition)
+    public function weather_pressure(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 
@@ -91,7 +91,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function humidity(ConditionModel $condition)
+    public function weather_humidity(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 
@@ -106,7 +106,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function clouds(ConditionModel $condition)
+    public function weather_clouds(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 
@@ -121,7 +121,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function rain(ConditionModel $condition)
+    public function weather_rain(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 
@@ -136,7 +136,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function snow(ConditionModel $condition)
+    public function weather_snow(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 

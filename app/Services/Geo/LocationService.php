@@ -99,7 +99,12 @@ class LocationService
             $parentIds = $parents->pluck('id');
 
             $locationVendors = VendorLocationModel::query()
-                ->with('vendor')
+                ->with([
+                    'location' => function ($query) {
+                        $query->with('parent');
+                    },
+                    'vendor',
+                ])
                 ->whereIn('location_id', $parentIds)
                 ->get();
 

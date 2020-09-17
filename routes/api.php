@@ -232,11 +232,25 @@ Route::group([
 });
 
 Route::group([
-    'namespace' => 'Google',
-    'prefix'    => 'google',
+    'middleware' => 'auth:api',
+    'namespace'  => 'Vendor',
+    'prefix'     => 'vendor',
 ], function () {
     Route::group([
-        'prefix' => 'project-{project}'
+        'prefix' => 'currencies',
+    ], function () {
+        Route::get('', 'CurrencyController@allCurrencies');
+    });
+});
+
+
+Route::group([
+    'middleware' => 'auth:api',
+    'namespace'  => 'Google',
+    'prefix'     => 'google',
+], function () {
+    Route::group([
+        'prefix' => 'project-{project}',
     ], function () {
         Route::get('campaigns', 'CampaignController@allGoogleCampaigns');
     });

@@ -3,15 +3,29 @@
 namespace App\Services\Vendor;
 
 use App\Models\Geo\Location as LocationModel;
+use App\Models\Vendor\Currency;
 use App\Models\Vendor\Currency as CurrencyModel;
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
 use DiDom\Document;
 use DiDom\Exceptions\InvalidSelectorException;
 use DiDom\Query;
+use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Collection;
 
 class CurrencyService
 {
+    /**
+     * @return DatabaseCollection
+     */
+    public function allCurrencies()
+    {
+        /** @var DatabaseCollection $currencies */
+        $currencies = Currency::query()
+            ->get();
+
+        return $currencies;
+    }
+
     /**
      * Получение обменного курса
      *
@@ -236,10 +250,6 @@ class CurrencyService
             $rates->each(function ($group) {
                 $group->each(function (CurrencyRateModel $from) use ($group) {
                     $group->each(function (CurrencyRateModel $to) use ($from) {
-                        if ($from->id === $to->id) {
-                            return;
-                        }
-
                         if ($from->type === CurrencyRateModel::TYPE_NATIONAL_RATE) {
                             $rate = [
                                 'average' => round((float)$from->rate['average'] / $to->rate['average'], 4),
@@ -273,10 +283,5 @@ class CurrencyService
     public function updateCurrency()
     {
         $this->getMinfinCurrencyRates();
-    }
-
-    public function crossCourse($currencyFrom, $currencyTo)
-    {
-
     }
 }

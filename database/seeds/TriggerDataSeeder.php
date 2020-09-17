@@ -196,8 +196,8 @@ class TriggerDataSeeder extends Seeder
                     LanguageModel::LANGUAGE_EN => 'Exchange currency rate',
                 ],
                 'default_parameters' => [
-                    'currency_from_id' => null,
-                    'currency_to_id'   => null,
+                    'from_currency_id' => null,
+                    'to_currency_id'   => null,
                     'type'             => CurrencyRateModel::TYPE_EXCHANGE_RATE,
                     'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
                     'rate_min'         => '5',
@@ -221,8 +221,8 @@ class TriggerDataSeeder extends Seeder
                 ],
                 'default_parameters' => [
                     'type'             => CurrencyRateModel::TYPE_NATIONAL_RATE,
-                    'currency_from_id' => null,
-                    'currency_to_id'   => null,
+                    'from_currency_id' => null,
+                    'to_currency_id'   => null,
                     'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
                     'rate_min'         => '5',
                     'rate_max'         => '10',
@@ -245,8 +245,8 @@ class TriggerDataSeeder extends Seeder
                 ],
                 'default_parameters' => [
                     'type'             => CurrencyRateModel::TYPE_INTERBANK_RATE,
-                    'currency_from_id' => null,
-                    'currency_to_id'   => null,
+                    'from_currency_id' => null,
+                    'to_currency_id'   => null,
                     'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
                     'rate_min'         => '5',
                     'rate_max'         => '10',

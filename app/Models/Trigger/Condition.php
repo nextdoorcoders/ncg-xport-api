@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon         $changed_at
  * @property Carbon         $created_at
  * @property Carbon         $updated_at
+ * @property string|null    $current_value
  * @property Group          $group
  * @property Vendor         $vendor
  * @property VendorLocation $vendorLocation
@@ -35,8 +36,8 @@ class Condition extends Model
 
     protected $fillable = [
         'group_id',
-        'vendor_type',
         'vendor_id',
+        'vendor_location_id',
         'parameters',
         'order_index',
         'is_enabled',

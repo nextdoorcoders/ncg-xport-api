@@ -10,26 +10,23 @@ abstract class BaseVendor
      * @param ConditionModel $condition
      * @return mixed
      */
-    public static function getCurrentValue(ConditionModel $condition)
+    public function getCurrentValue(ConditionModel $condition)
     {
         $condition->loadMissing([
             'vendor',
             'vendorLocation',
         ]);
 
-        return app()->call([
-            $condition->vendor->callback,
-            $condition->vendor->type
-        ], [
-            'condition' => $condition,
-        ]);
+        $instance = app($condition->vendor->callback);
+
+        return $instance->{$condition->vendor->type}($condition);
     }
 
     /**
      * @param ConditionModel $condition
      * @return mixed
      */
-    public static function checkCondition(ConditionModel $condition): bool
+    public function checkCondition(ConditionModel $condition): bool
     {
         $condition->loadMissing([
             'vendor',
@@ -38,12 +35,8 @@ abstract class BaseVendor
 
         $currentValue = self::getCurrentValue($condition);
 
-        return app()->call([
-            $condition->vendor->callback,
-            'check'
-        ], [
-            'condition' => $condition,
-            'current' => $currentValue
-        ]);
+        $instance = app($condition->vendor->callback);
+
+        return $instance->check($condition, $currentValue);
     }
 }

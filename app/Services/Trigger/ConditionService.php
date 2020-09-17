@@ -2,6 +2,7 @@
 
 namespace App\Services\Trigger;
 
+use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
 use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
@@ -48,19 +49,50 @@ class ConditionService
     }
 
     /**
-     * @param GroupModel          $group
-     * @param VendorLocationModel $vendorLocation
-     * @param UserModel           $user
-     * @param array               $data
+     * @param GroupModel $group
+     * @param UserModel  $user
+     * @param array      $data
      * @return ConditionModel
+     * @throws MessageException
      */
-    public function createCondition(GroupModel $group, VendorLocationModel $vendorLocation, UserModel $user, array $data)
+    public function createCondition(GroupModel $group, UserModel $user, array $data)
     {
+        $vendorId = $data['id'];
+        $vendorType = $data['type'];
+
         /** @var ConditionModel $condition */
+        if ($vendorType === VendorModel::LOCATION_GLOBAL) {
+            /** @var VendorModel $vendor */
+            $vendor = VendorModel::query()
+                ->where('id', $vendorId)
+                ->first();
+
+            $data = [
+                'group_id'           => $group->id,
+                'vendor_id'          => $vendor->id,
+                'vendor_location_id' => null,
+                'parameters'         => $vendor->default_parameters,
+            ];
+        } elseif ($vendorType === VendorModel::LOCATION_LOCAL) {
+            /** @var VendorLocationModel $vendorLocation */
+            $vendorLocation = VendorLocationModel::query()
+                ->with('vendor')
+                ->where('id', $vendorId)
+                ->first();
+
+            $data = [
+                'group_id'           => $group->id,
+                'vendor_id'          => $vendorLocation->vendor->id,
+                'vendor_location_id' => $vendorLocation->id,
+                'parameters'         => $vendorLocation->vendor->default_parameters,
+            ];
+        } else {
+            throw new MessageException('Unknown trigger location');
+        }
+
         $condition = app(ConditionModel::class);
         $condition->fill($data);
         $condition->group()->associate($group);
-        $condition->vendorLocation()->associate($vendorLocation);
         $condition->save();
 
         if ($condition->isDirty('parameters')) {
@@ -85,6 +117,7 @@ class ConditionService
      * @param UserModel      $user
      * @param array          $data
      * @return ConditionModel|null
+     * @throws MessageException
      */
     public function updateCondition(ConditionModel $condition, UserModel $user, array $data)
     {
@@ -113,7 +146,7 @@ class ConditionService
     }
 
     /**
-     * @throws \App\Exceptions\MessageException
+     * @throws MessageException
      */
     public function updateAllStatuses(): void
     {
@@ -133,7 +166,7 @@ class ConditionService
      *
      * @param ConditionModel $condition
      * @param bool           $checkParent
-     * @throws \App\Exceptions\MessageException
+     * @throws MessageException
      */
     public function updateStatus(ConditionModel $condition, bool $checkParent = false): void
     {
@@ -141,7 +174,7 @@ class ConditionService
 
         /** @var BaseVendor $triggerClass */
         $triggerClass = app($vendor->callback);
-        $isEnabled = $triggerClass->run($condition);
+        $isEnabled = $triggerClass->checkCondition($condition); // TODO: Fix it
 
         $condition->is_enabled = $isEnabled;
         $condition->refreshed_at = now();

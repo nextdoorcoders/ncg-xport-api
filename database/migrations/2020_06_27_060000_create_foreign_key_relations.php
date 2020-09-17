@@ -61,6 +61,23 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
+        Schema::table('vendor_currency_rate', function (Blueprint $table) {
+            $table->foreign('location_id')
+                ->references('id')
+                ->on('geo_locations')
+                ->onDelete('cascade');
+
+            $table->foreign('from_currency_id')
+                ->references('id')
+                ->on('vendor_currency')
+                ->onDelete('cascade');
+
+            $table->foreign('to_currency_id')
+                ->references('id')
+                ->on('vendor_currency')
+                ->onDelete('cascade');
+        });
+
         Schema::table('trigger_maps', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')

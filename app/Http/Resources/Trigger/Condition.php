@@ -22,8 +22,16 @@ class Condition extends JsonResource
         $resource = $this->resource;
 
         $response = [
-            'id'         => $resource->id,
-            'parameters' => $resource->parameters,
+            'id'                 => $resource->id,
+            'group_id'           => $resource->group_id,
+            'vendor_id'          => $resource->vendor_id,
+            'vendor_location_id' => $resource->vendor_location_id,
+            'parameters'         => $resource->parameters,
+            'order_index'        => $resource->order_index,
+            'is_enabled'         => $resource->is_enabled,
+            'refreshed_at'       => $resource->refreshed_at,
+            'changed_at'         => $resource->changed_at,
+            'current_value'      => $resource->current_value,
         ];
 
         if ($resource->relationLoaded('group')) {
@@ -35,6 +43,12 @@ class Condition extends JsonResource
         if ($resource->relationLoaded('vendor')) {
             $response = array_merge($response, [
                 'vendor' => new Vendor($resource->vendor),
+            ]);
+        }
+
+        if ($resource->relationLoaded('vendorLocation')) {
+            $response = array_merge($response, [
+                'vendorLocation' => new VendorLocation($resource->vendorLocation),
             ]);
         }
 
