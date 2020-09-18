@@ -95,7 +95,7 @@ class MapService
     public function replicateMap(MapModel $map, UserModel $user)
     {
         $replicateMap = $map->replicate();
-        $replicateMap->desc = sprintf('(replicated %s) - %s', now()->format('H:i:s, d.m.Y'), $replicateMap->desc);
+        $replicateMap->desc = trim(sprintf('(replicated) %s', $replicateMap->desc));
         $replicateMap->push();
 
         $groups = $map->groups()->get();

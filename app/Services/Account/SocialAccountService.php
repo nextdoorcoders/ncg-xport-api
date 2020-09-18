@@ -66,21 +66,12 @@ class SocialAccountService
         try {
             DB::beginTransaction();
 
-            /** @var SocialAccountModel $socialAccount */
-            $socialAccount = SocialAccountModel::query()
-                ->with([
-                    'user',
-                ])
-                ->where('provider_id', $providerUser->getId())
-                ->where('provider_name', $providerName)
-                ->first();
-
-            /** @var UserModel $user */
-            if ($socialAccount) {
-                // If social account already exists
-                $user = $socialAccount->user;
+            if ($authAccount) {
+                // Если пользователь авторизован
+                $user = $authAccount;
             } else {
-                // If social account not exist - check users
+                // Если пользователь гость
+
                 $account = UserModel::query()
                     ->where('email', $providerUser->getEmail())
                     ->first();
@@ -89,25 +80,19 @@ class SocialAccountService
                     // If account registered as primary (previously registered without social networks)
                     $user = $account;
                 } else {
-                    if ($authAccount) {
-                        // If user already authorized
-                        $user = $authAccount;
-                    } else {
-                        // If user are not registered and not authorized
-                        /** @var LanguageModel $language */
-                        $language = LanguageModel::query()
-                            ->where('code', $locale)
-                            ->orWhere('code', LanguageModel::LANGUAGE_BY_DEFAULT)
-                            ->first();
+                    /** @var LanguageModel $language */
+                    $language = LanguageModel::query()
+                        ->where('code', $locale)
+                        ->orWhere('code', LanguageModel::LANGUAGE_BY_DEFAULT)
+                        ->first();
 
-                        $user = UserModel::query()
-                            ->create([
-                                'language_id' => $language->id,
-                                'name'        => $providerUser->getName(),
-                                'email'       => $providerUser->getEmail(),
-                                'password'    => UserModel::getRandomPassword(),
-                            ]);
-                    }
+                    $user = UserModel::query()
+                        ->create([
+                            'language_id' => $language->id,
+                            'name'        => $providerUser->getName(),
+                            'email'       => $providerUser->getEmail(),
+                            'password'    => UserModel::getRandomPassword(),
+                        ]);
                 }
             }
 
@@ -120,7 +105,6 @@ class SocialAccountService
                 'refresh_token' => $providerUser->refreshToken,
                 'last_login_at' => now(),
             ]);
-
 
             DB::commit();
         } catch (Exception $exception) {

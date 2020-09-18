@@ -82,7 +82,6 @@ class SocialAccountController extends Controller
         /** @var UserModel $user */
         $user = auth()->user();
 
-
         try {
             /** @var FacebookProvider|GoogleProvider $driver */
             $driver = Socialite::driver($this->provider);
