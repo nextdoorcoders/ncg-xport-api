@@ -66,8 +66,8 @@ class CampaignRepository extends AdWords
                         'id'         => $campaign->getId(),
                         'name'       => str_replace('_', ' ', $campaign->getName()),
                         'status'     => $campaign->getStatus(),
-                        'start_date' => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getStartDate())),
-                        'end_date'   => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getEndDate())),
+                        'start_date' => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getStartDate()))->toDateString(),
+                        'end_date'   => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getEndDate()))->toDateString(),
                     ];
                 }
             }
