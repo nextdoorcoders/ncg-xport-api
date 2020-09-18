@@ -22,7 +22,7 @@ class CreateForeignKeyRelations extends Migration
             $table->foreign('language_id')
                 ->references('id')
                 ->on('account_languages')
-                ->onDelete('cascade');
+                ->nullOnDelete();
         });
 
         Schema::table('account_contacts', function (Blueprint $table) {
@@ -114,6 +114,11 @@ class CreateForeignKeyRelations extends Migration
                 ->references('id')
                 ->on('account_users')
                 ->onDelete('cascade');
+
+            $table->foreign('location_id')
+                ->references('id')
+                ->on('geo_locations')
+                ->nullOnDelete();
         });
 
         Schema::table('marketing_projects', function (Blueprint $table) {
@@ -125,12 +130,12 @@ class CreateForeignKeyRelations extends Migration
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('marketing_organizations')
-                ->onDelete('cascade');
+                ->nullOnDelete();
 
             $table->foreign('map_id')
                 ->references('id')
                 ->on('trigger_maps')
-                ->onDelete('cascade');
+                ->nullOnDelete();
         });
 
         Schema::table('marketing_campaigns', function (Blueprint $table) {
