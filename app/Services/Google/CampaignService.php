@@ -6,6 +6,7 @@ use App\Exceptions\MessageException;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class CampaignService
@@ -54,6 +55,10 @@ class CampaignService
     {
         $this->campaignRepository->setAccount($campaign->project);
 
-        $this->campaignRepository->update($campaign, $status);
+        $googleCampaign = $this->campaignRepository->find($campaign);
+
+        if ($googleCampaign && Carbon::parse($googleCampaign->start_date) <= now() && now() <= Carbon::parse($googleCampaign->end_date)) {
+            $this->campaignRepository->update($campaign, $status);
+        }
     }
 }

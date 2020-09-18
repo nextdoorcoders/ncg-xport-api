@@ -5,36 +5,25 @@ namespace App\Repositories\Google\AdWords;
 use App\Models\Marketing\Campaign as CampaignModel;
 use Carbon\Carbon;
 use Google\AdsApi\AdWords\AdWordsSession;
-use Google\AdsApi\AdWords\v201809\cm\AdvertisingChannelType;
-use Google\AdsApi\AdWords\v201809\cm\BiddingStrategyConfiguration;
-use Google\AdsApi\AdWords\v201809\cm\BiddingStrategyType;
-use Google\AdsApi\AdWords\v201809\cm\Budget;
-use Google\AdsApi\AdWords\v201809\cm\BudgetBudgetDeliveryMethod;
-use Google\AdsApi\AdWords\v201809\cm\BudgetOperation;
-use Google\AdsApi\AdWords\v201809\cm\BudgetService;
 use Google\AdsApi\AdWords\v201809\cm\Campaign;
 use Google\AdsApi\AdWords\v201809\cm\CampaignOperation;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
-use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
-use Google\AdsApi\AdWords\v201809\cm\FrequencyCap;
-use Google\AdsApi\AdWords\v201809\cm\GeoTargetTypeSetting;
-use Google\AdsApi\AdWords\v201809\cm\GeoTargetTypeSettingNegativeGeoTargetType;
-use Google\AdsApi\AdWords\v201809\cm\GeoTargetTypeSettingPositiveGeoTargetType;
-use Google\AdsApi\AdWords\v201809\cm\Level;
-use Google\AdsApi\AdWords\v201809\cm\ManualCpcBiddingScheme;
-use Google\AdsApi\AdWords\v201809\cm\Money;
-use Google\AdsApi\AdWords\v201809\cm\NetworkSetting;
 use Google\AdsApi\AdWords\v201809\cm\Operator;
 use Google\AdsApi\AdWords\v201809\cm\OrderBy;
 use Google\AdsApi\AdWords\v201809\cm\Paging;
+use Google\AdsApi\AdWords\v201809\cm\Predicate;
+use Google\AdsApi\AdWords\v201809\cm\PredicateOperator;
 use Google\AdsApi\AdWords\v201809\cm\Selector;
 use Google\AdsApi\AdWords\v201809\cm\SortOrder;
-use Google\AdsApi\AdWords\v201809\cm\TimeUnit;
+use Illuminate\Support\Collection;
 
 class CampaignRepository extends AdWords
 {
     const PAGE_LIMIT = 500;
 
+    /**
+     * @return Collection
+     */
     public function paginate()
     {
         /** @var AdWordsSession $session */
@@ -43,12 +32,74 @@ class CampaignRepository extends AdWords
         /** @var CampaignService $campaignService */
         $campaignService = $this->services->get($session, CampaignService::class);
 
+        $orderings = [
+            new OrderBy('Name', SortOrder::ASCENDING),
+        ];
+
+        $campaigns = $this->select($campaignService, [], $orderings);
+
+        return collect($campaigns);
+    }
+
+    /**
+     * @param CampaignModel $campaignModel
+     * @return mixed
+     */
+    public function find(CampaignModel $campaignModel)
+    {
+        /** @var AdWordsSession $session */
+        $session = $this->sessionBuilder->build();
+
+        /** @var CampaignService $campaignService */
+        $campaignService = $this->services->get($session, CampaignService::class);
+
+        $predicates = [
+            new Predicate('Id', PredicateOperator::EQUALS, [
+                $campaignModel->campaign_id,
+            ]),
+        ];
+
+        $orderings = [
+            new OrderBy('Name', SortOrder::ASCENDING),
+        ];
+
+        $campaigns = $this->select($campaignService, $predicates, $orderings);
+
+        return collect($campaigns)->first();
+    }
+
+    public function update(CampaignModel $campaignModel, string $status)
+    {
+        /** @var AdWordsSession $session */
+        $session = $this->sessionBuilder->build();
+
+        $campaignService = $this->services->get($session, CampaignService::class);
+
+        $operations = [];
+        // Create a campaign with PAUSED status.
+        $campaign = new Campaign();
+        $campaign->setId($campaignModel->campaign_id);
+        $campaign->setStatus($status);
+
+        // Create a campaign operation and add it to the list.
+        $operation = new CampaignOperation();
+        $operation->setOperand($campaign);
+        $operation->setOperator(Operator::SET);
+        $operations[] = $operation;
+
+        // Update the campaign on the server.
+        $result = $campaignService->mutate($operations);
+
+        return collect($result->getValue())->first();
+    }
+
+    protected function select($campaignService, $predicates = [], $orderings = [])
+    {
         // Create selector.
         $selector = new Selector();
         $selector->setFields(['Id', 'Name', 'Status', 'StartDate', 'EndDate']);
-        $selector->setOrdering([
-            new OrderBy('Name', SortOrder::ASCENDING),
-        ]);
+        $selector->setPredicates($predicates);
+        $selector->setOrdering($orderings);
         $selector->setPaging(new Paging(0, self::PAGE_LIMIT));
 
         $campaigns = [];
@@ -76,7 +127,7 @@ class CampaignRepository extends AdWords
             $selector->getPaging()->setStartIndex($selector->getPaging()->getStartIndex() + self::PAGE_LIMIT);
         } while ($selector->getPaging()->getStartIndex() < $totalNumEntries);
 
-        return collect($campaigns);
+        return $campaigns;
     }
 
 //    public function create()
@@ -194,34 +245,7 @@ class CampaignRepository extends AdWords
 //            printf("Campaign with name '%s' and ID %d was added.\n", $campaign->getName(), $campaign->getId());
 //        }
 //    }
-
-    public function update(CampaignModel $campaignModel, string $status)
-    {
-        /** @var AdWordsSession $session */
-        $session = $this->sessionBuilder->build();
-
-        $campaignService = $this->services->get($session, CampaignService::class);
-
-        $operations = [];
-        // Create a campaign with PAUSED status.
-        $campaign = new Campaign();
-        $campaign->setId($campaignModel->campaign_id);
-        $campaign->setStatus($status);
-
-        // Create a campaign operation and add it to the list.
-        $operation = new CampaignOperation();
-        $operation->setOperand($campaign);
-        $operation->setOperator(Operator::SET);
-        $operations[] = $operation;
-
-        // Update the campaign on the server.
-        $result = $campaignService->mutate($operations);
-
-        $campaign = $result->getValue()[0];
-
-        printf("Campaign with ID %d, name '%s', and budget delivery method '%s' was updated.\n", $campaign->getId(), $campaign->getName(), $campaign->getBudget()->getDeliveryMethod());
-    }
-
+//
 //    public function delete($campaignId)
 //    {
 //        $session = $this->sessionBuilder

@@ -2,6 +2,7 @@
 
 namespace App\Services\Trigger;
 
+use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
 use App\Models\Trigger\Group as GroupModel;
 use App\Models\Trigger\Map as MapModel;
@@ -100,7 +101,7 @@ class GroupService
     }
 
     /**
-     * @throws \App\Exceptions\MessageException
+     * @throws MessageException
      */
     public function updateAllStatuses(): void
     {
@@ -120,7 +121,7 @@ class GroupService
      *
      * @param GroupModel $group
      * @param bool       $checkParent
-     * @throws \App\Exceptions\MessageException
+     * @throws MessageException
      */
     public function updateStatus(GroupModel $group, bool $checkParent = false): void
     {

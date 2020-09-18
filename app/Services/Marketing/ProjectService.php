@@ -2,6 +2,7 @@
 
 namespace App\Services\Marketing;
 
+use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Marketing\Project as ProjectModel;
@@ -91,6 +92,9 @@ class ProjectService
         }
     }
 
+    /**
+     * @throws MessageException
+     */
     public function updateAllStatuses(): void
     {
         $projects = ProjectModel::query()
@@ -99,6 +103,8 @@ class ProjectService
                 'campaigns',
             ])
             ->whereHas('map')
+            ->where('date_start_at', '<=', now())
+            ->where('date_end_at', '>=', now())
             ->get();
 
         $projects->each(function (ProjectModel $project) {
@@ -108,7 +114,7 @@ class ProjectService
 
     /**
      * @param ProjectModel $project
-     * @throws \App\Exceptions\MessageException
+     * @throws MessageException
      */
     public function updateStatus(ProjectModel $project): void
     {
