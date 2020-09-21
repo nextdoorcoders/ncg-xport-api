@@ -93,6 +93,12 @@ Route::group([
 
         Route::get('vendors', 'LocationController@readVendors');
     });
+
+    Route::group([
+        'prefix' => 'timezones',
+    ], function () {
+        Route::get('', 'TimezoneController@allTimezones');
+    });
 });
 
 Route::group([

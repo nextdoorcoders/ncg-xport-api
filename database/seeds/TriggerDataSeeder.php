@@ -268,7 +268,12 @@ class TriggerDataSeeder extends Seeder
                     LanguageModel::LANGUAGE_EN => 'Calendar (date, time and timezone)',
                 ],
                 'default_parameters' => [
-                    'cron_mask' => '* * * * *',
+                    'date_start_at' => null,
+                    'date_end_at'   => null,
+                    'time_start_at' => null,
+                    'time_end_at'   => null,
+                    'day_of_week'   => null,
+                    'timezone'      => null,
                 ],
                 'settings'           => [
                     'color' => '#F64E60',
