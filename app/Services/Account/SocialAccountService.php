@@ -103,7 +103,6 @@ class SocialAccountService
                 'email'         => $providerUser->getEmail(),
                 'access_token'  => $providerUser->token,
                 'refresh_token' => $providerUser->refreshToken,
-                'last_login_at' => now(),
             ]);
 
             DB::commit();

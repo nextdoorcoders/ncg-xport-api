@@ -45,6 +45,18 @@ class User extends JsonResource
             ]);
         }
 
+        if ($resource->relationLoaded('socialAccounts')) {
+            $response = array_merge($response, [
+                'socialAccounts' => new ContactCollection($resource->socialAccounts),
+            ]);
+        }
+
+        if ($resource->relationLoaded('contacts')) {
+            $response = array_merge($response, [
+                'contacts' => new ContactCollection($resource->contacts),
+            ]);
+        }
+
         if ($resource->relationLoaded('organizations')) {
             $response = array_merge($response, [
                 'organizations' => new OrganizationCollection($resource->organizations),

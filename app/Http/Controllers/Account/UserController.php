@@ -9,6 +9,7 @@ use App\Http\Requests\Account\ForgotSendCode as ForgotSendCodeRequest;
 use App\Http\Requests\Account\Login as LoginRequest;
 use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
+use App\Http\Requests\Account\User as UserRequest;
 use App\Http\Resources\Account\User as UserResource;
 use App\Http\Resources\Account\UserCollection;
 use App\Http\Resources\DataResource;
@@ -18,6 +19,7 @@ use App\Models\Account\User as UserModel;
 use App\Services\Account\UserService as UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
@@ -65,7 +67,7 @@ class UserController extends Controller
 
         $this->userService->logout($user);
 
-        return new MessageResource('Сессия успешно закрыта', null);
+        return new MessageResource(null, null);
     }
 
     /**
@@ -123,6 +125,9 @@ class UserController extends Controller
         return new MessageResource('Success');
     }
 
+    /**
+     * @return UserCollection
+     */
     public function allUsers()
     {
         $response = $this->userService->allUsers();
@@ -130,6 +135,10 @@ class UserController extends Controller
         return new UserCollection($response);
     }
 
+    /**
+     * @param UserModel $user
+     * @return UserResource
+     */
     public function readUser(UserModel $user)
     {
         $response = $this->userService->readUser($user);
@@ -137,6 +146,9 @@ class UserController extends Controller
         return new UserResource($response);
     }
 
+    /**
+     * @return UserResource
+     */
     public function readCurrentUser()
     {
         /** @var UserModel $user */
@@ -147,8 +159,23 @@ class UserController extends Controller
         return new UserResource($response);
     }
 
-    public function updateCurrentUser()
+    /**
+     * @param UserRequest $request
+     * @return UserResource
+     */
+    public function updateCurrentUser(UserRequest $request)
     {
+        /** @var UserModel $user */
+        $user = auth()->user();
 
+        $data = $request->only([
+            'name',
+            'email',
+            'password',
+        ]);
+
+        $response = $this->userService->updateUser($user, $data);
+
+        return new UserResource($response, 'Successfully updated', 'Your account information has been saved');
     }
 }

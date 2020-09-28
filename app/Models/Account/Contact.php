@@ -5,6 +5,7 @@ namespace App\Models\Account;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * Class Contact
@@ -26,7 +27,18 @@ class Contact extends Model
     const TYPE_WEBSITE = 'website';
     const TYPE_ADDRESS = 'address';
 
+    const TYPES = [
+        self::TYPE_PHONE,
+        self::TYPE_EMAIL,
+        self::TYPE_WEBSITE,
+        self::TYPE_ADDRESS,
+    ];
+
     protected $table = 'account_contacts';
+
+    protected $appends = [
+        'type_text',
+    ];
 
     /*
      * Relations
@@ -38,5 +50,34 @@ class Contact extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /*
+     * Static methods
+     */
+
+    /**
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return array_combine(self::TYPES, [
+            'Phone',
+            'Email',
+            'Web site',
+            'Address',
+        ]);
+    }
+
+    /*
+     * Accessors
+     */
+
+    /**
+     * @return array|\ArrayAccess|mixed
+     */
+    public function getTypeTextAttribute()
+    {
+        return Arr::get(self::getTypes(), $this->type);
     }
 }

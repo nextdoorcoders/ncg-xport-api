@@ -44,6 +44,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\ForceApi::class,
             'throttle:600,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\UpdateLastSeen::class
         ],
     ];
 

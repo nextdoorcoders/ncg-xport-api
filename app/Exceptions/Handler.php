@@ -111,6 +111,7 @@ class Handler extends ExceptionHandler
 
             case ValidationException::class:
                 /** @var ValidationException $exception */
+                $title = 'Check form data';
                 $code = $exception->status;
 
                 $data = array_merge($data, [

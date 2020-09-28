@@ -66,7 +66,6 @@ class CreateAccountTable extends Migration
             $table->text('refresh_token')->nullable();
 
             $table->timestamps();
-            $table->timestamp('last_login_at')->nullable();
         });
 
 

@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string              $refresh_token
  * @property Carbon              $created_at
  * @property Carbon              $updated_at
- * @property Carbon              $last_login_at
  * @property User                $user
  * @property Collection<Project> $projects
  */
@@ -44,7 +43,6 @@ class SocialAccount extends Model
         'email',
         'access_token',
         'refresh_token',
-        'last_login_at',
     ];
 
     protected $hidden = [

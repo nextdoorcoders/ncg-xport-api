@@ -211,8 +211,25 @@ class UserService
      */
     public function readUser(UserModel $user)
     {
-        $user->load('language');
+        $user->load([
+            'language',
+            'socialAccounts',
+            'contacts',
+        ]);
 
-        return $user;
+        return $user->refresh();
+    }
+
+    /**
+     * @param UserModel $user
+     * @param array     $data
+     * @return UserModel
+     */
+    public function updateUser(UserModel $user, array $data)
+    {
+        $user->fill($data);
+        $user->save();
+
+        return $this->readUser($user);
     }
 }
