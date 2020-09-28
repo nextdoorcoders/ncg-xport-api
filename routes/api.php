@@ -1,5 +1,20 @@
 <?php
 
+use App\Http\Controllers\Account\UserController;
+use App\Http\Controllers\Geo\LocationController;
+use App\Http\Controllers\Geo\TimezoneController;
+use App\Http\Controllers\Google\CampaignController as GoogleCampaignController;
+use App\Http\Controllers\Marketing\Account\FacebookController;
+use App\Http\Controllers\Marketing\Account\GoogleController;
+use App\Http\Controllers\Marketing\AccountController;
+use App\Http\Controllers\Marketing\CampaignController;
+use App\Http\Controllers\Marketing\OrganizationController;
+use App\Http\Controllers\Marketing\ProjectController;
+use App\Http\Controllers\Trigger\ConditionController;
+use App\Http\Controllers\Trigger\GroupController;
+use App\Http\Controllers\Trigger\MapController;
+use App\Http\Controllers\Trigger\VendorController;
+use App\Http\Controllers\Vendor\CurrencyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,22 +29,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'namespace' => 'Account',
-    'prefix'    => 'accounts',
+    'prefix' => 'accounts',
 ], function () {
     Route::group([
         'prefix' => 'auth',
     ], function () {
-        Route::post('login', 'UserController@login')->middleware('guest:api');
-        Route::delete('logout', 'UserController@logout')->middleware('auth:api');
-        Route::post('register', 'UserController@register')->middleware('guest:api');
+        Route::post('login', [UserController::class, 'login'])->middleware('guest:api');
+        Route::delete('logout', [UserController::class, 'logout'])->middleware('auth:api');
+        Route::post('register', [UserController::class, 'register'])->middleware('guest:api');
 
         Route::group([
             'middleware' => 'guest:api',
             'prefix'     => 'forgot',
         ], function () {
-            Route::post('send-code', 'UserController@forgotSendCode');
-            Route::post('confirm-code', 'UserController@forgotConfirmCode');
+            Route::post('send-code', [UserController::class, 'forgotSendCode']);
+            Route::post('confirm-code', [UserController::class, 'forgotConfirmCode']);
         });
     });
 
@@ -37,100 +51,94 @@ Route::group([
         'middleware' => 'auth:api',
         'prefix'     => 'users',
     ], function () {
-        Route::get('', 'UserController@allUsers');
+        Route::get('', [UserController::class, 'allUsers']);
 
         Route::group([
             'prefix' => 'user-{user}',
         ], function () {
-            Route::get('', 'UserController@readUser');
+            Route::get('', [UserController::class, 'readUser']);
         });
 
         Route::group([
             'prefix' => 'current',
         ], function () {
-            Route::get('', 'UserController@readCurrentUser');
-            Route::put('', 'UserController@updateCurrentUser');
-        });
-    });
-
-    Route::group([
-        'prefix' => 'social-account',
-    ], function () {
-        Route::get('', 'SocialAccountController@allSocialAccounts')->middleware('auth:api');
-
-        Route::group([
-            'namespace' => 'SocialAccount',
-        ], function () {
-            Route::get('facebook', 'FacebookController@linkToProvider');
-            Route::post('facebook/callback', 'FacebookController@handleProviderCallback');
-
-            Route::get('google', 'GoogleController@linkToProvider');
-            Route::post('google/callback', 'GoogleController@handleProviderCallback');
+            Route::get('', [UserController::class, 'readCurrentUser']);
+            Route::put('', [UserController::class, 'updateCurrentUser']);
         });
     });
 });
 
 Route::group([
     'middleware' => 'auth:api',
-    'namespace'  => 'Geo',
     'prefix'     => 'geo',
 ], function () {
     Route::group([
         'prefix' => 'locations',
     ], function () {
-        Route::get('', 'LocationController@allLocations');
-        Route::post('', 'LocationController@createLocation');
+        Route::get('', [LocationController::class, 'allLocations']);
+        Route::post('', [LocationController::class, 'createLocation']);
 
         Route::group([
             'prefix' => 'location-{location}',
         ], function () {
-            Route::get('', 'LocationController@readLocation');
-            Route::put('', 'LocationController@updateLocation');
-            Route::delete('', 'LocationController@deleteLocation');
+            Route::get('', [LocationController::class, 'readLocation']);
+            Route::put('', [LocationController::class, 'updateLocation']);
+            Route::delete('', [LocationController::class, 'deleteLocation']);
 
-            Route::get('vendors', 'LocationController@readVendors');
+            Route::get('vendors', [LocationController::class, 'readVendors']);
         });
 
-        Route::get('vendors', 'LocationController@readVendors');
+        Route::get('vendors', [LocationController::class, 'readVendors']);
     });
 
     Route::group([
         'prefix' => 'timezones',
     ], function () {
-        Route::get('', 'TimezoneController@allTimezones');
+        Route::get('', [TimezoneController::class, 'allTimezones']);
     });
 });
 
 Route::group([
     'middleware' => 'auth:api',
-    'namespace'  => 'Marketing',
     'prefix'     => 'marketing',
 ], function () {
     Route::group([
+        'prefix' => 'accounts',
+    ], function () {
+        Route::get('', [AccountController::class, 'allAccounts'])->middleware('auth:api');
+
+        Route::get('facebook', [FacebookController::class, 'linkToProvider']);
+        Route::post('facebook/callback', [FacebookController::class, 'handleProviderCallback']);
+
+        Route::get('google', [GoogleController::class, 'linkToProvider']);
+        Route::post('google/callback', [GoogleController::class, 'handleProviderCallback']);
+    });
+
+    Route::group([
         'prefix' => 'projects',
     ], function () {
-        Route::get('', 'ProjectController@allProjects');
-        Route::post('', 'ProjectController@createProject');
+        Route::get('', [ProjectController::class, 'allProjects']);
+        Route::post('', [ProjectController::class, 'createProject']);
 
         Route::group([
             'prefix' => 'project-{project}',
         ], function () {
-            Route::get('', 'ProjectController@readProject');
-            Route::put('', 'ProjectController@updateProject');
-            Route::delete('', 'ProjectController@deleteProject');
+            Route::get('', [ProjectController::class, 'readProject']);
+            Route::put('', [ProjectController::class, 'updateProject']);
+            Route::delete('', [ProjectController::class, 'deleteProject']);
 
             Route::group([
                 'prefix' => 'campaigns',
             ], function () {
-                Route::get('', 'CampaignController@allCampaigns');
-                Route::post('', 'CampaignController@createCampaign');
+                Route::get('', [CampaignController::class, 'allCampaigns']);
+                Route::post('', [CampaignController::class, 'createCampaign']);
 
                 Route::group([
                     'prefix' => 'campaign-{campaign}',
                 ], function () {
-                    Route::get('', 'CampaignController@readCampaign');
-                    Route::put('', 'CampaignController@updateCampaign');
-                    Route::delete('', 'CampaignController@deleteCampaign');
+                    Route::get('', [CampaignController::class, 'readCampaign']);
+                    Route::put('', [CampaignController::class, 'updateCampaign']);
+                    Route::delete('', [CampaignController::class, 'deleteCampaign']);
                 });
             });
         });
@@ -139,46 +147,45 @@ Route::group([
     Route::group([
         'prefix' => 'organizations',
     ], function () {
-        Route::get('', 'OrganizationController@allOrganizations');
-        Route::post('', 'OrganizationController@createOrganization');
+        Route::get('', [OrganizationController::class, 'allOrganizations']);
+        Route::post('', [OrganizationController::class, 'createOrganization']);
 
         Route::group([
             'prefix' => 'organization-{organization}',
         ], function () {
-            Route::get('', 'OrganizationController@readOrganization');
-            Route::put('', 'OrganizationController@updateOrganization');
-            Route::delete('', 'OrganizationController@deleteOrganization');
+            Route::get('', [OrganizationController::class, 'readOrganization']);
+            Route::put('', [OrganizationController::class, 'updateOrganization']);
+            Route::delete('', [OrganizationController::class, 'deleteOrganization']);
         });
     });
 });
 
 Route::group([
     'middleware' => 'auth:api',
-    'namespace'  => 'Trigger',
     'prefix'     => 'trigger',
 ], function () {
     Route::group([
         'prefix' => 'maps',
     ], function () {
-        Route::get('', 'MapController@allMaps');
-        Route::post('', 'MapController@createMap');
+        Route::get('', [MapController::class, 'allMaps']);
+        Route::post('', [MapController::class, 'createMap']);
 
         Route::group([
             'prefix' => 'map-{map}',
         ], function () {
-            Route::get('', 'MapController@readMap');
-            Route::put('', 'MapController@updateMap');
-            Route::delete('', 'MapController@deleteMap');
+            Route::get('', [MapController::class, 'readMap']);
+            Route::put('', [MapController::class, 'updateMap']);
+            Route::delete('', [MapController::class, 'deleteMap']);
 
-            Route::post('replicate', 'MapController@replicateMap');
+            Route::post('replicate', [MapController::class, 'replicateMap']);
 
-            Route::get('projects', 'MapController@readProjects');
+            Route::get('projects', [MapController::class, 'readProjects']);
 
             Route::group([
                 'prefix' => 'conditions',
             ], function () {
-                Route::get('', 'MapController@readConditions');
-                Route::put('', 'MapController@updateConditions');
+                Route::get('', [MapController::class, 'readConditions']);
+                Route::put('', [MapController::class, 'updateConditions']);
             });
         });
     });
@@ -189,16 +196,16 @@ Route::group([
         Route::group([
             'prefix' => 'map-{map}',
         ], function () {
-            Route::get('', 'GroupController@allGroups');
-            Route::post('', 'GroupController@createGroup');
+            Route::get('', [GroupController::class, 'allGroups']);
+            Route::post('', [GroupController::class, 'createGroup']);
         });
 
         Route::group([
             'prefix' => 'group-{group}',
         ], function () {
-            Route::get('', 'GroupController@readGroup');
-            Route::put('', 'GroupController@updateGroup');
-            Route::delete('', 'GroupController@deleteGroup');
+            Route::get('', [GroupController::class, 'readGroup']);
+            Route::put('', [GroupController::class, 'updateGroup']);
+            Route::delete('', [GroupController::class, 'deleteGroup']);
         });
     });
 
@@ -208,56 +215,53 @@ Route::group([
         Route::group([
             'prefix' => 'group-{group}',
         ], function () {
-            Route::get('', 'ConditionController@allConditions');
-            Route::post('', 'ConditionController@createCondition');
+            Route::get('', [ConditionController::class, 'allConditions']);
+            Route::post('', [ConditionController::class, 'createCondition']);
         });
 
         Route::group([
             'prefix' => 'condition-{condition}',
         ], function () {
-            Route::get('', 'ConditionController@readCondition');
-            Route::put('', 'ConditionController@updateCondition');
-            Route::delete('', 'ConditionController@deleteCondition');
+            Route::get('', [ConditionController::class, 'readCondition']);
+            Route::put('', [ConditionController::class, 'updateCondition']);
+            Route::delete('', [ConditionController::class, 'deleteCondition']);
         });
     });
 
     Route::group([
         'prefix' => 'vendors',
     ], function () {
-        Route::get('', 'VendorController@allVendors');
-        Route::post('', 'VendorController@createVendor');
+        Route::get('', [VendorController::class, 'allVendors']);
+        Route::post('', [VendorController::class, 'createVendor']);
 
         Route::group([
             'prefix' => 'vendor-{vendor}',
         ], function () {
-            Route::get('', 'VendorController@readVendor');
-            Route::put('', 'VendorController@updateVendor');
-            Route::delete('', 'VendorController@deleteVendor');
+            Route::get('', [VendorController::class, 'readVendor']);
+            Route::put('', [VendorController::class, 'updateVendor']);
+            Route::delete('', [VendorController::class, 'deleteVendor']);
         });
     });
 });
 
 Route::group([
     'middleware' => 'auth:api',
-    'namespace'  => 'Vendor',
     'prefix'     => 'vendor',
 ], function () {
     Route::group([
         'prefix' => 'currencies',
     ], function () {
-        Route::get('', 'CurrencyController@allCurrencies');
+        Route::get('', [CurrencyController::class, 'allCurrencies']);
     });
 });
 
-
 Route::group([
     'middleware' => 'auth:api',
-    'namespace'  => 'Google',
     'prefix'     => 'google',
 ], function () {
     Route::group([
         'prefix' => 'project-{project}',
     ], function () {
-        Route::get('campaigns', 'CampaignController@allGoogleCampaigns');
+        Route::get('campaigns', [GoogleCampaignController::class, 'allGoogleCampaigns']);
     });
 });

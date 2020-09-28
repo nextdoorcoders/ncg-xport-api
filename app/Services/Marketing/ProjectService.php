@@ -32,7 +32,7 @@ class ProjectService
     public function allProjects(UserModel $user)
     {
         return $user->projects()
-            ->with('socialAccount')
+            ->with('account')
             ->get();
     }
 
@@ -58,7 +58,7 @@ class ProjectService
     public function readProject(ProjectModel $project, UserModel $user)
     {
         return $project->fresh([
-            'socialAccount',
+            'account',
             'organization',
             'map',
         ]);

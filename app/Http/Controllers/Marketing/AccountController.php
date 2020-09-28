@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Account;
+namespace App\Http\Controllers\Marketing;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Account\SocialAccountCollection;
+use App\Http\Resources\Marketing\AccountCollection;
 use App\Http\Resources\DataResource;
 use App\Http\Resources\MessageResource;
 use App\Models\Account\User as UserModel;
-use App\Services\Account\SocialAccountService as SocialAuthService;
+use App\Services\Marketing\AccountService as SocialAuthService;
 use App\Services\Account\UserService as UserService;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\User as UserSocialite;
 
-class SocialAccountController extends Controller
+class AccountController extends Controller
 {
     protected ?string $provider = null;
 
@@ -32,27 +32,27 @@ class SocialAccountController extends Controller
     /**
      * SocialAuthController constructor.
      *
-     * @param SocialAuthService $socialAccountService
+     * @param SocialAuthService $accountService
      * @param UserService       $userService
      */
-    public function __construct(SocialAuthService $socialAccountService, UserService $userService)
+    public function __construct(SocialAuthService $accountService, UserService $userService)
     {
-        $this->socialAuthService = $socialAccountService;
+        $this->socialAuthService = $accountService;
 
         $this->userService = $userService;
     }
 
     /**
-     * @return SocialAccountCollection
+     * @return AccountCollection
      */
-    public function allSocialAccounts()
+    public function allAccounts()
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->socialAuthService->allSocialAccounts($user);
+        $response = $this->socialAuthService->allAccounts($user);
 
-        return new SocialAccountCollection($response);
+        return new AccountCollection($response);
     }
 
     /**
@@ -76,7 +76,7 @@ class SocialAccountController extends Controller
     public function handleProviderCallback(Request $request)
     {
         if ($this->provider == null) {
-            throw new MessageException('Unknown social provider');
+            throw new MessageException('Unknown provider');
         }
 
         /** @var UserModel $user */
@@ -99,13 +99,13 @@ class SocialAccountController extends Controller
                     // Return Bearer token if user are not logged in
                     $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
 
-                    return new DataResource($response, 'Social account is assigned to the profile');
+                    return new DataResource($response, 'Account is assigned to the profile');
                 }
             } catch (Exception $exception) {
                 throw $exception;
             }
 
-            return new MessageResource('Social account is assigned to the profile');
+            return new MessageResource('Account is assigned to the profile');
         } catch (Exception $exception) {
             throw new MessageException('Something happened', 'Failed to get profile information. Please try again later');
         }

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Account;
+namespace App\Models\Marketing;
 
 use App\Casts\Encrypt;
-use App\Models\Marketing\Project;
+use App\Models\Account\User;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class SocialAccount
+ * Class Account
  *
  * @package App\Models\Account
  * @property string              $id
@@ -27,14 +27,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property User                $user
  * @property Collection<Project> $projects
  */
-class SocialAccount extends Model
+class Account extends Model
 {
     use UuidTrait;
 
     const PROVIDER_NAME_GOOGLE = 'google';
     const PROVIDER_NAME_FACEBOOK = 'facebook';
 
-    protected $table = 'account_social_accounts';
+    protected $table = 'marketing_accounts';
 
     protected $fillable = [
         'user_id',

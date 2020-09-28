@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Marketing;
 
-use App\Http\Resources\Account\SocialAccount;
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Http\Resources\Trigger\Map;
 use App\Models\Marketing\Project as ProjectModel;
@@ -41,9 +40,9 @@ class Project extends JsonResource
             ]);
         }
 
-        if ($resource->relationLoaded('socialAccount')) {
+        if ($resource->relationLoaded('account')) {
             $response = array_merge($response, [
-                'socialAccount' => new SocialAccount($resource->socialAccount),
+                'account' => new Account($resource->account),
             ]);
         }
 
@@ -59,9 +58,9 @@ class Project extends JsonResource
             ]);
         }
 
-        if ($resource->relationLoaded('socialAccount')) {
+        if ($resource->relationLoaded('account')) {
             $response = array_merge($response, [
-                'socialAccount' => new SocialAccount($resource->socialAccount),
+                'account' => new Account($resource->account),
             ]);
         }
 

@@ -53,21 +53,6 @@ class CreateAccountTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('account_social_accounts', function (Blueprint $table) {
-            $table->uuid('id')->index()->primary();
-            $table->uuid('user_id')->index();
-
-            $table->string('provider_id')->index();
-            $table->string('provider_name')->index();
-
-            $table->string('email')->index()->nullable();
-
-            $table->text('access_token')->nullable();
-            $table->text('refresh_token')->nullable();
-
-            $table->timestamps();
-        });
-
 
         Schema::create('account_workers', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
@@ -94,7 +79,7 @@ class CreateAccountTable extends Migration
     public function down()
     {
         Schema::dropIfExists('account_workers');
-        Schema::dropIfExists('account_social_accounts');
+        Schema::dropIfExists('marketing_accounts');
         Schema::dropIfExists('account_contacts');
         Schema::dropIfExists('account_users');
         Schema::dropIfExists('account_languages');

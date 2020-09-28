@@ -4,6 +4,7 @@ namespace App\Models\Account;
 
 use App\Models\File;
 use App\Models\Geo\Location;
+use App\Models\Marketing\Account;
 use App\Models\Marketing\Organization;
 use App\Models\Marketing\Project;
 use App\Models\Traits\UserTrait;
@@ -23,19 +24,19 @@ use Laravel\Sanctum\HasApiTokens;
  * Class User
  *
  * @package App\Models\Account
- * @property string                    $id
- * @property string                    $location_id
- * @property string                    $language_id
- * @property Carbon                    $created_at
- * @property Carbon                    $updated_at
- * @property Location                  $location
- * @property Language                  $language
- * @property Collection<Contact>       $contacts
- * @property Collection<SocialAccount> $socialAccounts
- * @property Collection<Project>       $projects
- * @property Collection<Map>           $maps
- * @property Collection<Organization>  $organizations
- * @property File                      $picture
+ * @property string                   $id
+ * @property string                   $location_id
+ * @property string                   $language_id
+ * @property Carbon                   $created_at
+ * @property Carbon                   $updated_at
+ * @property Location                 $location
+ * @property Language                 $language
+ * @property Collection<Contact>      $contacts
+ * @property Collection<Account>      $accounts
+ * @property Collection<Project>      $projects
+ * @property Collection<Map>          $maps
+ * @property Collection<Organization> $organizations
+ * @property File                     $picture
  */
 class User extends Authenticatable
 {
@@ -79,9 +80,9 @@ class User extends Authenticatable
     /**
      * @return HasMany
      */
-    public function socialAccounts(): HasMany
+    public function accounts(): HasMany
     {
-        return $this->hasMany(SocialAccount::class, 'user_id');
+        return $this->hasMany(Account::class, 'user_id');
     }
 
     /**
@@ -89,7 +90,7 @@ class User extends Authenticatable
      */
     public function projects(): HasManyThrough
     {
-        return $this->hasManyThrough(Project::class, SocialAccount::class, 'user_id', 'social_account_id');
+        return $this->hasManyThrough(Project::class, Account::class, 'user_id', 'social_account_id');
     }
 
     /**

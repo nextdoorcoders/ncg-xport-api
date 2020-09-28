@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Account;
 
 use App\Http\Resources\Geo\Location;
+use App\Http\Resources\Marketing\AccountCollection;
 use App\Http\Resources\Marketing\OrganizationCollection;
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Models\Account\User as UserModel;
@@ -45,9 +46,9 @@ class User extends JsonResource
             ]);
         }
 
-        if ($resource->relationLoaded('socialAccounts')) {
+        if ($resource->relationLoaded('accounts')) {
             $response = array_merge($response, [
-                'socialAccounts' => new ContactCollection($resource->socialAccounts),
+                'accounts' => new AccountCollection($resource->accounts),
             ]);
         }
 

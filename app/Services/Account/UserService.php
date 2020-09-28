@@ -4,7 +4,7 @@ namespace App\Services\Account;
 
 use App\Exceptions\MessageException;
 use App\Models\Account\Language as LanguageModel;
-use App\Models\Account\SocialAccount as SocialAccountModel;
+use App\Models\Marketing\Account as AccountModel;
 use App\Models\Account\User as UserModel;
 use App\Models\Token;
 use App\Services\Sender\EmailService;
@@ -142,17 +142,17 @@ class UserService
             ->first();
 
         if (!$user) {
-            /** @var SocialAccountModel $socialAccount */
-            $socialAccount = SocialAccountModel::query()
+            /** @var AccountModel $account */
+            $account = AccountModel::query()
                 ->with('user')
                 ->where('email', $email)
                 ->first();
 
-            if (!$socialAccount) {
+            if (!$account) {
                 throw new MessageException('User is not found', 'Please check your email and try again');
             }
 
-            $user = $socialAccount->user;
+            $user = $account->user;
         }
 
         $code = UserModel::getPasswordResetCode();
@@ -177,17 +177,17 @@ class UserService
             ->first();
 
         if (!$user) {
-            /** @var SocialAccountModel $socialAccount */
-            $socialAccount = SocialAccountModel::query()
+            /** @var AccountModel $account */
+            $account = AccountModel::query()
                 ->with('user')
                 ->where('email', $email)
                 ->first();
 
-            if (!$socialAccount) {
+            if (!$account) {
                 throw new MessageException('User is not found', 'Please check your email and try again');
             }
 
-            $user = $socialAccount->user;
+            $user = $account->user;
         }
 
         if ($user->password_reset_code != $code) {
@@ -213,7 +213,7 @@ class UserService
     {
         $user->load([
             'language',
-            'socialAccounts',
+            'accounts',
             'contacts',
         ]);
 

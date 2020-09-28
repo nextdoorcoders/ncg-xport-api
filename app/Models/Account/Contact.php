@@ -5,6 +5,7 @@ namespace App\Models\Account;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
 
 /**
@@ -45,7 +46,7 @@ class Contact extends Model
      */
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {

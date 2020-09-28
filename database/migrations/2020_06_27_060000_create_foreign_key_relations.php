@@ -32,7 +32,7 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('account_social_accounts', function (Blueprint $table) {
+        Schema::table('marketing_accounts', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('account_users')
@@ -124,7 +124,7 @@ class CreateForeignKeyRelations extends Migration
         Schema::table('marketing_projects', function (Blueprint $table) {
             $table->foreign('social_account_id')
                 ->references('id')
-                ->on('account_social_accounts')
+                ->on('marketing_accounts')
                 ->onDelete('cascade');
 
             $table->foreign('organization_id')

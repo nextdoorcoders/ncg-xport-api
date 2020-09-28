@@ -3,7 +3,7 @@
 namespace App\Models\Marketing;
 
 use App\Casts\Encrypt;
-use App\Models\Account\SocialAccount;
+use App\Models\Marketing\Account;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Map;
 use Carbon\Carbon;
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon               $created_at
  * @property Carbon               $updated_at
  * @property Map                  $map
- * @property SocialAccount        $socialAccount
+ * @property Account        $account
  * @property Organization         $organization
  * @property Collection<Campaign> $campaigns
  */
@@ -67,9 +67,9 @@ class Project extends Model
     /**
      * @return BelongsTo
      */
-    public function socialAccount(): BelongsTo
+    public function account(): BelongsTo
     {
-        return $this->belongsTo(SocialAccount::class, 'social_account_id');
+        return $this->belongsTo(Account::class, 'social_account_id');
     }
 
     /**

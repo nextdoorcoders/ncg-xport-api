@@ -3,7 +3,7 @@
 namespace App\Repositories\Google\AdWords;
 
 use App\Exceptions\MessageException;
-use App\Models\Account\SocialAccount as SocialProjectModel;
+use App\Models\Marketing\Account as SocialProjectModel;
 use App\Models\Marketing\Project as ProjectModel;
 use Google\AdsApi\AdWords\AdWordsServices;
 use Google\AdsApi\AdWords\AdWordsSessionBuilder;
@@ -33,8 +33,8 @@ abstract class AdWords
      */
     public function setAccount(ProjectModel $project)
     {
-        if ($project->socialAccount->provider_name != SocialProjectModel::PROVIDER_NAME_GOOGLE) {
-            throw new MessageException('This social account does not support here');
+        if ($project->account->provider_name != SocialProjectModel::PROVIDER_NAME_GOOGLE) {
+            throw new MessageException('This account does not support here');
         }
 
         $this->sessionBuilder = $this->getSessionBuilder($project);
@@ -121,7 +121,7 @@ abstract class AdWords
 
                 'clientId'     => config('services.google.client_id', null),
                 'clientSecret' => config('services.google.client_secret', null),
-                'refreshToken' => $account->socialAccount->refresh_token,
+                'refreshToken' => $account->account->refresh_token,
 
                 /*
                  * For service account flow.

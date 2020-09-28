@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Services\Account;
+namespace App\Services\Marketing;
 
 use App\Exceptions\MessageException;
 use App\Models\Account\Language as LanguageModel;
-use App\Models\Account\SocialAccount as SocialAccountModel;
 use App\Models\Account\User as UserModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,15 +14,15 @@ use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\User as UserSocialite;
 
-class SocialAccountService
+class AccountService
 {
     /**
      * @param UserModel $user
      * @return Collection
      */
-    public function allSocialAccounts(UserModel $user): Collection
+    public function allAccounts(UserModel $user): Collection
     {
-        return $user->socialAccounts()
+        return $user->accounts()
             ->get();
     }
 
@@ -36,7 +35,7 @@ class SocialAccountService
     public function redirectToProvider(string $provider, array $scopes = [], array $with = [])
     {
         if ($provider == null) {
-            abort(Response::HTTP_BAD_GATEWAY, 'Unknown social provider');
+            abort(Response::HTTP_BAD_GATEWAY, 'Unknown provider');
         }
 
         /** @var FacebookProvider|GoogleProvider $driver */
@@ -96,7 +95,7 @@ class SocialAccountService
                 }
             }
 
-            $user->socialAccounts()->updateOrCreate([
+            $user->accounts()->updateOrCreate([
                 'provider_id'   => $providerUser->getId(),
                 'provider_name' => $providerName,
             ], [

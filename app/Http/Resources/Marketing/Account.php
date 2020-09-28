@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Resources\Account;
+namespace App\Http\Resources\Marketing;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SocialAccount extends JsonResource
+class Account extends JsonResource
 {
     use ResourceTrait;
 
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
