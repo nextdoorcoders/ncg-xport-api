@@ -37,6 +37,11 @@ class Contact extends Model
 
     protected $table = 'account_contacts';
 
+    protected $fillable = [
+        'type',
+        'value',
+    ];
+
     protected $appends = [
         'type_text',
     ];

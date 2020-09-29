@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Vendor\CurrencyCollection;
 use App\Services\Vendor\CurrencyService;
-use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
 {

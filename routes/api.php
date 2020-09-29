@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\ContactController;
 use App\Http\Controllers\Account\UserController;
 use App\Http\Controllers\Geo\LocationController;
 use App\Http\Controllers\Geo\TimezoneController;
@@ -66,6 +67,22 @@ Route::group([
             Route::put('', [UserController::class, 'updateCurrentUser']);
         });
     });
+
+    Route::group([
+        'middleware' => 'auth:api',
+        'prefix'     => 'contacts',
+    ], function () {
+        Route::get('', [ContactController::class, 'allContacts']);
+        Route::post('', [ContactController::class, 'createContact']);
+
+        Route::group([
+            'prefix' => 'contact-{contact}'
+        ], function () {
+            Route::get('', [ContactController::class, 'readContact']);
+            Route::put('', [ContactController::class, 'updateContact']);
+            Route::delete('', [ContactController::class, 'deleteContact']);
+        });
+    });
 });
 
 Route::group([
@@ -113,7 +130,8 @@ Route::group([
         Route::post('google/callback', [AccountGoogleController::class, 'handleProviderCallback']);
 
         Route::group([
-            'prefix' => 'account-{account}',
+            'middleware' => 'auth:api',
+            'prefix'     => 'account-{account}',
         ], function () {
             Route::delete('', [AccountController::class, 'deleteAccount']);
         });

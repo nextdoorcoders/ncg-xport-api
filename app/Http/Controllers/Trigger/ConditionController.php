@@ -8,7 +8,6 @@ use App\Http\Resources\Trigger\ConditionCollection;
 use App\Models\Account\User;
 use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
-use App\Models\Trigger\VendorLocation;
 use App\Services\Trigger\ConditionService;
 use Exception;
 use Illuminate\Http\Request;
@@ -42,10 +41,10 @@ class ConditionController extends Controller
     }
 
     /**
-     * @param Request        $request
-     * @param GroupModel     $group
-     * @param VendorLocation $vendorLocation
+     * @param Request    $request
+     * @param GroupModel $group
      * @return ConditionResponse
+     * @throws \App\Exceptions\MessageException
      */
     public function createCondition(Request $request, GroupModel $group) {
         /** @var User $user */
