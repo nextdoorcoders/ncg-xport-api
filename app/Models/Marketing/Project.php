@@ -3,7 +3,7 @@
 namespace App\Models\Marketing;
 
 use App\Casts\Encrypt;
-use App\Models\Marketing\Account;
+use App\Models\Account\User;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Map;
 use Carbon\Carbon;
@@ -17,9 +17,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @package App\Models\Marketing
  * @property string               $id
- * @property string               $social_account_id
+ * @property string               $account_id
  * @property string               $organization_id
  * @property string               $map_id
+ * @property string               $user_id
  * @property string               $name
  * @property string               $desc
  * @property array                $parameters
@@ -27,9 +28,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon               $date_end_at
  * @property Carbon               $created_at
  * @property Carbon               $updated_at
+ * @property Account              $account
  * @property Map                  $map
- * @property Account        $account
  * @property Organization         $organization
+ * @property User                 $user
  * @property Collection<Campaign> $campaigns
  */
 class Project extends Model
@@ -39,9 +41,10 @@ class Project extends Model
     protected $table = 'marketing_projects';
 
     protected $fillable = [
-        'social_account_id',
+        'account_id',
         'organization_id',
         'map_id',
+        'user_id',
         'name',
         'desc',
         'parameters',
@@ -49,15 +52,13 @@ class Project extends Model
         'date_end_at',
     ];
 
-//    protected $dates = [
-//        'date_start_at',
-//        'date_end_at',
-//    ];
+    protected $dates = [
+        'date_start_at',
+        'date_end_at',
+    ];
 
     protected $casts = [
-        'parameters'    => Encrypt::class,
-        'date_start_at' => 'date:Y-m-d',
-        'date_end_at'   => 'date:Y-m-d',
+        'parameters' => Encrypt::class,
     ];
 
     /*
@@ -69,7 +70,15 @@ class Project extends Model
      */
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'social_account_id');
+        return $this->belongsTo(Account::class, 'account_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function map(): BelongsTo
+    {
+        return $this->belongsTo(Map::class, 'map_id');
     }
 
     /**
@@ -81,18 +90,18 @@ class Project extends Model
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
      * @return HasMany
      */
     public function campaigns(): HasMany
     {
         return $this->hasMany(Campaign::class, 'project_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function map(): BelongsTo
-    {
-        return $this->belongsTo(Map::class, 'map_id');
     }
 }

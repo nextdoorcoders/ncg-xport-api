@@ -5,6 +5,7 @@ namespace App\Services\Marketing;
 use App\Exceptions\MessageException;
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Account\User as UserModel;
+use App\Models\Marketing\Account as AccountModel;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
@@ -112,5 +113,18 @@ class AccountService
         }
 
         return $user;
+    }
+
+    /**
+     * @param AccountModel $account
+     * @throws Exception
+     */
+    public function deleteAccount(AccountModel $account): void
+    {
+        try {
+            $account->delete();
+        } catch (Exception $exception) {
+            throw $exception;
+        }
     }
 }

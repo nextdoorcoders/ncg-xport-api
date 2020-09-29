@@ -10,7 +10,6 @@ use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Services\Marketing\ProjectService;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProjectController extends Controller

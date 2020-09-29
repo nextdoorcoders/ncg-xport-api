@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Google\AdsApi\AdWords\v201809\cm\ApiException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -117,6 +118,14 @@ class Handler extends ExceptionHandler
                 $data = array_merge($data, [
                     'errors' => $exception->errors(),
                 ]);
+
+                break;
+
+            case ApiException::class:
+                /** @var ApiException $exception */
+                $errors = $exception->getErrors();
+
+                // TODO: Processing errors
 
                 break;
         }

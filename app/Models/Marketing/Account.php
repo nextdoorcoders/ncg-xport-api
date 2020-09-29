@@ -73,6 +73,6 @@ class Account extends Model
      */
     public function projects(): HasMany
     {
-        return $this->hasMany(Project::class, 'social_account_id');
+        return $this->hasMany(Project::class, 'account_id');
     }
 }

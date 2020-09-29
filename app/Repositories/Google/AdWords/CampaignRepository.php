@@ -2,9 +2,11 @@
 
 namespace App\Repositories\Google\AdWords;
 
+use App\Exceptions\MessageException;
 use App\Models\Marketing\Campaign as CampaignModel;
 use Carbon\Carbon;
 use Google\AdsApi\AdWords\AdWordsSession;
+use Google\AdsApi\AdWords\v201809\cm\ApiException;
 use Google\AdsApi\AdWords\v201809\cm\Campaign;
 use Google\AdsApi\AdWords\v201809\cm\CampaignOperation;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;

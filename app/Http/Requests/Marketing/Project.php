@@ -24,13 +24,13 @@ class Project extends FormRequest
     public function rules()
     {
         return [
-            'social_account_id'          => 'required',
+            'account_id'                 => 'nullable',
             'organization_id'            => 'nullable',
             'map_id'                     => 'nullable',
             'name'                       => 'required',
             'parameters'                 => 'required|array',
-            'parameters.account_id'      => 'required',
-            'parameters.developer_token' => 'required',
+            'parameters.account_id'      => 'nullable',
+            'parameters.developer_token' => 'nullable',
             'date_start_at'              => 'required|date|date_format:Y-m-d|before:date_end_at',
             'date_end_at'                => 'required|date|date_format:Y-m-d|after:date_start_at',
         ];

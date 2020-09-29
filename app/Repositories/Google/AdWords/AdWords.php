@@ -33,6 +33,10 @@ abstract class AdWords
      */
     public function setAccount(ProjectModel $project)
     {
+        if (!$project->account) {
+            throw new MessageException('Account required', 'Can\'t get a list of marketing campaigns. Account required');
+        }
+
         if ($project->account->provider_name != SocialProjectModel::PROVIDER_NAME_GOOGLE) {
             throw new MessageException('This account does not support here');
         }

@@ -14,7 +14,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -86,11 +85,11 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasManyThrough
+     * @return HasMany
      */
-    public function projects(): HasManyThrough
+    public function projects(): HasMany
     {
-        return $this->hasManyThrough(Project::class, Account::class, 'user_id', 'social_account_id');
+        return $this->hasMany(Project::class, 'user_id');
     }
 
     /**

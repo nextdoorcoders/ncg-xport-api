@@ -49,9 +49,10 @@ class CreateMarketingTable extends Migration
 
         Schema::create('marketing_projects', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('social_account_id')->index();
+            $table->uuid('account_id')->index()->nullable();
             $table->uuid('organization_id')->index()->nullable();
             $table->uuid('map_id')->index()->nullable();
+            $table->uuid('user_id')->index();
 
             $table->string('name');
             $table->string('desc')->nullable();

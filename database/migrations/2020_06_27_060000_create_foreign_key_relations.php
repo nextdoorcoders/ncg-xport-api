@@ -32,13 +32,6 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('marketing_accounts', function (Blueprint $table) {
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('account_users')
-                ->onDelete('cascade');
-        });
-
         Schema::table('geo_locations', function (Blueprint $table) {
         });
 
@@ -109,6 +102,13 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
+        Schema::table('marketing_accounts', function (Blueprint $table) {
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('account_users')
+                ->onDelete('cascade');
+        });
+
         Schema::table('marketing_organizations', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')
@@ -122,10 +122,10 @@ class CreateForeignKeyRelations extends Migration
         });
 
         Schema::table('marketing_projects', function (Blueprint $table) {
-            $table->foreign('social_account_id')
+            $table->foreign('account_id')
                 ->references('id')
                 ->on('marketing_accounts')
-                ->onDelete('cascade');
+                ->nullOnDelete();
 
             $table->foreign('organization_id')
                 ->references('id')
@@ -136,6 +136,11 @@ class CreateForeignKeyRelations extends Migration
                 ->references('id')
                 ->on('trigger_maps')
                 ->nullOnDelete();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('account_users')
+                ->onDelete('cascade');
         });
 
         Schema::table('marketing_campaigns', function (Blueprint $table) {

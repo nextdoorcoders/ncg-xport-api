@@ -4,8 +4,8 @@ use App\Http\Controllers\Account\UserController;
 use App\Http\Controllers\Geo\LocationController;
 use App\Http\Controllers\Geo\TimezoneController;
 use App\Http\Controllers\Google\CampaignController as GoogleCampaignController;
-use App\Http\Controllers\Marketing\Account\FacebookController;
-use App\Http\Controllers\Marketing\Account\GoogleController;
+use App\Http\Controllers\Marketing\Account\FacebookController as AccountFacebookController;
+use App\Http\Controllers\Marketing\Account\GoogleController as AccountGoogleController;
 use App\Http\Controllers\Marketing\AccountController;
 use App\Http\Controllers\Marketing\CampaignController;
 use App\Http\Controllers\Marketing\OrganizationController;
@@ -99,23 +99,29 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'auth:api',
-    'prefix'     => 'marketing',
+    'prefix' => 'marketing',
 ], function () {
     Route::group([
         'prefix' => 'accounts',
     ], function () {
         Route::get('', [AccountController::class, 'allAccounts'])->middleware('auth:api');
 
-        Route::get('facebook', [FacebookController::class, 'linkToProvider']);
-        Route::post('facebook/callback', [FacebookController::class, 'handleProviderCallback']);
+        Route::get('facebook', [AccountFacebookController::class, 'linkToProvider']);
+        Route::post('facebook/callback', [AccountFacebookController::class, 'handleProviderCallback']);
 
-        Route::get('google', [GoogleController::class, 'linkToProvider']);
-        Route::post('google/callback', [GoogleController::class, 'handleProviderCallback']);
+        Route::get('google', [AccountGoogleController::class, 'linkToProvider']);
+        Route::post('google/callback', [AccountGoogleController::class, 'handleProviderCallback']);
+
+        Route::group([
+            'prefix' => 'account-{account}',
+        ], function () {
+            Route::delete('', [AccountController::class, 'deleteAccount']);
+        });
     });
 
     Route::group([
-        'prefix' => 'projects',
+        'middleware' => 'auth:api',
+        'prefix'     => 'projects',
     ], function () {
         Route::get('', [ProjectController::class, 'allProjects']);
         Route::post('', [ProjectController::class, 'createProject']);
@@ -145,7 +151,8 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'organizations',
+        'middleware' => 'auth:api',
+        'prefix'     => 'organizations',
     ], function () {
         Route::get('', [OrganizationController::class, 'allOrganizations']);
         Route::post('', [OrganizationController::class, 'createOrganization']);

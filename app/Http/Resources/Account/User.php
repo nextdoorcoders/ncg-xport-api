@@ -5,6 +5,7 @@ namespace App\Http\Resources\Account;
 use App\Http\Resources\Geo\Location;
 use App\Http\Resources\Marketing\AccountCollection;
 use App\Http\Resources\Marketing\OrganizationCollection;
+use App\Http\Resources\Marketing\ProjectCollection;
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Models\Account\User as UserModel;
 use Illuminate\Http\Request;
@@ -61,6 +62,12 @@ class User extends JsonResource
         if ($resource->relationLoaded('organizations')) {
             $response = array_merge($response, [
                 'organizations' => new OrganizationCollection($resource->organizations),
+            ]);
+        }
+
+        if ($resource->relationLoaded('projects')) {
+            $response = array_merge($response, [
+                'projects' => new ProjectCollection($resource->projects),
             ]);
         }
 

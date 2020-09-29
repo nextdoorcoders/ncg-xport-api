@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Marketing;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Marketing\AccountCollection;
 use App\Http\Resources\DataResource;
+use App\Http\Resources\Marketing\AccountCollection;
 use App\Http\Resources\MessageResource;
 use App\Models\Account\User as UserModel;
-use App\Services\Marketing\AccountService as SocialAuthService;
+use App\Models\Marketing\Account as AccountModel;
 use App\Services\Account\UserService as UserService;
+use App\Services\Marketing\AccountService;
 use Exception;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -25,19 +26,19 @@ class AccountController extends Controller
 
     protected array $with = [];
 
-    protected SocialAuthService $socialAuthService;
+    protected AccountService $accountService;
 
     protected UserService $userService;
 
     /**
-     * SocialAuthController constructor.
+     * AccountController constructor.
      *
-     * @param SocialAuthService $accountService
-     * @param UserService       $userService
+     * @param AccountService $accountService
+     * @param UserService    $userService
      */
-    public function __construct(SocialAuthService $accountService, UserService $userService)
+    public function __construct(AccountService $accountService, UserService $userService)
     {
-        $this->socialAuthService = $accountService;
+        $this->accountService = $accountService;
 
         $this->userService = $userService;
     }
@@ -50,18 +51,18 @@ class AccountController extends Controller
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->socialAuthService->allAccounts($user);
+        $response = $this->accountService->allAccounts($user);
 
         return new AccountCollection($response);
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|object
+     * @return DataResource
      */
     public function linkToProvider(Request $request)
     {
-        $response = $this->socialAuthService->redirectToProvider($this->provider, $this->scopes, $this->with);
+        $response = $this->accountService->redirectToProvider($this->provider, $this->scopes, $this->with);
 
         return new DataResource([
             'link' => $response->redirect()->getTargetUrl(),
@@ -93,21 +94,33 @@ class AccountController extends Controller
             $locale = app()->getLocale();
 
             try {
-                $account = $this->socialAuthService->getOrCreateUser($user, $this->provider, $userData, $locale);
+                $account = $this->accountService->getOrCreateUser($user, $this->provider, $userData, $locale);
 
                 if (!$user) {
                     // Return Bearer token if user are not logged in
                     $response = $this->userService->generateBearerToken($account, $request->getClientIp(), $request->userAgent());
 
-                    return new DataResource($response, 'Account is assigned to the profile');
+                    return new DataResource($response);
                 }
             } catch (Exception $exception) {
                 throw $exception;
             }
 
-            return new MessageResource('Account is assigned to the profile');
+            return new MessageResource();
         } catch (Exception $exception) {
             throw new MessageException('Something happened', 'Failed to get profile information. Please try again later');
         }
+    }
+
+    /**
+     * @param AccountModel $account
+     * @return \Illuminate\Http\Response
+     * @throws Exception
+     */
+    public function deleteAccount(AccountModel $account)
+    {
+        $this->accountService->deleteAccount($account);
+
+        return response()->noContent();
     }
 }
