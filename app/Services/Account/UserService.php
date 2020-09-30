@@ -213,8 +213,6 @@ class UserService
     {
         $user->load([
             'language',
-            'accounts',
-            'contacts',
         ]);
 
         return $user->refresh();
