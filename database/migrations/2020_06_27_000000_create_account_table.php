@@ -79,7 +79,6 @@ class CreateAccountTable extends Migration
     public function down()
     {
         Schema::dropIfExists('account_workers');
-        Schema::dropIfExists('marketing_accounts');
         Schema::dropIfExists('account_contacts');
         Schema::dropIfExists('account_users');
         Schema::dropIfExists('account_languages');

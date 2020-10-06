@@ -85,7 +85,7 @@ class VendorService
 
         $locationIds = WeatherModel::query()
             ->get()
-            ->pluck('location_id')
+            ->pluck('vendor_location_id')
             ->unique();
 
         $triggers->each(function (VendorModel $vendor) use ($locationIds) {
@@ -101,7 +101,7 @@ class VendorService
 
         $locationIds = CurrencyRateModel::query()
             ->get()
-            ->pluck('location_id')
+            ->pluck('vendor_location_id')
             ->unique();
 
         $triggers->each(function (VendorModel $vendor) use ($locationIds) {

@@ -33,7 +33,7 @@ class CampaignService
     {
         $campaign = CampaignModel::query()
             ->where('project_id', $project->id)
-            ->where('campaign_id', $data['campaign_id'])
+            ->where('foreign_campaign_id', $data['foreign_campaign_id'])
             ->first();
 
         if ($campaign) {

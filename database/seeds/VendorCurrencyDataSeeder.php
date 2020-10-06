@@ -3,7 +3,7 @@
 use App\Models\Vendor\Currency as CurrencyModel;
 use Illuminate\Database\Seeder;
 
-class VendorDataSeeder extends Seeder
+class VendorCurrencyDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.

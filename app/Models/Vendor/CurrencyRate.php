@@ -2,8 +2,8 @@
 
 namespace App\Models\Vendor;
 
-use App\Models\Geo\Location;
 use App\Models\Traits\UuidTrait;
+use App\Models\Trigger\VendorLocation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,18 +12,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class CurrencyRate
  *
  * @package App\Models\Vendor
- * @property string   $id
- * @property string   $location_id
- * @property string   $from_currency_id
- * @property string   $to_currency_id
- * @property string   $source
- * @property string   $type
- * @property array    $rate
- * @property Carbon   $created_at
- * @property Carbon   $updated_at
- * @property Location $location
- * @property Currency $fromCurrency
- * @property Currency $toCurrency
+ * @property string         $id
+ * @property string         $vendor_location_id
+ * @property string         $from_currency_id
+ * @property string         $to_currency_id
+ * @property string         $source
+ * @property string         $type
+ * @property array          $rate
+ * @property Carbon         $created_at
+ * @property Carbon         $updated_at
+ * @property VendorLocation $vendor_location
+ * @property Currency       $fromCurrency
+ * @property Currency       $toCurrency
  */
 class CurrencyRate extends Model
 {
@@ -39,12 +39,12 @@ class CurrencyRate extends Model
     const TYPE_OF_RATE_AVG = 'average';
     const TYPE_OF_RATE_MAX = 'max';
 
-    protected $table = 'vendor_currency_rate';
+    protected $table = 'vendor_currencies_rate';
 
     protected $fillable = [
+        'vendor_location_id',
         'from_currency_id',
         'to_currency_id',
-        'location_id',
         'source',
         'type',
         'rate',
@@ -77,9 +77,9 @@ class CurrencyRate extends Model
     /**
      * @return BelongsTo
      */
-    public function location(): BelongsTo
+    public function vendorLocation(): BelongsTo
     {
-        return $this->belongsTo(Location::class, 'location_id');
+        return $this->belongsTo(VendorLocation::class, 'vendor_location_id');
     }
 
     /*
@@ -96,9 +96,10 @@ class CurrencyRate extends Model
         $replicate->from_currency_id = $this->to_currency_id;
         $replicate->to_currency_id = $this->from_currency_id;
 
-        $replicate->rate = collect($replicate->rate)->map(function ($item, $key) {
-            return round(1 / $item, 4);
-        });
+        $replicate->rate = collect($replicate->rate)
+            ->map(function ($item, $key) {
+                return round(1 / $item, 4);
+            });
 
         $replicate->push();
 

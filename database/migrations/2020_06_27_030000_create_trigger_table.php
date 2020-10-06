@@ -47,6 +47,7 @@ class CreateTriggerTable extends Migration
         Schema::create('trigger_maps', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('user_id')->index();
+            $table->uuid('project_id')->index()->nullable();
 
             $table->string('name');
             $table->text('desc')->nullable();

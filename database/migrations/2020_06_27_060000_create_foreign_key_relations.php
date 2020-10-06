@@ -32,9 +32,6 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('geo_locations', function (Blueprint $table) {
-        });
-
         Schema::table('geo_locations_translate', function (Blueprint $table) {
             $table->foreign('language_id')
                 ->references('id')
@@ -47,27 +44,27 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('vendor_weather', function (Blueprint $table) {
-            $table->foreign('location_id')
+        Schema::table('vendor_currencies_rate', function (Blueprint $table) {
+            $table->foreign('vendor_location_id')
                 ->references('id')
-                ->on('geo_locations')
-                ->onDelete('cascade');
-        });
-
-        Schema::table('vendor_currency_rate', function (Blueprint $table) {
-            $table->foreign('location_id')
-                ->references('id')
-                ->on('geo_locations')
+                ->on('trigger_vendors_location')
                 ->onDelete('cascade');
 
             $table->foreign('from_currency_id')
                 ->references('id')
-                ->on('vendor_currency')
+                ->on('vendor_currencies')
                 ->onDelete('cascade');
 
             $table->foreign('to_currency_id')
                 ->references('id')
-                ->on('vendor_currency')
+                ->on('vendor_currencies')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('vendor_weather', function (Blueprint $table) {
+            $table->foreign('vendor_location_id')
+                ->references('id')
+                ->on('trigger_vendors_location')
                 ->onDelete('cascade');
         });
 
@@ -76,6 +73,11 @@ class CreateForeignKeyRelations extends Migration
                 ->references('id')
                 ->on('account_users')
                 ->onDelete('cascade');
+
+            $table->foreign('project_id')
+                ->references('id')
+                ->on('marketing_projects')
+                ->nullOnDelete();
         });
 
         Schema::table('trigger_groups', function (Blueprint $table) {
@@ -132,11 +134,6 @@ class CreateForeignKeyRelations extends Migration
                 ->on('marketing_organizations')
                 ->nullOnDelete();
 
-            $table->foreign('map_id')
-                ->references('id')
-                ->on('trigger_maps')
-                ->nullOnDelete();
-
             $table->foreign('user_id')
                 ->references('id')
                 ->on('account_users')
@@ -144,9 +141,9 @@ class CreateForeignKeyRelations extends Migration
         });
 
         Schema::table('marketing_campaigns', function (Blueprint $table) {
-            $table->foreign('project_id')
+            $table->foreign('map_id')
                 ->references('id')
-                ->on('marketing_projects')
+                ->on('trigger_maps')
                 ->onDelete('cascade');
         });
 

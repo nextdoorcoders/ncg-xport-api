@@ -3,34 +3,35 @@
 namespace App\Models\Geo;
 
 use App\Models\Account\User;
+use App\Models\Marketing\Organization;
 use App\Models\Traits\NestedTreeTrait;
 use App\Models\Traits\TranslatableTrait;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorLocation;
-use App\Models\Vendor\Weather;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Location
  *
  * @package App\Models\Geo
- * @property string              $id
- * @property string              $type
- * @property string              $parent_id
- * @property integer             $nest_left
- * @property integer             $nest_right
- * @property integer             $nest_depth
- * @property array               $parameters
- * @property array               $name
- * @property Collection<User>    $users
- * @property Collection<Weather> $weathers
- * @property Weather             $actualWeather
- * @property Collection<Vendor>  $vendors
+ * @property string                   $id
+ * @property string                   $type
+ * @property string                   $parent_id
+ * @property integer                  $nest_left
+ * @property integer                  $nest_right
+ * @property integer                  $nest_depth
+ * @property array                    $parameters
+ * @property Carbon                   $created_at
+ * @property Carbon                   $updated_at
+ * @property array                    $name
+ * @property Collection<Organization> $organization
+ * @property Collection<User>         $users
+ * @property Collection<Vendor>       $vendors
  */
 class Location extends Model
 {
@@ -75,23 +76,6 @@ class Location extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'location_id');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function weathers(): HasMany
-    {
-        return $this->hasMany(Weather::class, 'location_id');
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function actualWeather(): HasOne
-    {
-        return $this->hasOne(Weather::class, 'location_id')
-            ->orderBy('datetime_at', 'desc');
     }
 
     /**

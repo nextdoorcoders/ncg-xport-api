@@ -4,6 +4,7 @@ namespace App\Services\Vendor;
 
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Geo\Location as LocationModel;
+use App\Models\Vendor\Weather;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Arr;
@@ -130,10 +131,9 @@ class WeatherService
                 }
 
                 if ($weather !== null) {
-                    $city->weathers()
-                        ->updateOrCreate([
+                    Weather::query()
+                        ->create([
                             'datetime_at' => Carbon::createFromTimestamp($weather['dt']) ?? null,
-                        ], [
                             'temperature' => round($weather['main']['temp'] ?? null, 1),
                             'wind'        => round($weather['wind']['speed'] ?? null, 1),
                             'pressure'    => round($weather['main']['pressure'] ?? null),

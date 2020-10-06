@@ -18,6 +18,7 @@ use Illuminate\Support\Arr;
  * @property string $value
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property User   $user
  */
 class Contact extends Model
 {

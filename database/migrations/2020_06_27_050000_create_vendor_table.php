@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
+use App\Models\Vendor\Weather as WeatherModel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,7 @@ class CreateVendorTable extends Migration
      */
     public function up()
     {
-        Schema::create('vendor_currency', function (Blueprint $table) {
+        Schema::create('vendor_currencies', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
 
             $table->string('code');
@@ -24,34 +25,28 @@ class CreateVendorTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('vendor_currency_rate', function (Blueprint $table) {
+        Schema::create('vendor_currencies_rate', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('location_id')->index();
+            $table->uuid('vendor_location_id')->index();
             $table->uuid('from_currency_id')->index();
             $table->uuid('to_currency_id')->index();
 
-            $table->string('source')->default(CurrencyRateModel::SOURCE_MINFIN);
-            $table->string('type')->default(CurrencyRateModel::TYPE_EXCHANGE_RATE);
+            $table->string('source')->default(CurrencyRateModel::SOURCE_MINFIN)->index();
+            $table->string('type')->default(CurrencyRateModel::TYPE_EXCHANGE_RATE)->index();
 
-            $table->json('rate');
+            $table->json('value');
 
             $table->timestamps();
         });
 
         Schema::create('vendor_weather', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('location_id')->index();
+            $table->uuid('vendor_location_id')->index();
 
-            $table->timestamp('datetime_at')->index()->nullable();
+            $table->string('source')->default(WeatherModel::SOURCE_OPEN_WEATHER_MAP)->index();
+            $table->string('type')->default(WeatherModel::TYPE_TEMPERATURE)->index();
 
-            $table->decimal('temperature', 4, 1)->default(0)->index();
-            $table->decimal('wind', 4, 1)->default(0)->index();
-            $table->smallInteger('pressure', false, true)->index();
-            $table->tinyInteger('humidity', false, true)->index();
-
-            $table->smallInteger('clouds', false, true)->index();
-            $table->smallInteger('rain', false, true)->index();
-            $table->smallInteger('snow', false, true)->index();
+            $table->string('value');
 
             $table->timestamps();
         });
@@ -65,6 +60,7 @@ class CreateVendorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('vendor_weather');
+        Schema::dropIfExists('vendor_currencies_rate');
         Schema::dropIfExists('vendor_currency');
     }
 }

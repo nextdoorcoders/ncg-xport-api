@@ -36,7 +36,7 @@ class CampaignService
 
         $existedCampaigns = $project->campaigns()
             ->get()
-            ->pluck('id', 'campaign_id')
+            ->pluck('id', 'foreign_campaign_id')
             ->toArray();
 
         $campaigns->each(function ($campaign) use ($existedCampaigns) {

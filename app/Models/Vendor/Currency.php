@@ -25,7 +25,7 @@ class Currency extends Model
 {
     use UuidTrait;
 
-    protected $table = 'vendor_currency';
+    protected $table = 'vendor_currencies';
 
     protected $fillable = [
         'code',

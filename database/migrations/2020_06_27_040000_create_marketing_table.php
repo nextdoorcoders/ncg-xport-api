@@ -51,7 +51,6 @@ class CreateMarketingTable extends Migration
             $table->uuid('id')->index()->primary();
             $table->uuid('account_id')->index()->nullable();
             $table->uuid('organization_id')->index()->nullable();
-            $table->uuid('map_id')->index()->nullable();
             $table->uuid('user_id')->index();
 
             $table->string('name');
@@ -66,9 +65,9 @@ class CreateMarketingTable extends Migration
 
         Schema::create('marketing_campaigns', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
-            $table->uuid('project_id')->index();
+            $table->uuid('map_id')->index();
 
-            $table->string('campaign_id')->index();
+            $table->string('foreign_campaign_id')->index();
             $table->string('name');
 
             $table->timestamps();
@@ -85,5 +84,6 @@ class CreateMarketingTable extends Migration
         Schema::dropIfExists('marketing_campaigns');
         Schema::dropIfExists('marketing_projects');
         Schema::dropIfExists('marketing_organizations');
+        Schema::dropIfExists('marketing_accounts');
     }
 }

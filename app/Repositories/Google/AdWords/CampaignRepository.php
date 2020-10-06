@@ -57,7 +57,7 @@ class CampaignRepository extends AdWords
 
         $predicates = [
             new Predicate('Id', PredicateOperator::EQUALS, [
-                $campaignModel->campaign_id,
+                $campaignModel->foreign_campaign_id,
             ]),
         ];
 
@@ -80,7 +80,7 @@ class CampaignRepository extends AdWords
         $operations = [];
         // Create a campaign with PAUSED status.
         $campaign = new Campaign();
-        $campaign->setId($campaignModel->campaign_id);
+        $campaign->setId($campaignModel->foreign_campaign_id);
         $campaign->setStatus($status);
 
         // Create a campaign operation and add it to the list.

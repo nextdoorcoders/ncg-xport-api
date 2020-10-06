@@ -2,8 +2,8 @@
 
 namespace App\Models\Vendor;
 
-use App\Models\Geo\Location;
 use App\Models\Traits\UuidTrait;
+use App\Models\Trigger\VendorLocation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,39 +12,36 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class Weather
  *
  * @package App\Models\Vendor
- * @property string   $id
- * @property string   $location_id
- * @property Carbon   $datetime_at
- * @property integer  $temperature
- * @property integer  $wind
- * @property integer  $pressure
- * @property integer  $humidity
- * @property integer  $clouds
- * @property integer  $rain
- * @property integer  $snow
- * @property Carbon   $created_at
- * @property Carbon   $updated_at
- * @property Location $location
+ * @property string         $id
+ * @property string         $vendor_location_id
+ * @property string         $source
+ * @property string         $type
+ * @property string         $value
+ * @property Carbon         $created_at
+ * @property Carbon         $updated_at
+ * @property VendorLocation $vendorLocation
  */
 class Weather extends Model
 {
+    const SOURCE_OPEN_WEATHER_MAP = 'open_weather_map';
+
+    const TYPE_TEMPERATURE = 'temperature';
+    const TYPE_WIND = 'wind';
+    const TYPE_PRESSURE = 'pressure';
+    const TYPE_HUMIDITY = 'humidity';
+    const TYPE_CLOUDS = 'clouds';
+    const TYPE_RAIN = 'rain';
+    const TYPE_SNOW = 'snow';
+
     use UuidTrait;
 
     protected $table = 'vendor_weather';
 
     protected $fillable = [
-        'datetime_at',
-        'temperature',
-        'wind',
-        'pressure',
-        'humidity',
-        'clouds',
-        'rain',
-        'snow',
-    ];
-
-    protected $dates = [
-        'datetime_at',
+        'vendor_location_id',
+        'source',
+        'type',
+        'value',
     ];
 
     /*
@@ -54,8 +51,8 @@ class Weather extends Model
     /**
      * @return BelongsTo
      */
-    public function location()
+    public function vendorLocation()
     {
-        return $this->belongsTo(Location::class, 'location_id');
+        return $this->belongsTo(VendorLocation::class, 'vendor_location_id');
     }
 }

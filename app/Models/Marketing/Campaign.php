@@ -3,6 +3,7 @@
 namespace App\Models\Marketing;
 
 use App\Models\Traits\UuidTrait;
+use App\Models\Trigger\Map;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,13 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class Campaign
  *
  * @package App\Models\Marketing
- * @property string  $id
- * @property string  $project_id
- * @property string  $campaign_id
- * @property string  $name
- * @property Carbon  $created_at
- * @property Carbon  $updated_at
- * @property Project $project
+ * @property string $id
+ * @property string $map_id
+ * @property string $foreign_campaign_id
+ * @property string $name
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Map    $map
  */
 class Campaign extends Model
 {
@@ -26,8 +27,8 @@ class Campaign extends Model
     protected $table = 'marketing_campaigns';
 
     protected $fillable = [
-        'project_id',
-        'campaign_id',
+        'map_id',
+        'foreign_campaign_id',
         'name',
     ];
 
@@ -38,8 +39,8 @@ class Campaign extends Model
     /**
      * @return BelongsTo
      */
-    public function project(): BelongsTo
+    public function map(): BelongsTo
     {
-        return $this->belongsTo(Project::class, 'project_id');
+        return $this->belongsTo(Map::class, 'map_id');
     }
 }

@@ -29,10 +29,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon               $created_at
  * @property Carbon               $updated_at
  * @property Account              $account
- * @property Map                  $map
  * @property Organization         $organization
  * @property User                 $user
  * @property Collection<Campaign> $campaigns
+ * @property Collection<Map>      $maps
  */
 class Project extends Model
 {
@@ -43,7 +43,6 @@ class Project extends Model
     protected $fillable = [
         'account_id',
         'organization_id',
-        'map_id',
         'user_id',
         'name',
         'desc',
@@ -74,11 +73,11 @@ class Project extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function map(): BelongsTo
+    public function maps(): HasMany
     {
-        return $this->belongsTo(Map::class, 'map_id');
+        return $this->hasMany(Map::class, 'project_id');
     }
 
     /**
