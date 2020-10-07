@@ -3,12 +3,14 @@
 namespace App\Services\Vendor;
 
 use App\Models\Geo\Location as LocationModel;
-use App\Models\Vendor\Currency;
+use App\Models\Trigger\Vendor;
+use App\Models\Trigger\VendorLocation;
 use App\Models\Vendor\Currency as CurrencyModel;
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
 use DiDom\Document;
 use DiDom\Exceptions\InvalidSelectorException;
 use DiDom\Query;
+use Exception;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Collection;
 
@@ -20,7 +22,7 @@ class CurrencyService
     public function allCurrencies()
     {
         /** @var DatabaseCollection $currencies */
-        $currencies = Currency::query()
+        $currencies = CurrencyModel::query()
             ->get();
 
         return $currencies;
@@ -30,7 +32,8 @@ class CurrencyService
      * Получение обменного курса
      *
      * @return Collection
-     * @throws \DiDom\Exceptions\InvalidSelectorException
+     * @throws InvalidSelectorException
+     * @throws Exception
      */
     public function getMinfinExchangeAndNationalRates(): Collection
     {
@@ -38,7 +41,7 @@ class CurrencyService
 
         $table = $document->first('table.table-response.mfm-table.mfcur-table-lg-banks.mfcur-table-lg');
 
-        $rates = collect();
+        $values = collect();
 
         $rows = $table->find('//tbody//tr', Query::TYPE_XPATH);
 
@@ -69,35 +72,42 @@ class CurrencyService
                     $data['from_currency'] = mb_strtoupper(last(explode('/', trim($href, '/'))));
                     $data['to_currency'] = 'UAH';
                 } else {
-                    $data['rates'][] = preg_replace('/\n/', '', $col->text());
+                    $data['values'][] = preg_replace('/\n/', '', $col->text());
                 }
             }
 
-            [$purchase, $sale] = explode('/', $data['rates'][0]);
+            [$purchase, $sale] = explode('/', $data['values'][0]);
 
-            $data[CurrencyRateModel::TYPE_EXCHANGE_RATE] = (object)[
-                'purchase' => round((float)$purchase, 4),
-                'average'  => round((float)($purchase + $sale) / 2, 4),
-                'sale'     => round((float)$sale, 4),
-            ];
+            $purchase = (float)$purchase;
+            $sale = (float)$sale;
+
+            try {
+                $data[CurrencyRateModel::TYPE_EXCHANGE_RATE] = (object)[
+                    'purchase' => round($purchase, 4),
+                    'average'  => round(($purchase + $sale) / 2, 4),
+                    'sale'     => round($sale, 4),
+                ];
+            } catch (Exception $exception) {
+                throw $exception;
+            }
 
             $data[CurrencyRateModel::TYPE_NATIONAL_RATE] = (object)[
-                'average' => round((float)$data['rates'][1], 4),
+                'average' => round((float)$data['values'][1], 4),
             ];
 
-            unset($data['rates']);
+            unset($data['values']);
 
-            $rates->push((object)$data);
+            $values->push((object)$data);
         }
 
-        return $rates;
+        return $values;
     }
 
     /**
      * Получение курса на межбанке
      *
      * @return Collection
-     * @throws \DiDom\Exceptions\InvalidSelectorException
+     * @throws InvalidSelectorException
      */
     public function getMinfinInterbankRates(): Collection
     {
@@ -105,7 +115,7 @@ class CurrencyService
 
         $table = $document->first('table.mb-table-currency');
 
-        $rates = collect();
+        $values = collect();
 
         $rows = $table->find('//tbody//tr', Query::TYPE_XPATH);
 
@@ -138,7 +148,7 @@ class CurrencyService
         $data = array_map(null, ...$data);
 
         foreach ($data as $key => $value) {
-            $rates->push((object)[
+            $values->push((object)[
                 'from_currency'                        => $value[0],
                 'to_currency'                          => 'UAH',
                 CurrencyRateModel::TYPE_INTERBANK_RATE => (object)[
@@ -149,95 +159,123 @@ class CurrencyService
             ]);
         }
 
-        return $rates;
+        return $values;
     }
 
-    public function getMinfinCurrencyRates()
+    /**
+     * @throws InvalidSelectorException
+     */
+    public function updateCurrency()
     {
         try {
-            /** @var LocationModel $location */
-            $location = LocationModel::query()
-                ->whereJsonContains('parameters', ['alpha2' => 'UA'])
-                ->first();
+            /*
+             * Request currency rates
+             */
+            $values1 = $this->getMinfinExchangeAndNationalRates();
+            $values2 = $this->getMinfinInterbankRates();
+
+            $mergedValues = $values1->map(function ($value1) use ($values2) {
+                $value2 = $values2->where('from_currency', $value1->from_currency)
+                    ->where('to_currency', $value1->to_currency)
+                    ->first();
+
+                if ($value2) {
+                    return (object)array_merge((array)$value1, (array)$value2);
+                }
+
+                return $value1;
+            });
+
+            /*
+             * Processing currency rates
+             */
+            $locations = LocationModel::query()
+                ->with([
+                    'vendors' => function ($vendors) {
+                        $vendors->where('vendor_type', Vendor::VENDOR_TYPE_CURRENCY);
+                    },
+                ])
+                ->where('type', LocationModel::TYPE_COUNTRY)
+                ->whereJsonContains('parameters', ['alpha2' => 'UA']) // TODO: Remove in future
+                ->get();
+
+            $vendors = Vendor::query()
+                ->where('vendor_type', Vendor::VENDOR_TYPE_CURRENCY)
+                ->get();
 
             $currencies = CurrencyModel::query()
                 ->get();
 
-            $rates1 = $this->getMinfinExchangeAndNationalRates();
-            $rates1->each(function ($item) use ($location, $currencies) {
-                /** @var CurrencyModel $fromCurrency */
-                $fromCurrency = $currencies->where('code', $item->from_currency)
-                    ->first();
+            $locations->each(function (LocationModel $location) use ($vendors, $currencies, $mergedValues) {
+                $location->vendors()->sync($vendors);
+                $location->refresh();
 
-                /** @var CurrencyModel $toCurrency */
-                $toCurrency = $currencies->where('code', $item->to_currency)
-                    ->first();
+                $mergedValues->each(function ($rate) use ($location, $currencies) {
+                    // Each currency rate, one by one
 
-                if ($fromCurrency && $toCurrency) {
-                    // Forward rate
-                    /** @var CurrencyRateModel $rate */
-                    $rate = CurrencyRateModel::query()
-                        ->create([
-                            'from_currency_id' => $fromCurrency->id,
-                            'to_currency_id'   => $toCurrency->id,
-                            'location_id'      => $location->id,
-                            'source'           => CurrencyRateModel::SOURCE_MINFIN,
-                            'type'             => CurrencyRateModel::TYPE_EXCHANGE_RATE,
-                            'rate'             => $item->exchange,
-                        ]);
+                    /** @var CurrencyModel $fromCurrency */
+                    $fromCurrency = $currencies->where('code', $rate->from_currency)
+                        ->first();
 
-                    // Back rate
-                    $rate->createBackRate();
+                    /** @var CurrencyModel $toCurrency */
+                    $toCurrency = $currencies->where('code', $rate->to_currency)
+                        ->first();
 
+                    if ($fromCurrency && $toCurrency) {
+                        foreach (Vendor::CURRENCY_VALUES as $valueType) {
+                            $value = null;
 
-                    $rate = CurrencyRateModel::query()
-                        ->create([
-                            'from_currency_id' => $fromCurrency->id,
-                            'to_currency_id'   => $toCurrency->id,
-                            'location_id'      => $location->id,
-                            'source'           => CurrencyRateModel::SOURCE_MINFIN,
-                            'type'             => CurrencyRateModel::TYPE_NATIONAL_RATE,
-                            'rate'             => $item->national,
-                        ]);
+                            switch ($valueType) {
+                                case Vendor::VALUE_TYPE_CURRENCY_EXCHANGE:
+                                    $value = $rate->exchange ?? null;
+                                    break;
+                                case Vendor::VALUE_TYPE_CURRENCY_NATIONAL:
+                                    $value = $rate->interbank ?? null;
+                                    break;
+                                case Vendor::VALUE_TYPE_CURRENCY_INTERBANK:
+                                    $value = $rate->national ?? null;
+                                    break;
+                            }
 
-                    $rate->createBackRate();
-                }
+                            if (!is_null($value)) {
+                                /** @var Vendor $vendor */
+                                $vendor = $location->vendors
+                                    ->where('vendor_type', Vendor::VENDOR_TYPE_CURRENCY)
+                                    ->where('value_type', $valueType)
+                                    ->first();
+
+                                /** @var VendorLocation $vendorLocation */
+                                $vendorLocation = $vendor->pivot;
+
+                                // Forward value
+                                /** @var CurrencyRateModel $value */
+                                $value = $vendorLocation->currencies()
+                                    ->create([
+                                        'from_currency_id' => $fromCurrency->id,
+                                        'to_currency_id'   => $toCurrency->id,
+                                        'source'           => CurrencyRateModel::SOURCE_MINFIN,
+                                        'type'             => $valueType,
+                                        'value'            => $value,
+                                    ]);
+
+                                // Back value
+                                $value->createBackRate();
+                            }
+                        }
+                    }
+                });
             });
 
-            $rates2 = $this->getMinfinInterbankRates();
-            $rates2->each(function ($item) use ($location, $currencies) {
-                /** @var CurrencyModel $fromCurrency */
-                $fromCurrency = $currencies->where('code', $item->from_currency)
-                    ->first();
-
-                /** @var CurrencyModel $toCurrency */
-                $toCurrency = $currencies->where('code', $item->to_currency)
-                    ->first();
-
-                if ($fromCurrency && $toCurrency) {
-                    // Forward rate
-                    /** @var CurrencyRateModel $rate */
-                    $rate = CurrencyRateModel::query()
-                        ->create([
-                            'from_currency_id' => $fromCurrency->id,
-                            'to_currency_id'   => $toCurrency->id,
-                            'location_id'      => $location->id,
-                            'source'           => CurrencyRateModel::SOURCE_MINFIN,
-                            'type'             => CurrencyRateModel::TYPE_INTERBANK_RATE,
-                            'rate'             => $item->interbank,
-                        ]);
-
-                    // Back rate
-                    $rate->createBackRate();
-                }
-            });
+            /*
+             * Calculate cross rate
+             */
 
             /** @var CurrencyModel $uahCurrency */
             $uahCurrency = CurrencyModel::query()
                 ->where('code', 'UAH')
                 ->first();
 
-            $rates = CurrencyRateModel::query()
+            $values = CurrencyRateModel::query()
                 ->with([
                     'fromCurrency',
                     'toCurrency',
@@ -247,41 +285,38 @@ class CurrencyService
                 ->get()
                 ->groupBy('type');
 
-            $rates->each(function ($group) {
+            $values->each(function ($group) {
                 $group->each(function (CurrencyRateModel $from) use ($group) {
                     $group->each(function (CurrencyRateModel $to) use ($from) {
                         if ($from->type === CurrencyRateModel::TYPE_NATIONAL_RATE) {
-                            $rate = [
-                                'average' => round((float)$from->rate['average'] / $to->rate['average'], 4),
+                            $value = [
+                                'average' => round((float)$from->value['average'] / $to->value['average'], 4),
                             ];
                         } else {
-                            $rate = [
-                                'purchase' => round((float)$from->rate['purchase'] / $to->rate['purchase'], 4),
-                                'average'  => round((float)$from->rate['average'] / $to->rate['average'], 4),
-                                'sale'     => round((float)$from->rate['sale'] / $to->rate['sale'], 4),
+                            $value = [
+                                'purchase' => round((float)$from->value['purchase'] / $to->value['purchase'], 4),
+                                'average'  => round((float)$from->value['average'] / $to->value['average'], 4),
+                                'sale'     => round((float)$from->value['sale'] / $to->value['sale'], 4),
                             ];
                         }
 
-                        // Cross rate
+                        // Cross value
                         CurrencyRateModel::query()
                             ->create([
-                                'from_currency_id' => $from->from_currency_id,
-                                'to_currency_id'   => $to->from_currency_id,
-                                'location_id'      => $from->location_id,
-                                'source'           => $from->source,
-                                'type'             => $from->type,
-                                'rate'             => $rate,
+                                'vendor_location_id' => $from->vendor_location_id,
+                                'from_currency_id'   => $from->from_currency_id,
+                                'to_currency_id'     => $to->from_currency_id,
+                                'source'             => $from->source,
+                                'type'               => $from->type,
+                                'value'              => $value,
                             ]);
                     });
                 });
             });
-        } catch (InvalidSelectorException $e) {
-
+        } catch (InvalidSelectorException $exception) {
+            throw $exception;
+        } catch (Exception $exception) {
+            throw $exception;
         }
-    }
-
-    public function updateCurrency()
-    {
-        $this->getMinfinCurrencyRates();
     }
 }

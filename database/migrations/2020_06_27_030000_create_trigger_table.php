@@ -15,8 +15,10 @@ class CreateTriggerTable extends Migration
     {
         Schema::create('trigger_vendors', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
+
             $table->string('callback');
-            $table->string('type')->index()->nullable();
+            $table->string('vendor_type')->index()->nullable();
+            $table->string('value_type')->index()->nullable();
 
             $table->json('default_parameters')->nullable();
             $table->json('settings')->nullable();
@@ -36,7 +38,7 @@ class CreateTriggerTable extends Migration
             $table->primary(['language_id', 'translatable_id'], 'language_translatable_key');
         });
 
-        Schema::create('trigger_vendors_location', function (Blueprint $table) {
+        Schema::create('trigger_vendors_locations', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('location_id')->index();
             $table->uuid('vendor_id')->index();
@@ -102,7 +104,7 @@ class CreateTriggerTable extends Migration
         Schema::dropIfExists('trigger_conditions');
         Schema::dropIfExists('trigger_groups');
         Schema::dropIfExists('trigger_maps');
-        Schema::dropIfExists('trigger_vendors_location');
+        Schema::dropIfExists('trigger_vendors_locations');
         Schema::dropIfExists('trigger_vendors_translate');
         Schema::dropIfExists('trigger_vendors');
     }

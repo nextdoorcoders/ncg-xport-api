@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string         $to_currency_id
  * @property string         $source
  * @property string         $type
- * @property array          $rate
+ * @property array          $value
  * @property Carbon         $created_at
  * @property Carbon         $updated_at
  * @property VendorLocation $vendor_location
@@ -47,11 +47,11 @@ class CurrencyRate extends Model
         'to_currency_id',
         'source',
         'type',
-        'rate',
+        'value',
     ];
 
     protected $casts = [
-        'rate' => 'array',
+        'value' => 'array',
     ];
 
     /*
@@ -96,7 +96,7 @@ class CurrencyRate extends Model
         $replicate->from_currency_id = $this->to_currency_id;
         $replicate->to_currency_id = $this->from_currency_id;
 
-        $replicate->rate = collect($replicate->rate)
+        $replicate->value = collect($replicate->value)
             ->map(function ($item, $key) {
                 return round(1 / $item, 4);
             });

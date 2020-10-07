@@ -39,6 +39,7 @@ class Currency extends Command
      * Execute the console command.
      *
      * @return void
+     * @throws \DiDom\Exceptions\InvalidSelectorException
      */
     public function handle()
     {

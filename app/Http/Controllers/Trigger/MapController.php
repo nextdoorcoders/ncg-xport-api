@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Trigger;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Trigger\Map as MapRequest;
-use App\Http\Resources\Marketing\ProjectCollection;
 use App\Http\Resources\Trigger\GroupCollection;
 use App\Http\Resources\Trigger\Map as MapResource;
 use App\Http\Resources\Trigger\MapCollection;
@@ -116,16 +115,6 @@ class MapController extends Controller
         $response = $this->mapService->replicateMap($map, $user);
 
         return new MapResource($response);
-    }
-
-    public function readProjects(MapModel $map)
-    {
-        /** @var UserModel $user */
-        $user = auth()->user();
-
-        $response = $this->mapService->readProjects($map, $user);
-
-        return new ProjectCollection($response);
     }
 
     /**

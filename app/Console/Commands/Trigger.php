@@ -19,7 +19,7 @@ class Trigger extends Command
      *
      * @var string
      */
-    protected $description = 'Ckeck and update all triggers';
+    protected $description = 'Check and update all triggers';
 
     protected ConditionService $conditionService;
 

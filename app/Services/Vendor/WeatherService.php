@@ -4,8 +4,8 @@ namespace App\Services\Vendor;
 
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Geo\Location as LocationModel;
-use App\Models\Vendor\Weather;
-use Carbon\Carbon;
+use App\Models\Trigger\Vendor;
+use App\Models\Trigger\VendorLocation;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -61,12 +61,15 @@ class WeatherService
 
     /**
      * @param LocationModel $city
-     * @param LocationModel $country
      * @return array|mixed|null
      */
-    public function getWeatherByNames(LocationModel $city, LocationModel $country)
+    public function getWeatherByNames(LocationModel $city)
     {
         $weather = null;
+
+        $country = $city->parents()
+            ->where('type', LocationModel::TYPE_COUNTRY)
+            ->first();
 
         foreach ($city->name as $lang => $value) {
             $value = explode('/', $value);
@@ -78,6 +81,13 @@ class WeatherService
 
                 // We only need the first cycle.
                 // The loop will continue if an exception was thrown by API
+
+                $city->parameters = [
+                    'owm_id' => $weather['id'],
+                ];
+
+                $city->save();
+
                 break;
             } catch (Exception  $exception) {
                 // Do nothing
@@ -106,42 +116,80 @@ class WeatherService
         })->toArray();
     }
 
+    /**
+     * @throws \Illuminate\Http\Client\RequestException
+     */
     public function updateWeather()
     {
-        $cities = LocationModel::query()
+        $locations = LocationModel::query()
+            ->with([
+                'vendors' => function ($vendors) {
+                    $vendors->where('vendor_type', Vendor::VENDOR_TYPE_WEATHER);
+                },
+            ])
             ->where('type', LocationModel::TYPE_CITY)
             ->get();
 
-        $cities->each(function (LocationModel $city) {
+        $vendors = Vendor::query()
+            ->where('vendor_type', Vendor::VENDOR_TYPE_WEATHER)
+            ->get();
+
+        $locations->each(function (LocationModel $location) use ($vendors) {
             try {
-                if (!is_null($city->parameters) && array_key_exists('owm_id', $city->parameters)) {
-                    $weather = $this->findById($city->parameters['owm_id']);
+                if (!is_null($location->parameters) && array_key_exists('owm_id', $city->parameters)) {
+                    $weather = $this->findById($location->parameters['owm_id']);
                 } else {
-                    $country = $city->parents()
-                        ->where('type', LocationModel::TYPE_COUNTRY)
-                        ->first();
-
-                    $weather = $this->getWeatherByNames($city, $country);
-
-                    if ($weather !== null) {
-                        // TODO: Fix error
-//                        $city->parameters['owm_id'] = $weather['id'];
-//                        $city->save();
-                    }
+                    $weather = $this->getWeatherByNames($location);
                 }
 
                 if ($weather !== null) {
-                    Weather::query()
-                        ->create([
-                            'datetime_at' => Carbon::createFromTimestamp($weather['dt']) ?? null,
-                            'temperature' => round($weather['main']['temp'] ?? null, 1),
-                            'wind'        => round($weather['wind']['speed'] ?? null, 1),
-                            'pressure'    => round($weather['main']['pressure'] ?? null),
-                            'humidity'    => round($weather['main']['humidity'] ?? null),
-                            'clouds'      => round($weather['clouds']['all'] ?? null),
-                            'rain'        => round($weather['rain']['1h'] ?? null),
-                            'snow'        => round($weather['snow']['1h'] ?? null),
-                        ]);
+                    $location->vendors()->sync($vendors);
+                    $location->refresh();
+
+                    foreach (Vendor::WEATHER_VALUES as $valueType) {
+                        $value = null;
+
+                        switch ($valueType) {
+                            case Vendor::VALUE_TYPE_WEATHER_TEMPERATURE:
+                                $value = round($weather['main']['temp'] ?? null, 1);
+                                break;
+                            case Vendor::VALUE_TYPE_WEATHER_WIND:
+                                $value = round($weather['wind']['speed'] ?? null, 1);
+                                break;
+                            case Vendor::VALUE_TYPE_WEATHER_PRESSURE:
+                                $value = round($weather['main']['pressure'] ?? null);
+                                break;
+                            case Vendor::VALUE_TYPE_WEATHER_HUMIDITY:
+                                $value = round($weather['main']['humidity'] ?? null);
+                                break;
+                            case Vendor::VALUE_TYPE_WEATHER_CLOUDS:
+                                $value = round($weather['clouds']['all'] ?? null);
+                                break;
+                            case Vendor::VALUE_TYPE_WEATHER_RAIN:
+                                $value = round($weather['rain']['1h'] ?? null);
+                                break;
+                            case Vendor::VALUE_TYPE_WEATHER_SNOW:
+                                $value = round($weather['snow']['1h'] ?? null);
+                                break;
+                        }
+
+                        if (!is_null($value)) {
+                            /** @var Vendor $vendor */
+                            $vendor = $location->vendors
+                                ->where('vendor_type', Vendor::VENDOR_TYPE_WEATHER)
+                                ->where('value_type', $valueType)
+                                ->first();
+
+                            /** @var VendorLocation $vendorLocation */
+                            $vendorLocation = $vendor->pivot;
+
+                            $vendorLocation->weathers()->create([
+                                'source' => 'open_weather_map',
+                                'type'   => $valueType,
+                                'value'  => $value,
+                            ]);
+                        }
+                    }
                 }
             } catch (Exception $exception) {
                 throw $exception;

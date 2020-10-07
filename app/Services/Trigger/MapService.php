@@ -119,16 +119,6 @@ class MapService
     }
 
     /**
-     * @param MapModel  $map
-     * @param UserModel $user
-     * @return Collection
-     */
-    public function readProjects(MapModel $map, UserModel $user) {
-        return $map->projects()
-            ->get();
-    }
-
-    /**
      * @throws MessageException
      */
     public function updateAllStatuses(): void

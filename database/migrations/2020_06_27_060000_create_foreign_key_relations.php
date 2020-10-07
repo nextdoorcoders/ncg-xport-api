@@ -47,7 +47,7 @@ class CreateForeignKeyRelations extends Migration
         Schema::table('vendor_currencies_rate', function (Blueprint $table) {
             $table->foreign('vendor_location_id')
                 ->references('id')
-                ->on('trigger_vendors_location')
+                ->on('trigger_vendors_locations')
                 ->onDelete('cascade');
 
             $table->foreign('from_currency_id')
@@ -64,7 +64,7 @@ class CreateForeignKeyRelations extends Migration
         Schema::table('vendor_weather', function (Blueprint $table) {
             $table->foreign('vendor_location_id')
                 ->references('id')
-                ->on('trigger_vendors_location')
+                ->on('trigger_vendors_locations')
                 ->onDelete('cascade');
         });
 
@@ -100,7 +100,7 @@ class CreateForeignKeyRelations extends Migration
 
             $table->foreign('vendor_location_id')
                 ->references('id')
-                ->on('trigger_vendors_location')
+                ->on('trigger_vendors_locations')
                 ->onDelete('cascade');
         });
 
@@ -159,7 +159,7 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('trigger_vendors_location', function (Blueprint $table) {
+        Schema::table('trigger_vendors_locations', function (Blueprint $table) {
             $table->foreign('vendor_id')
                 ->references('id')
                 ->on('trigger_vendors')

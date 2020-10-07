@@ -4,6 +4,9 @@ namespace App\Models\Trigger;
 
 use App\Models\Geo\Location;
 use App\Models\Traits\UuidTrait;
+use App\Models\Vendor\Currency;
+use App\Models\Vendor\CurrencyRate;
+use App\Models\Vendor\Weather;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,12 +22,14 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property Location              $location
  * @property Vendor                $vendor
  * @property Collection<Condition> $conditions
+ * @property Collection<Weather>   $weathers
+ * @property Collection<Currency>  $currencies
  */
 class VendorLocation extends Pivot
 {
     use UuidTrait;
 
-    protected $table = 'trigger_vendors_location';
+    protected $table = 'trigger_vendors_locations';
 
     protected $fillable = [
         'location_id',
@@ -59,5 +64,21 @@ class VendorLocation extends Pivot
     public function conditions(): HasMany
     {
         return $this->hasMany(Condition::class, 'vendor_location_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function weathers(): HasMany
+    {
+        return $this->hasMany(Weather::class, 'vendor_location_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function currencies(): HasMany
+    {
+        return $this->hasMany(CurrencyRate::class, 'vendor_location_id');
     }
 }

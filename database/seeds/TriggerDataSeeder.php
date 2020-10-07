@@ -20,7 +20,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Weather::class,
-                'type'               => VendorModel::TYPE_WEATHER_TEMPERATURE,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
+                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_TEMPERATURE,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Air temperature (С°)',
                     LanguageModel::LANGUAGE_RU => 'Температура воздуха (С°)',
@@ -44,7 +45,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Weather::class,
-                'type'               => VendorModel::TYPE_WEATHER_WIND,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
+                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_WIND,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Wind speed (m/s)',
                     LanguageModel::LANGUAGE_RU => 'Скорость ветра (м/с)',
@@ -68,7 +70,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Weather::class,
-                'type'               => VendorModel::TYPE_WEATHER_CLOUDS,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
+                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_CLOUDS,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Cloudiness (%)',
                     LanguageModel::LANGUAGE_RU => 'Облачность (%)',
@@ -92,7 +95,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Weather::class,
-                'type'               => VendorModel::TYPE_WEATHER_RAIN,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
+                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_RAIN,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Rain precipitation (mm)',
                     LanguageModel::LANGUAGE_RU => 'Дождь осадки (мм)',
@@ -116,7 +120,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Weather::class,
-                'type'               => VendorModel::TYPE_WEATHER_SNOW,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
+                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_SNOW,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Snow precipitation (mm)',
                     LanguageModel::LANGUAGE_RU => 'Снег осадки (мм)',
@@ -140,7 +145,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Weather::class,
-                'type'               => VendorModel::TYPE_WEATHER_PRESSURE,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
+                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_PRESSURE,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Atmosphere pressure (hPa)',
                     LanguageModel::LANGUAGE_RU => 'Атмосферное давление (hPa)',
@@ -164,7 +170,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Weather::class,
-                'type'               => VendorModel::TYPE_WEATHER_HUMIDITY,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
+                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_HUMIDITY,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Air humidity (%)',
                     LanguageModel::LANGUAGE_RU => 'Влажность воздуха (%)',
@@ -188,7 +195,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Currency::class,
-                'type'               => VendorModel::TYPE_CURRENCY_EXCHANGE,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_CURRENCY,
+                'value_type'         => VendorModel::VALUE_TYPE_CURRENCY_EXCHANGE,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Exchange currency rate',
                 ],
@@ -212,7 +220,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Currency::class,
-                'type'               => VendorModel::TYPE_CURRENCY_NATIONAL,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_CURRENCY,
+                'value_type'         => VendorModel::VALUE_TYPE_CURRENCY_NATIONAL,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'National bank currency rate',
                 ],
@@ -236,7 +245,8 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Currency::class,
-                'type'               => VendorModel::TYPE_CURRENCY_INTERBANK,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_CURRENCY,
+                'value_type'         => VendorModel::VALUE_TYPE_CURRENCY_INTERBANK,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Interbank currency rate',
                 ],
@@ -260,7 +270,7 @@ class TriggerDataSeeder extends Seeder
         VendorModel::query()
             ->create([
                 'callback'           => Calendar::class,
-                'type'               => VendorModel::TYPE_CALENDAR,
+                'vendor_type'        => VendorModel::VENDOR_TYPE_CALENDAR,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Calendar',
                 ],
