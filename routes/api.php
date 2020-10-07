@@ -76,7 +76,7 @@ Route::group([
         Route::post('', [ContactController::class, 'createContact']);
 
         Route::group([
-            'prefix' => 'contact-{contact}'
+            'prefix' => 'contact-{contact}',
         ], function () {
             Route::get('', [ContactController::class, 'readContact']);
             Route::put('', [ContactController::class, 'updateContact']);
@@ -150,21 +150,6 @@ Route::group([
             Route::get('', [ProjectController::class, 'readProject']);
             Route::put('', [ProjectController::class, 'updateProject']);
             Route::delete('', [ProjectController::class, 'deleteProject']);
-
-            Route::group([
-                'prefix' => 'campaigns',
-            ], function () {
-                Route::get('', [CampaignController::class, 'allCampaigns']);
-                Route::post('', [CampaignController::class, 'createCampaign']);
-
-                Route::group([
-                    'prefix' => 'campaign-{campaign}',
-                ], function () {
-                    Route::get('', [CampaignController::class, 'readCampaign']);
-                    Route::put('', [CampaignController::class, 'updateCampaign']);
-                    Route::delete('', [CampaignController::class, 'deleteCampaign']);
-                });
-            });
         });
     });
 
@@ -181,6 +166,22 @@ Route::group([
             Route::get('', [OrganizationController::class, 'readOrganization']);
             Route::put('', [OrganizationController::class, 'updateOrganization']);
             Route::delete('', [OrganizationController::class, 'deleteOrganization']);
+        });
+    });
+
+    Route::group([
+        'middleware' => 'auth:api',
+        'prefix'     => 'map-{map}/campaigns',
+    ], function () {
+        Route::get('', [CampaignController::class, 'allCampaigns']);
+        Route::post('', [CampaignController::class, 'createCampaign']);
+
+        Route::group([
+            'prefix' => 'campaign-{campaign}',
+        ], function () {
+            Route::get('', [CampaignController::class, 'readCampaign']);
+            Route::put('', [CampaignController::class, 'updateCampaign']);
+            Route::delete('', [CampaignController::class, 'deleteCampaign']);
         });
     });
 });
@@ -203,8 +204,6 @@ Route::group([
             Route::delete('', [MapController::class, 'deleteMap']);
 
             Route::post('replicate', [MapController::class, 'replicateMap']);
-
-            Route::get('projects', [MapController::class, 'readProjects']);
 
             Route::group([
                 'prefix' => 'conditions',
