@@ -43,7 +43,7 @@ class Currency extends BaseVendor
 
         /** @var CurrencyRate $currencyRate */
         $currencyRate = CurrencyRate::query()
-            ->where('location_id', $condition->vendorLocation->location_id)
+            ->where('vendor_location_id', $condition->vendor_location_id)
             ->where('from_currency_id', $formCurrencyId)
             ->where('to_currency_id', $toCurrencyId)
             ->where('type', $type)
@@ -53,7 +53,11 @@ class Currency extends BaseVendor
         return $currencyRate;
     }
 
-    public function currency_exchange(ConditionModel $condition)
+    /**
+     * @param ConditionModel $condition
+     * @return mixed|null
+     */
+    protected function getValue(ConditionModel $condition)
     {
         $currencyRate = $this->getVendor($condition);
 
@@ -63,7 +67,7 @@ class Currency extends BaseVendor
 
         $parameters = $condition->parameters;
 
-        $rate = $currencyRate->rate;
+        $rate = $currencyRate->value;
         $rateType = $parameters['rate_type'];
 
         return $rate[$rateType] ?? null;
@@ -73,39 +77,26 @@ class Currency extends BaseVendor
      * @param ConditionModel $condition
      * @return mixed|null
      */
-    public function currency_national(ConditionModel $condition)
+    public function exchange(ConditionModel $condition)
     {
-        $currencyRate = $this->getVendor($condition);
-
-        if (!$currencyRate) {
-            return null;
-        }
-
-        $parameters = $condition->parameters;
-
-        $rate = $currencyRate->rate;
-        $rateType = $parameters['rate_type'];
-
-        return $rate[$rateType] ?? null;
+        return $this->getValue($condition);
     }
 
     /**
      * @param ConditionModel $condition
      * @return mixed|null
      */
-    public function currency_interbank(ConditionModel $condition)
+    public function national(ConditionModel $condition)
     {
-        $currencyRate = $this->getVendor($condition);
+        return $this->getValue($condition);
+    }
 
-        if (!$currencyRate) {
-            return null;
-        }
-
-        $parameters = $condition->parameters;
-
-        $rate = $currencyRate->rate;
-        $rateType = $parameters['rate_type'];
-
-        return $rate[$rateType] ?? null;
+    /**
+     * @param ConditionModel $condition
+     * @return mixed|null
+     */
+    public function interbank(ConditionModel $condition)
+    {
+        return $this->getValue($condition);
     }
 }

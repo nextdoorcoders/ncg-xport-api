@@ -6,11 +6,25 @@ use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Marketing\Project as ProjectModel;
+use App\Services\Google\CampaignService as GoogleCampaignService;
 use Exception;
+use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Illuminate\Database\Eloquent\Collection;
 
 class CampaignService
 {
+    protected GoogleCampaignService $googleCampaignService;
+
+    /**
+     * ProjectService constructor.
+     *
+     * @param GoogleCampaignService $googleCampaignService
+     */
+    public function __construct(GoogleCampaignService $googleCampaignService)
+    {
+        $this->googleCampaignService = $googleCampaignService;
+    }
+
     /**
      * @param ProjectModel $project
      * @param UserModel    $user
@@ -88,5 +102,31 @@ class CampaignService
         } catch (Exception $exception) {
             throw $exception;
         }
+    }
+
+    /**
+     * @param CampaignModel $campaign
+     * @throws MessageException
+     */
+    public function updateStatus(CampaignModel $campaign): void
+    {
+        $map = $campaign->map;
+
+        $project = $map->project;
+
+        if (
+            $map->is_enabled &&
+            $project->is_enabled &&
+            now()->greaterThanOrEqualTo($project->date_start_at) &&
+            now()->lessThanOrEqualTo($project->date_end_at)
+        ) {
+            $status = CampaignStatus::ENABLED;
+        } else {
+            $status = CampaignStatus::PAUSED;
+        }
+
+        $project->campaigns->each(function (CampaignModel $campaign) use ($status) {
+            $this->googleCampaignService->updateCampaignStatus($campaign, $status);
+        });
     }
 }

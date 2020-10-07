@@ -7,6 +7,7 @@ use App\Models\Account\User as UserModel;
 use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
 use App\Models\Trigger\Map as MapModel;
+use App\Services\Marketing\CampaignService;
 use App\Services\Marketing\ProjectService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Collection;
 class MapService
 {
     protected ProjectService $projectService;
+
+    protected CampaignService $campaignService;
 
     /**
      * MapService constructor.
@@ -130,8 +133,6 @@ class MapService
         $maps->each(function (MapModel $map) {
             $this->updateStatus($map);
         });
-
-        $this->projectService->updateAllStatuses();
     }
 
     /**
@@ -167,10 +168,10 @@ class MapService
         $map->save();
 
         if ($checkParent && $isEnabledSwitched) {
-            $projects = $map->projects()->get();
+            $campaigns = $map->campaigns()->get();
 
-            $projects->each(function ($project) {
-                $this->projectService->updateStatus($project);
+            $campaigns->each(function ($campaign) {
+                $this->campaignService->updateStatus($campaign);
             });
         }
     }

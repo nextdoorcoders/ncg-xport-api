@@ -271,6 +271,7 @@ class TriggerDataSeeder extends Seeder
             ->create([
                 'callback'           => Calendar::class,
                 'vendor_type'        => VendorModel::VENDOR_TYPE_CALENDAR,
+                'value_type'         => VendorModel::VENDOR_TYPE_CALENDAR,
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Calendar',
                 ],

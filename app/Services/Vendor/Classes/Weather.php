@@ -35,7 +35,7 @@ class Weather extends BaseVendor
     {
         /** @var WeatherModel $weather */
         $weather = WeatherModel::query()
-            ->where('location_id', $condition->vendorLocation->location_id)
+            ->where('vendor_location_id', $condition->vendor_location_id)
             ->orderBy('created_at', 'desc')
             ->first();
 
@@ -44,9 +44,9 @@ class Weather extends BaseVendor
 
     /**
      * @param ConditionModel $condition
-     * @return int|null
+     * @return string|null
      */
-    public function weather_temperature(ConditionModel $condition)
+    protected function getValue(ConditionModel $condition)
     {
         $weather = $this->getVendor($condition);
 
@@ -54,37 +54,34 @@ class Weather extends BaseVendor
             return null;
         }
 
-        return $weather->temperature;
+        return $weather->value;
     }
 
     /**
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function weather_wind(ConditionModel $condition)
+    public function temperature(ConditionModel $condition)
     {
-        $weather = $this->getVendor($condition);
-
-        if (!$weather) {
-            return null;
-        }
-
-        return $weather->wind;
+        return $this->getValue($condition);
     }
 
     /**
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function weather_pressure(ConditionModel $condition)
+    public function wind(ConditionModel $condition)
     {
-        $weather = $this->getVendor($condition);
+        return $this->getValue($condition);
+    }
 
-        if (!$weather) {
-            return null;
-        }
-
-        return $weather->pressure;
+    /**
+     * @param ConditionModel $condition
+     * @return int|null
+     */
+    public function pressure(ConditionModel $condition)
+    {
+        return $this->getValue($condition);
     }
 
     /**
@@ -93,57 +90,33 @@ class Weather extends BaseVendor
      */
     public function weather_humidity(ConditionModel $condition)
     {
-        $weather = $this->getVendor($condition);
-
-        if (!$weather) {
-            return null;
-        }
-
-        return $weather->humidity;
+        return $this->getValue($condition);
     }
 
     /**
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function weather_clouds(ConditionModel $condition)
+    public function clouds(ConditionModel $condition)
     {
-        $weather = $this->getVendor($condition);
-
-        if (!$weather) {
-            return null;
-        }
-
-        return $weather->clouds;
+        return $this->getValue($condition);
     }
 
     /**
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function weather_rain(ConditionModel $condition)
+    public function rain(ConditionModel $condition)
     {
-        $weather = $this->getVendor($condition);
-
-        if (!$weather) {
-            return null;
-        }
-
-        return $weather->rain;
+        return $this->getValue($condition);
     }
 
     /**
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function weather_snow(ConditionModel $condition)
+    public function snow(ConditionModel $condition)
     {
-        $weather = $this->getVendor($condition);
-
-        if (!$weather) {
-            return null;
-        }
-
-        return $weather->snow;
+        return $this->getValue($condition);
     }
 }

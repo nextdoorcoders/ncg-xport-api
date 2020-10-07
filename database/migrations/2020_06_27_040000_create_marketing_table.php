@@ -57,6 +57,7 @@ class CreateMarketingTable extends Migration
             $table->string('desc')->nullable();
 
             $table->json('parameters');
+            $table->boolean('is_enabled')->default(false);
             $table->date('date_start_at')->nullable();
             $table->date('date_end_at')->nullable();
 

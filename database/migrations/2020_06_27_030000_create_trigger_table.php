@@ -17,8 +17,8 @@ class CreateTriggerTable extends Migration
             $table->uuid('id')->index()->primary();
 
             $table->string('callback');
-            $table->string('vendor_type')->index()->nullable();
-            $table->string('value_type')->index()->nullable();
+            $table->string('vendor_type')->index();
+            $table->string('value_type')->index();
 
             $table->json('default_parameters')->nullable();
             $table->json('settings')->nullable();
@@ -57,6 +57,9 @@ class CreateTriggerTable extends Migration
             $table->boolean('is_enabled')->default(false);
             $table->timestamp('refreshed_at')->nullable();
             $table->timestamp('changed_at')->nullable();
+
+            $table->smallInteger('expires_offset', false, true)->nullable();
+            $table->timestamp('expires_in')->nullable();
 
             $table->timestamps();
         });

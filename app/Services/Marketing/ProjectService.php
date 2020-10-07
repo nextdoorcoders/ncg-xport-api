@@ -2,29 +2,13 @@
 
 namespace App\Services\Marketing;
 
-use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
-use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Marketing\Project as ProjectModel;
-use App\Services\Google\CampaignService as GoogleCampaignService;
 use Exception;
-use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
 {
-    protected GoogleCampaignService $googleCampaignService;
-
-    /**
-     * ProjectService constructor.
-     *
-     * @param GoogleCampaignService $googleCampaignService
-     */
-    public function __construct(GoogleCampaignService $googleCampaignService)
-    {
-        $this->googleCampaignService = $googleCampaignService;
-    }
-
     /**
      * @param UserModel $user
      * @return Collection
@@ -90,44 +74,5 @@ class ProjectService
         } catch (Exception $exception) {
             throw $exception;
         }
-    }
-
-    /**
-     * @throws MessageException
-     */
-    public function updateAllStatuses(): void
-    {
-        $projects = ProjectModel::query()
-            ->with([
-                'map',
-                'campaigns',
-            ])
-            ->whereHas('map')
-            ->where('date_start_at', '<=', now())
-            ->where('date_end_at', '>=', now())
-            ->get();
-
-        $projects->each(function (ProjectModel $project) {
-            $this->updateStatus($project);
-        });
-    }
-
-    /**
-     * @param ProjectModel $project
-     * @throws MessageException
-     */
-    public function updateStatus(ProjectModel $project): void
-    {
-        $map = $project->map;
-
-        if ($map->is_enabled) {
-            $status = CampaignStatus::ENABLED;
-        } else {
-            $status = CampaignStatus::PAUSED;
-        }
-
-        $project->campaigns->each(function (CampaignModel $campaign) use ($status) {
-            $this->googleCampaignService->updateCampaignStatus($campaign, $status);
-        });
     }
 }

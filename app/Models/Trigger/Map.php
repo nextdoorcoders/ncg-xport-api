@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property boolean              $is_enabled
  * @property Carbon               $refreshed_at
  * @property Carbon               $changed_at
+ * @property integer              $expires_offset
+ * @property Carbon               $expires_in
  * @property Carbon               $created_at
  * @property Carbon               $updated_at
  * @property User                 $user
@@ -44,11 +46,14 @@ class Map extends Model
         'is_enabled',
         'refreshed_at',
         'changed_at',
+        'expires_offset',
+        'expires_in',
     ];
 
     protected $dates = [
         'refreshed_at',
         'changed_at',
+        'expires_in',
     ];
 
     /*

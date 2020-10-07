@@ -20,7 +20,7 @@ abstract class BaseVendor
         /** @var Calendar|Currency|Weather $instance */
         $instance = app($condition->vendor->callback);
 
-        return $instance->{$condition->vendor->type}($condition);
+        return $instance->{$condition->vendor->value_type}($condition);
     }
 
     /**
