@@ -75,6 +75,7 @@ class MapController extends Controller
      * @param MapRequest $request
      * @param MapModel   $map
      * @return MapResource
+     * @throws Exception
      */
     public function updateMap(MapRequest $request, MapModel $map)
     {

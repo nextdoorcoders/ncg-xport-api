@@ -28,4 +28,12 @@ class Login extends FormRequest
             'password' => 'required',
         ];
     }
+
+    /**
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function messages()
+    {
+        return trans('auth/login.validation');
+    }
 }

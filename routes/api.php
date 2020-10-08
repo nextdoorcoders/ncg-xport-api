@@ -150,6 +150,8 @@ Route::group([
             Route::get('', [ProjectController::class, 'readProject']);
             Route::put('', [ProjectController::class, 'updateProject']);
             Route::delete('', [ProjectController::class, 'deleteProject']);
+
+            Route::get('maps', [ProjectController::class, 'readMaps']);
         });
     });
 
@@ -171,10 +173,10 @@ Route::group([
 
     Route::group([
         'middleware' => 'auth:api',
-        'prefix'     => 'map-{map}/campaigns',
+        'prefix'     => 'campaigns',
     ], function () {
-        Route::get('', [CampaignController::class, 'allCampaigns']);
-        Route::post('', [CampaignController::class, 'createCampaign']);
+        Route::get('map-{map}', [CampaignController::class, 'allCampaigns']);
+        Route::post('map-{map}', [CampaignController::class, 'createCampaign']);
 
         Route::group([
             'prefix' => 'campaign-{campaign}',
@@ -284,7 +286,7 @@ Route::group([
     'prefix'     => 'google',
 ], function () {
     Route::group([
-        'prefix' => 'project-{project}',
+        'prefix' => 'map-{map}',
     ], function () {
         Route::get('campaigns', [GoogleCampaignController::class, 'allGoogleCampaigns']);
     });

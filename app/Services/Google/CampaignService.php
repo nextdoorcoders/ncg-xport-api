@@ -4,7 +4,7 @@ namespace App\Services\Google;
 
 use App\Exceptions\MessageException;
 use App\Models\Marketing\Campaign as CampaignModel;
-use App\Models\Marketing\Project as ProjectModel;
+use App\Models\Trigger\Map as MapModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -24,26 +24,32 @@ class CampaignService
     }
 
     /**
-     * @param ProjectModel $project
-     * @return Collection
+     * @param MapModel $map
+     * @return array|Collection
      * @throws MessageException
      */
-    public function allCampaigns(ProjectModel $project)
+    public function allCampaigns(MapModel $map)
     {
-        $this->campaignRepository->setAccount($project);
+        $project = $map->project;
 
-        $campaigns = $this->campaignRepository->paginate();
+        if ($project) {
+            $this->campaignRepository->setAccount($project);
 
-        $existedCampaigns = $project->campaigns()
-            ->get()
-            ->pluck('id', 'foreign_campaign_id')
-            ->toArray();
+            $campaigns = $this->campaignRepository->paginate();
 
-        $campaigns->each(function ($campaign) use ($existedCampaigns) {
-            $campaign->campaign_imported = array_key_exists($campaign->id, $existedCampaigns);
-        });
+            $existedCampaigns = $map->campaigns()
+                ->get()
+                ->pluck('id', 'foreign_campaign_id')
+                ->toArray();
 
-        return $campaigns;
+            $campaigns->each(function ($campaign) use ($existedCampaigns) {
+                $campaign->campaign_imported = array_key_exists($campaign->id, $existedCampaigns);
+            });
+
+            return $campaigns;
+        }
+
+        return [];
     }
 
     /**
@@ -53,12 +59,18 @@ class CampaignService
      */
     public function updateCampaignStatus(CampaignModel $campaign, string $status)
     {
-        $this->campaignRepository->setAccount($campaign->project);
+        $map = $campaign->map;
 
-        $googleCampaign = $this->campaignRepository->find($campaign);
+        $project = $map->project;
 
-        if ($googleCampaign && Carbon::parse($googleCampaign->start_date) <= now() && now() <= Carbon::parse($googleCampaign->end_date)) {
-            $this->campaignRepository->update($campaign, $status);
+        if ($project) {
+            $this->campaignRepository->setAccount($project);
+
+            $googleCampaign = $this->campaignRepository->find($campaign);
+
+            if ($googleCampaign && Carbon::parse($googleCampaign->start_date) <= now() && now() <= Carbon::parse($googleCampaign->end_date)) {
+                $this->campaignRepository->update($campaign, $status);
+            }
         }
     }
 }

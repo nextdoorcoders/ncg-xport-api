@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string               $id
  * @property string               $account_id
  * @property string               $organization_id
- * @property string               $map_id
  * @property string               $user_id
  * @property string               $name
  * @property string               $desc

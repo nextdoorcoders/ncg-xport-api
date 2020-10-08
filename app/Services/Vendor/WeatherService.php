@@ -7,6 +7,7 @@ use App\Models\Geo\Location as LocationModel;
 use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorLocation;
 use Exception;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
@@ -18,7 +19,7 @@ class WeatherService
      * @param int    $id
      * @param string $lang
      * @return array|mixed
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     public function findById(int $id, string $lang = LanguageModel::LANGUAGE_BY_DEFAULT)
     {
@@ -32,7 +33,7 @@ class WeatherService
      * @param string $name
      * @param string $lang
      * @return array|mixed
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     public function findByName(string $name, string $lang = LanguageModel::LANGUAGE_BY_DEFAULT)
     {
@@ -45,7 +46,7 @@ class WeatherService
     /**
      * @param array $data
      * @return array|mixed
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     public function request(array $data)
     {
@@ -100,7 +101,7 @@ class WeatherService
     /**
      * @param int $id
      * @return array
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     public function getTranslationsById(int $id)
     {
@@ -117,7 +118,7 @@ class WeatherService
     }
 
     /**
-     * @throws \Illuminate\Http\Client\RequestException
+     * @throws RequestException
      */
     public function updateWeather()
     {

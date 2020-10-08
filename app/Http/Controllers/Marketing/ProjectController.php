@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Marketing\Project as ProjectRequest;
 use App\Http\Resources\Marketing\Project as ProjectResource;
 use App\Http\Resources\Marketing\ProjectCollection;
+use App\Http\Resources\Trigger\MapCollection;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Project as ProjectModel;
 use App\Services\Marketing\ProjectService;
@@ -96,9 +97,22 @@ class ProjectController extends Controller
         /** @var UserModel $user */
         $user = auth()->user();
 
-
         $this->projectService->deleteProject($project, $user);
 
         return response()->noContent();
+    }
+
+    /**
+     * @param ProjectModel $project
+     * @return MapCollection
+     */
+    public function readMaps(ProjectModel $project)
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->projectService->readMaps($project, $user);
+
+        return new MapCollection($response);
     }
 }

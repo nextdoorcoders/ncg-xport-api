@@ -30,4 +30,12 @@ class ForgotSendCode extends FormRequest
             ],
         ];
     }
+
+    /**
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function messages()
+    {
+        return trans('auth/forgot.validation');
+    }
 }

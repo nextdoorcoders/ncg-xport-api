@@ -58,8 +58,8 @@ class CreateTriggerTable extends Migration
             $table->timestamp('refreshed_at')->nullable();
             $table->timestamp('changed_at')->nullable();
 
-            $table->smallInteger('expires_offset', false, true)->nullable();
-            $table->timestamp('expires_in')->nullable();
+            $table->smallInteger('shutdown_delay')->default(0);
+            $table->timestamp('shutdown_in')->nullable();
 
             $table->timestamps();
         });

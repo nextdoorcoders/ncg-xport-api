@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Google;
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Google\Campaign as GoogleCampaignResource;
-use App\Models\Marketing\Project as ProjectModel;
+use App\Models\Trigger\Map as MapModel;
 use App\Services\Google\CampaignService;
 
 class CampaignController extends Controller
@@ -23,14 +23,14 @@ class CampaignController extends Controller
     }
 
     /**
-     * @param ProjectModel $project
+     * @param MapModel $map
      * @return GoogleCampaignResource
      * @throws MessageException
      */
-    public function allGoogleCampaigns(ProjectModel $project)
+    public function allGoogleCampaigns(MapModel $map)
     {
         $response = $this->campaignService
-            ->allCampaigns($project);
+            ->allCampaigns($map);
 
         return new GoogleCampaignResource($response);
     }

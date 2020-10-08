@@ -2,7 +2,11 @@
 
 namespace App\Http\Resources\Trigger;
 
+use App\Http\Resources\Account\User;
+use App\Http\Resources\Marketing\CampaignCollection;
+use App\Http\Resources\Marketing\Project;
 use App\Http\Resources\Traits\ResourceTrait;
+use App\Models\Trigger\Map as MapModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Map extends JsonResource
@@ -12,46 +16,53 @@ class Map extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
-//        $resource = $this->resource;
-//
-//        return $resource->map(function ($model) {
-//            if ($model instanceof VendorLocationModel) {
-//                /** @var VendorLocationModel $model */
-//                return [
-//                    'id'         => $model->id,
-//                    'vendor_id'  => $model->vendor_id,
-//                    'name'       => $model->vendor->name,
-//                    'parameters' => $model->vendor->default_parameters,
-//                ];
-//            } else {
-//                /** @var GroupModel $model */
-//                return [
-//                    'id'         => $model->id,
-//                    'name'       => $model->name,
-//                    'desc'       => $model->desc,
-//                    'type'       => 'group',
-//                    'conditions' => $model->conditions->map(function (ConditionModel $condition) {
-//                        return [
-//                            'id'            => $condition->id,
-//                            'group_id'      => $condition->group_id,
-//                            'parameters'    => $condition->parameters,
-//                            'name'          => $condition->vendor->vendor->name,
-//                            'desc'          => $condition->vendor->vendor->desc,
-//                            'type'          => 'condition',
-//                            'settings'      => $condition->vendor->vendor->settings,
-//                            'current_value' => $condition->current_value,
-//                            'is_enabled'    => $condition->is_enabled,
-//                        ];
-//                    }),
-//                ];
-//            }
-//        });
+        /** @var MapModel $resource */
+        $resource = $this->resource;
 
-        return parent::toArray($request);
+        $response = [
+            'id'             => $resource->id,
+            'user_id'        => $resource->user_id,
+            'project_id'     => $resource->project_id,
+            'name'           => $resource->name,
+            'desc'           => $resource->desc,
+            'is_enabled'     => $resource->is_enabled,
+            'refreshed_at'   => $resource->refreshed_at,
+            'changed_at'     => $resource->changed_at,
+            'shutdown_delay' => $resource->shutdown_delay,
+            'shutdown_in'    => $resource->shutdown_in,
+            'created_at'     => $resource->created_at,
+            'updated_at'     => $resource->updated_at,
+        ];
+
+        if ($resource->relationLoaded('user')) {
+            $response = array_merge($response, [
+                'user' => new User($resource->user),
+            ]);
+        }
+
+        if ($resource->relationLoaded('project')) {
+            $response = array_merge($response, [
+                'project' => new Project($resource->project),
+            ]);
+        }
+
+        if ($resource->relationLoaded('campaigns')) {
+            $response = array_merge($response, [
+                'campaigns' => new CampaignCollection($resource->campaigns),
+            ]);
+        }
+
+        if ($resource->relationLoaded('groups')) {
+            $response = array_merge($response, [
+                'groups' => new GroupCollection($resource->groups),
+            ]);
+        }
+
+        return $response;
     }
 }

@@ -18,13 +18,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @package App\Models\Trigger
  * @property string               $id
  * @property string               $user_id
+ * @property string               $project_id
  * @property string               $name
  * @property string               $desc
  * @property boolean              $is_enabled
  * @property Carbon               $refreshed_at
  * @property Carbon               $changed_at
- * @property integer              $expires_offset
- * @property Carbon               $expires_in
+ * @property integer              $shutdown_delay
+ * @property Carbon               $shutdown_in
  * @property Carbon               $created_at
  * @property Carbon               $updated_at
  * @property User                 $user
@@ -46,14 +47,14 @@ class Map extends Model
         'is_enabled',
         'refreshed_at',
         'changed_at',
-        'expires_offset',
-        'expires_in',
+        'shutdown_delay',
+        'shutdown_in',
     ];
 
     protected $dates = [
         'refreshed_at',
         'changed_at',
-        'expires_in',
+        'shutdown_in',
     ];
 
     /*

@@ -5,7 +5,7 @@ namespace App\Services\Marketing;
 use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Campaign as CampaignModel;
-use App\Models\Marketing\Project as ProjectModel;
+use App\Models\Trigger\Map as MapModel;
 use App\Services\Google\CampaignService as GoogleCampaignService;
 use Exception;
 use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
@@ -26,27 +26,27 @@ class CampaignService
     }
 
     /**
-     * @param ProjectModel $project
-     * @param UserModel    $user
+     * @param MapModel  $map
+     * @param UserModel $user
      * @return Collection
      */
-    public function allCampaigns(ProjectModel $project, UserModel $user)
+    public function allCampaigns(MapModel $map, UserModel $user)
     {
-        return $project->campaigns()
+        return $map->campaigns()
             ->get();
     }
 
     /**
-     * @param ProjectModel $project
-     * @param UserModel    $user
-     * @param array        $data
+     * @param MapModel  $map
+     * @param UserModel $user
+     * @param array     $data
      * @return CampaignModel|null
      * @throws MessageException
      */
-    public function createCampaign(ProjectModel $project, UserModel $user, array $data)
+    public function createCampaign(MapModel $map, UserModel $user, array $data)
     {
         $campaign = CampaignModel::query()
-            ->where('project_id', $project->id)
+            ->where('map_id', $map->id)
             ->where('foreign_campaign_id', $data['foreign_campaign_id'])
             ->first();
 
@@ -55,47 +55,44 @@ class CampaignService
         }
 
         /** @var CampaignModel $campaign */
-        $campaign = $project->campaigns()
+        $campaign = $map->campaigns()
             ->create($data);
 
-        return $this->readCampaign($project, $campaign, $user);
+        return $this->readCampaign($campaign, $user);
     }
 
     /**
-     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @return CampaignModel|null
      */
-    public function readCampaign(ProjectModel $project, CampaignModel $campaign, UserModel $user)
+    public function readCampaign(CampaignModel $campaign, UserModel $user)
     {
         return $campaign->fresh([
-            'project',
+            'map',
         ]);
     }
 
     /**
-     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @param array         $data
      * @return CampaignModel|null
      */
-    public function updateCampaign(ProjectModel $project, CampaignModel $campaign, UserModel $user, array $data)
+    public function updateCampaign(CampaignModel $campaign, UserModel $user, array $data)
     {
         $campaign->fill($data);
         $campaign->save();
 
-        return $this->readCampaign($project, $campaign, $user);
+        return $this->readCampaign($campaign, $user);
     }
 
     /**
-     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @param UserModel     $user
      * @throws Exception
      */
-    public function deleteCampaign(ProjectModel $project, CampaignModel $campaign, UserModel $user)
+    public function deleteCampaign(CampaignModel $campaign, UserModel $user)
     {
         try {
             $campaign->delete();

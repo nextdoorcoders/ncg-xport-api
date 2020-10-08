@@ -25,10 +25,19 @@ class Vendor extends FormRequest
     {
         return [
             'name'               => 'required',
-            'callback'      => 'required',
-            'type'               => 'required',
+            'callback'           => 'required',
+            'vendor_type'        => 'required',
+            'value_type'         => 'required',
             'default_parameters' => 'sometimes',
             'settings'           => 'sometimes',
         ];
+    }
+
+    /**
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function messages()
+    {
+        return trans('trigger/vendor.validation');
     }
 }

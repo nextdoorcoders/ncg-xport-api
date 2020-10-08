@@ -40,4 +40,12 @@ class Register extends FormRequest
             ],
         ];
     }
+
+    /**
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function messages()
+    {
+        return trans('auth/register.validation');
+    }
 }

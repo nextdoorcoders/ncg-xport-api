@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Marketing;
 
+use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Marketing\Campaign as CampaignResource;
 use App\Http\Resources\Marketing\CampaignCollection;
 use App\Models\Account\User as UserModel;
 use App\Models\Marketing\Campaign as CampaignModel;
-use App\Models\Marketing\Project as ProjectModel;
+use App\Models\Trigger\Map as MapModel;
 use App\Services\Marketing\CampaignService;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,82 +29,79 @@ class CampaignController extends Controller
     }
 
     /**
-     * @param ProjectModel $project
+     * @param MapModel $map
      * @return CampaignCollection
      */
-    public function allCampaigns(ProjectModel $project)
+    public function allCampaigns(MapModel $map)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->campaignService->allCampaigns($project, $user);
+        $response = $this->campaignService->allCampaigns($map, $user);
 
         return new CampaignCollection($response);
     }
 
     /**
-     * @param Request      $request
-     * @param ProjectModel $project
+     * @param Request  $request
+     * @param MapModel $map
      * @return CampaignResource
+     * @throws MessageException
      */
-    public function createCampaign(Request $request, ProjectModel $project)
+    public function createCampaign(Request $request, MapModel $map)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->campaignService->createCampaign($project, $user, $data);
+        $response = $this->campaignService->createCampaign($map, $user, $data);
 
         return new CampaignResource($response);
     }
 
     /**
-     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @return CampaignResource
      */
-    public function readCampaign(ProjectModel $project, CampaignModel $campaign)
+    public function readCampaign(CampaignModel $campaign)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->campaignService->readCampaign($project, $campaign, $user);
+        $response = $this->campaignService->readCampaign($campaign, $user);
 
         return new CampaignResource($response);
     }
 
     /**
      * @param Request       $request
-     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @return CampaignResource
      */
-    public function updateCampaign(Request $request, ProjectModel $project, CampaignModel $campaign)
+    public function updateCampaign(Request $request, CampaignModel $campaign)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->campaignService->updateCampaign($project, $campaign, $user, $data);
+        $response = $this->campaignService->updateCampaign($campaign, $user, $data);
 
         return new CampaignResource($response);
     }
 
     /**
-     * @param ProjectModel  $project
      * @param CampaignModel $campaign
      * @return Response
      * @throws Exception
      */
-    public function deleteCampaign(ProjectModel $project, CampaignModel $campaign)
+    public function deleteCampaign(CampaignModel $campaign)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-
-        $this->campaignService->deleteCampaign($project, $campaign, $user);
+        $this->campaignService->deleteCampaign($campaign, $user);
 
         return response()->noContent();
     }

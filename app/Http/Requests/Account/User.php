@@ -29,4 +29,12 @@ class User extends FormRequest
             'password' => 'sometimes|confirmed',
         ];
     }
+
+    /**
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function messages()
+    {
+        return trans('auth/user.validation');
+    }
 }

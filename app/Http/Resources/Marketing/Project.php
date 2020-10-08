@@ -4,7 +4,7 @@ namespace App\Http\Resources\Marketing;
 
 use App\Http\Resources\Account\User;
 use App\Http\Resources\Traits\ResourceTrait;
-use App\Http\Resources\Trigger\Map;
+use App\Http\Resources\Trigger\MapCollection;
 use App\Models\Marketing\Project as ProjectModel;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -27,10 +27,10 @@ class Project extends JsonResource
         $response = [
             'id'              => $resource->id,
             'account_id'      => $resource->account_id,
-            'map_id'          => $resource->map_id,
             'organization_id' => $resource->organization_id,
             'name'            => $resource->name,
             'parameters'      => $resource->parameters,
+            'is_enabled'      => $resource->is_enabled,
             'date_start_at'   => Carbon::parse($resource->date_start_at)->toDateString(),
             'date_end_at'     => Carbon::parse($resource->date_end_at)->toDateString(),
         ];
@@ -38,12 +38,6 @@ class Project extends JsonResource
         if ($resource->relationLoaded('account')) {
             $response = array_merge($response, [
                 'account' => new Account($resource->account),
-            ]);
-        }
-
-        if ($resource->relationLoaded('map')) {
-            $response = array_merge($response, [
-                'map' => new Map($resource->map),
             ]);
         }
 
@@ -59,9 +53,9 @@ class Project extends JsonResource
             ]);
         }
 
-        if ($resource->relationLoaded('campaigns')) {
+        if ($resource->relationLoaded('maps')) {
             $response = array_merge($response, [
-                'campaigns' => new CampaignCollection($resource->campaigns),
+                'maps' => new MapCollection($resource->maps),
             ]);
         }
 

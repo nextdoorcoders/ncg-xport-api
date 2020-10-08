@@ -11,6 +11,7 @@ use App\Services\Marketing\CampaignService;
 use App\Services\Marketing\ProjectService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class MapService
 {
@@ -68,11 +69,27 @@ class MapService
      * @param UserModel $user
      * @param array     $data
      * @return MapModel|null
+     * @throws Exception
      */
     public function updateMap(MapModel $map, UserModel $user, array $data)
     {
-        $map->fill($data);
-        $map->save();
+        try {
+            DB::beginTransaction();
+
+            $map->fill($data);
+
+            if ($map->isDirty('project_id')) {
+                $map->campaigns()->delete();
+            }
+
+            $map->save();
+
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            throw $exception;
+        }
 
         return $this->readMap($map, $user);
     }
@@ -99,6 +116,7 @@ class MapService
     public function replicateMap(MapModel $map, UserModel $user)
     {
         $replicateMap = $map->replicate();
+        $replicateMap->project_id = null;
         $replicateMap->desc = trim(sprintf('(replicated) %s', $replicateMap->desc));
         $replicateMap->push();
 

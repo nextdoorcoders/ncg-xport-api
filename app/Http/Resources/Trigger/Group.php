@@ -22,9 +22,15 @@ class Group extends JsonResource
         $resource = $this->resource;
 
         $response = [
-            'id'   => $resource->id,
-            'name' => $resource->name,
-            'desc' => $resource->desc,
+            'id'           => $resource->id,
+            'name'         => $resource->name,
+            'desc'         => $resource->desc,
+            'order_index'  => $resource->order_index,
+            'is_enabled'   => $resource->is_enabled,
+            'refreshed_at' => $resource->refreshed_at,
+            'changed_at'   => $resource->changed_at,
+            'created_at'   => $resource->created_at,
+            'updated_at'   => $resource->updated_at,
         ];
 
         if ($resource->relationLoaded('map')) {

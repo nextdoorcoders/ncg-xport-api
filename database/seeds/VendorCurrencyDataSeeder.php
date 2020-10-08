@@ -2,6 +2,7 @@
 
 use App\Models\Vendor\Currency as CurrencyModel;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class VendorCurrencyDataSeeder extends Seeder
 {
@@ -109,5 +110,7 @@ class VendorCurrencyDataSeeder extends Seeder
             ->create([
                 'code' => 'SEK',
             ]);
+
+        Artisan::call('vendor:currency');
     }
 }

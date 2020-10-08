@@ -88,7 +88,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function weather_humidity(ConditionModel $condition)
+    public function humidity(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }

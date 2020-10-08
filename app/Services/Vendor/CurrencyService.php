@@ -16,6 +16,10 @@ use Illuminate\Support\Collection;
 
 class CurrencyService
 {
+    protected string $exchangeAndNationalRates = 'https://minfin.com.ua/currency/banks/';
+
+    protected string $interbankRates = 'https://minfin.com.ua/currency/mb/';
+
     /**
      * @return DatabaseCollection
      */
@@ -37,7 +41,7 @@ class CurrencyService
      */
     public function getMinfinExchangeAndNationalRates(): Collection
     {
-        $document = new Document('https://minfin.com.ua/currency/banks/', true);
+        $document = new Document($this->exchangeAndNationalRates, true);
 
         $table = $document->first('table.table-response.mfm-table.mfcur-table-lg-banks.mfcur-table-lg');
 
@@ -111,7 +115,7 @@ class CurrencyService
      */
     public function getMinfinInterbankRates(): Collection
     {
-        $document = new Document('https://minfin.com.ua/currency/mb/', true);
+        $document = new Document($this->interbankRates, true);
 
         $table = $document->first('table.mb-table-currency');
 
