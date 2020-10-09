@@ -146,9 +146,16 @@ class GroupService
             $group->changed_at = now();
         }
 
-        $group->save();
+        $group->save([
+            'timestamps' => false,
+        ]);
 
         if ($checkParent && $isEnabledSwitch) {
+            /*
+             * В случае если запуск метода был единичным а не из
+             * коллекции - проверяем значение модели уровнем выше
+             */
+
             /** @var MapModel $map */
             $map = $group->map()->first();
 

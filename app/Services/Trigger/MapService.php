@@ -170,8 +170,14 @@ class MapService
             ->count();
 
         if ($totalCountOfGroups > 0 && $totalCountOfGroups === $countOfEnabledGroups) {
+            // Если общее количество групп равно количеству включённых групп - включаем карту
             $map->is_enabled = true;
-        } else {
+
+            // Обновляем время после которого карта будет автоматически отключена
+            $map->shutdown_in = now()->addSeconds($map->shutdown_delay);
+        } else if (now()->greaterThan($map->shutdown_in)) {
+            // Карта должна работать до тех пор пока не истечёт время.
+            // Если время выключения настоло - выключаем карту
             $map->is_enabled = false;
         }
 
@@ -183,9 +189,16 @@ class MapService
             $map->changed_at = now();
         }
 
-        $map->save();
+        $map->save([
+            'timestamps' => false,
+        ]);
 
         if ($checkParent && $isEnabledSwitched) {
+            /*
+             * В случае если запуск метода был единичным а не из
+             * коллекции - запускаем изменение статуса состояний
+             */
+
             $campaigns = $map->campaigns()->get();
 
             $campaigns->each(function ($campaign) {

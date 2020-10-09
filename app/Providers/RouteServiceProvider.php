@@ -34,13 +34,16 @@ class RouteServiceProvider extends ServiceProvider
         $params = [
             // Account
             'user',
+            'contact',
 
             // Geo
             'location',
 
             // Marketing
-            'project',
+            'account',
             'campaign',
+            'organization',
+            'project',
 
             // Trigger
             'condition',

@@ -74,6 +74,7 @@ class ProjectController extends Controller
      * @param ProjectRequest $request
      * @param ProjectModel   $project
      * @return ProjectResource
+     * @throws Exception
      */
     public function updateProject(ProjectRequest $request, ProjectModel $project)
     {

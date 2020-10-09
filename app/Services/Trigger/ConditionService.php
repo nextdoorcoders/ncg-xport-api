@@ -185,7 +185,7 @@ class ConditionService
 
         /** @var BaseVendor $triggerClass */
         $triggerClass = app($vendor->callback);
-        $isEnabled = $triggerClass->checkCondition($condition); // TODO: Fix it
+        $isEnabled = $triggerClass->checkCondition($condition);
 
         $condition->is_enabled = $isEnabled;
         $condition->refreshed_at = now();
@@ -196,7 +196,9 @@ class ConditionService
             $condition->changed_at = now();
         }
 
-        $condition->save();
+        $condition->save([
+            'timestamps' => false,
+        ]);
 
         if ($checkParent && $isEnabledSwitched) {
             /*
