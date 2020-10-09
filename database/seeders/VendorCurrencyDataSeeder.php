@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Vendor\Currency as CurrencyModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;

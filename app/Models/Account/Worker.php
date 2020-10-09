@@ -5,6 +5,7 @@ namespace App\Models\Account;
 use App\Models\Traits\UserTrait;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Worker extends Model
 {
-    use UserTrait, UuidTrait;
+    use HasFactory, UserTrait, UuidTrait;
 
     const ROLE_ADMIN = 'admin';
     const ROLE_MODERATOR = 'moderator';

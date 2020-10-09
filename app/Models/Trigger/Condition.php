@@ -5,6 +5,7 @@ namespace App\Models\Trigger;
 use App\Models\Traits\UuidTrait;
 use App\Services\Vendor\Classes\BaseVendor;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -30,7 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Condition extends Model
 {
-    use UuidTrait;
+    use HasFactory, UuidTrait;
 
     protected $table = 'trigger_conditions';
 

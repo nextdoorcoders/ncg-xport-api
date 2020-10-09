@@ -5,6 +5,7 @@ namespace App\Models\Marketing;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Map;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Campaign extends Model
 {
-    use UuidTrait;
+    use HasFactory, UuidTrait;
 
     protected $table = 'marketing_campaigns';
 

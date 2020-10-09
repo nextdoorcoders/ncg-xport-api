@@ -5,6 +5,7 @@ namespace App\Models\Trigger;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Group extends Model
 {
-    use UuidTrait;
+    use HasFactory, UuidTrait;
 
     protected $table = 'trigger_groups';
 

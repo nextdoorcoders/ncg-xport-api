@@ -41,7 +41,7 @@ trait TranslateTrait
      * @return Builder
      * @throws Exception
      */
-    protected function setKeysForSaveQuery(Builder $query): Builder
+    protected function setKeysForSaveQuery($query): Builder
     {
         /*
          * ORM Laravel не позволяет использовать первичный композитный ключ. Для этого

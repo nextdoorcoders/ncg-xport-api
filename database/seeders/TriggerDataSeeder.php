@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Trigger\Vendor as VendorModel;
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;

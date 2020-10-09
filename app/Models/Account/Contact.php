@@ -4,6 +4,7 @@ namespace App\Models\Account;
 
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
@@ -22,7 +23,7 @@ use Illuminate\Support\Arr;
  */
 class Contact extends Model
 {
-    use UuidTrait;
+    use HasFactory, UuidTrait;
 
     const TYPE_PHONE = 'phone';
     const TYPE_EMAIL = 'email';

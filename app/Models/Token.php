@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +29,7 @@ use Laravel\Sanctum\Contracts\HasAbilities;
  */
 class Token extends Model implements HasAbilities
 {
-    use UuidTrait;
+    use HasFactory, UuidTrait;
 
     protected $table = 'morph_tokens';
 

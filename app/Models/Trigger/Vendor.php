@@ -9,6 +9,7 @@ use App\Models\Vendor\CurrencyRate;
 use App\Models\Vendor\Weather;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Vendor extends Model
 {
-    use TranslatableTrait, UuidTrait;
+    use HasFactory, TranslatableTrait, UuidTrait;
 
     const LOCATION_GLOBAL = 'global';
     const LOCATION_LOCAL = 'local';

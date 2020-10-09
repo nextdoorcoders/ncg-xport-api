@@ -5,6 +5,7 @@ namespace App\Models\Vendor;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\VendorLocation;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -27,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CurrencyRate extends Model
 {
-    use UuidTrait;
+    use HasFactory, UuidTrait;
 
     const SOURCE_MINFIN = 'minfin';
 

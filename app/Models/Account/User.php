@@ -12,6 +12,7 @@ use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Map;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -39,7 +40,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, UserTrait, UuidTrait;
+    use HasApiTokens, HasFactory, Notifiable, UserTrait, UuidTrait;
 
     protected $table = 'account_users';
 

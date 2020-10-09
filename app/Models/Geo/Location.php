@@ -11,6 +11,7 @@ use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorLocation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Location extends Model
 {
-    use NestedTreeTrait, TranslatableTrait, UuidTrait;
+    use HasFactory, NestedTreeTrait, TranslatableTrait, UuidTrait;
 
     const TYPE_COUNTRY = 'country';
     const TYPE_STATE = 'state';

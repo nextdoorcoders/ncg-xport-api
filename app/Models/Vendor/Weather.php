@@ -5,6 +5,7 @@ namespace App\Models\Vendor;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\VendorLocation;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Weather extends Model
 {
+    use HasFactory, UuidTrait;
+
     const SOURCE_OPEN_WEATHER_MAP = 'open_weather_map';
 
     const TYPE_TEMPERATURE = 'temperature';
@@ -32,8 +35,6 @@ class Weather extends Model
     const TYPE_CLOUDS = 'clouds';
     const TYPE_RAIN = 'rain';
     const TYPE_SNOW = 'snow';
-
-    use UuidTrait;
 
     protected $table = 'vendor_weather';
 

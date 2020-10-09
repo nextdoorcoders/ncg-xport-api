@@ -4,6 +4,7 @@ namespace App\Models\Account;
 
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Language extends Model
 {
-    use UuidTrait;
+    use HasFactory, UuidTrait;
 
     const LANGUAGE_EN = 'en';
     const LANGUAGE_RU = 'ru';

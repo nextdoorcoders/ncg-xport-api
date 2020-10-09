@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Geo\Location as LocationModel;
 use App\Services\Geo\LocationService;
