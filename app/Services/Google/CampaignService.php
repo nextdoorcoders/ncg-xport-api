@@ -3,6 +3,7 @@
 namespace App\Services\Google;
 
 use App\Exceptions\MessageException;
+use App\Jobs\Google\UpdateCampaignStatus;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Trigger\Map as MapModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
@@ -55,22 +56,9 @@ class CampaignService
     /**
      * @param CampaignModel $campaign
      * @param string        $status
-     * @throws MessageException
      */
     public function updateCampaignStatus(CampaignModel $campaign, string $status)
     {
-        $map = $campaign->map;
-
-        $project = $map->project;
-
-        if ($project) {
-            $this->campaignRepository->setAccount($project);
-
-            $googleCampaign = $this->campaignRepository->find($campaign);
-
-            if ($googleCampaign && Carbon::parse($googleCampaign->start_date) <= now() && now() <= Carbon::parse($googleCampaign->end_date)) {
-                $this->campaignRepository->update($campaign, $status);
-            }
-        }
+        UpdateCampaignStatus::dispatch($campaign, $status);
     }
 }

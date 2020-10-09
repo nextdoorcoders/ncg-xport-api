@@ -103,7 +103,6 @@ class CampaignService
 
     /**
      * @param CampaignModel $campaign
-     * @throws MessageException
      */
     public function updateStatus(CampaignModel $campaign): void
     {
@@ -122,8 +121,6 @@ class CampaignService
             $status = CampaignStatus::PAUSED;
         }
 
-        $project->campaigns->each(function (CampaignModel $campaign) use ($status) {
-            $this->googleCampaignService->updateCampaignStatus($campaign, $status);
-        });
+        $this->googleCampaignService->updateCampaignStatus($campaign, $status);
     }
 }

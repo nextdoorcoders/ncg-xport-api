@@ -4,29 +4,27 @@ namespace App\Services\Trigger;
 
 use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
+use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
 use App\Models\Trigger\Map as MapModel;
 use App\Services\Marketing\CampaignService;
-use App\Services\Marketing\ProjectService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class MapService
 {
-    protected ProjectService $projectService;
-
     protected CampaignService $campaignService;
 
     /**
      * MapService constructor.
      *
-     * @param ProjectService $projectService
+     * @param CampaignService $campaignService
      */
-    public function __construct(ProjectService $projectService)
+    public function __construct(CampaignService $campaignService)
     {
-        $this->projectService = $projectService;
+        $this->campaignService = $campaignService;
     }
 
     /**
@@ -175,7 +173,7 @@ class MapService
 
             // Обновляем время после которого карта будет автоматически отключена
             $map->shutdown_in = now()->addSeconds($map->shutdown_delay);
-        } else if (now()->greaterThan($map->shutdown_in)) {
+        } elseif (now()->greaterThan($map->shutdown_in)) {
             // Карта должна работать до тех пор пока не истечёт время.
             // Если время выключения настоло - выключаем карту
             $map->is_enabled = false;
@@ -193,18 +191,11 @@ class MapService
             'timestamps' => false,
         ]);
 
-        if ($checkParent && $isEnabledSwitched) {
-            /*
-             * В случае если запуск метода был единичным а не из
-             * коллекции - запускаем изменение статуса состояний
-             */
+        $campaigns = $map->campaigns()->get();
 
-            $campaigns = $map->campaigns()->get();
-
-            $campaigns->each(function ($campaign) {
-                $this->campaignService->updateStatus($campaign);
-            });
-        }
+        $campaigns->each(function (CampaignModel $campaign) {
+            $this->campaignService->updateStatus($campaign);
+        });
     }
 
     /**
