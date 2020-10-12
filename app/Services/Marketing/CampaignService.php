@@ -113,8 +113,8 @@ class CampaignService
         if (
             $map->is_enabled &&
             $project->is_enabled &&
-            now()->greaterThanOrEqualTo($project->date_start_at) &&
-            now()->lessThanOrEqualTo($project->date_end_at)
+            (is_null($project->date_start_at) || now()->greaterThanOrEqualTo($project->date_start_at)) &&
+            (is_null($project->date_end_at) || now()->lessThanOrEqualTo($project->date_end_at))
         ) {
             $status = CampaignStatus::ENABLED;
         } else {

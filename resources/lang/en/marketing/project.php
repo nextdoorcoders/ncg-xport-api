@@ -13,7 +13,7 @@ return [
 //        'date_end_at.date_format'             => '',
 //        'date_end_at.after'                   => '',
         'account_id.required'                 => 'Marketing account is required',
-        'parameters.account.required'         => 'Account ID is required',
+        'parameters.account_id.required'      => 'Account ID is required',
         'parameters.developer_token.required' => 'Developer token is required',
     ],
 ];

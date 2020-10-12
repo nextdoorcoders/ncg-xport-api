@@ -31,10 +31,6 @@ class Kernel extends ConsoleKernel
          $schedule->command('vendor:currency')
              ->everyThirtyMinutes()
              ->withoutOverlapping();
-
-         $schedule->command('trigger:update')
-             ->everyMinute()
-             ->withoutOverlapping();
     }
 
     /**

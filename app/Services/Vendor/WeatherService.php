@@ -137,7 +137,7 @@ class WeatherService
 
         $locations->each(function (LocationModel $location) use ($vendors) {
             try {
-                if (!is_null($location->parameters) && array_key_exists('owm_id', $city->parameters)) {
+                if (!is_null($location->parameters) && array_key_exists('owm_id', $location->parameters)) {
                     $weather = $this->findById($location->parameters['owm_id']);
                 } else {
                     $weather = $this->getWeatherByNames($location);

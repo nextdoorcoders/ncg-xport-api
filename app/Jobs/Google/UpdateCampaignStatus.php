@@ -55,7 +55,12 @@ class UpdateCampaignStatus implements ShouldQueue
 
             $googleCampaign = $this->campaignRepository->find($campaign);
 
-            if ($googleCampaign && Carbon::parse($googleCampaign->start_date) <= now() && now() <= Carbon::parse($googleCampaign->end_date)) {
+            if (
+                $googleCampaign &&
+                $googleCampaign->status !== $this->status &&
+                Carbon::parse($googleCampaign->start_date) <= now() &&
+                now() <= Carbon::parse($googleCampaign->end_date)
+            ) {
                 $this->campaignRepository->update($campaign, $this->status);
             }
         }
