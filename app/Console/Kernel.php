@@ -26,11 +26,19 @@ class Kernel extends ConsoleKernel
     {
          $schedule->command('vendor:weather')
              ->everyThirtyMinutes()
-             ->withoutOverlapping();
+             ->withoutOverlapping(15);
 
          $schedule->command('vendor:currency')
              ->everyThirtyMinutes()
-             ->withoutOverlapping();
+             ->withoutOverlapping(15);
+
+        $schedule->command('vendor:clear')
+            ->daily()
+            ->withoutOverlapping();
+
+        $schedule->command('telescope:prune --hours=72')
+            ->daily()
+            ->withoutOverlapping();
     }
 
     /**
