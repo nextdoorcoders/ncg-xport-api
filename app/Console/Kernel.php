@@ -33,12 +33,12 @@ class Kernel extends ConsoleKernel
              ->withoutOverlapping(15);
 
         $schedule->command('vendor:clear')
-            ->daily()
-            ->withoutOverlapping();
+            ->everySixHours()
+            ->withoutOverlapping(60);
 
         $schedule->command('telescope:prune --hours=72')
-            ->daily()
-            ->withoutOverlapping();
+            ->everySixHours()
+            ->withoutOverlapping(60);
     }
 
     /**
