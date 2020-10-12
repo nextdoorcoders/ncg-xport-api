@@ -33,9 +33,17 @@ class MapService
      */
     public function allMaps(UserModel $user)
     {
-        return MapModel::query()
+        $templates = MapModel::query()
             ->where('user_id', $user->id)
+            ->where('project_id', null)
             ->get();
+
+        $maps = MapModel::query()
+            ->where('user_id', $user->id)
+            ->where('project_id', '!=', null)
+            ->get();
+
+        return $templates->merge($maps);
     }
 
     /**
