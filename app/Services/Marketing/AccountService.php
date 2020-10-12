@@ -50,14 +50,14 @@ class AccountService
     }
 
     /**
-     * @param UserModel     $authAccount
-     * @param string        $providerName
-     * @param UserSocialite $providerUser
-     * @param string        $locale
+     * @param null|UserModel $authAccount
+     * @param string         $providerName
+     * @param UserSocialite  $providerUser
+     * @param string         $locale
      * @return UserModel
      * @throws MessageException
      */
-    public function getOrCreateUser($authAccount, string $providerName, UserSocialite $providerUser, string $locale)
+    public function getOrCreateUser(?UserModel $authAccount, string $providerName, UserSocialite $providerUser, string $locale)
     {
         if (empty($providerUser->getEmail())) {
             throw new MessageException('Registration with this provider is not possible. Please, use another provider');
