@@ -12,7 +12,7 @@ class Trigger extends Command
      *
      * @var string
      */
-    protected $signature = 'trigger:update';
+    protected $signature = 'trigger:update {--sleep=0}';
 
     /**
      * The console command description.
@@ -43,6 +43,8 @@ class Trigger extends Command
      */
     public function handle()
     {
+        sleep($this->option('sleep'));
+
         /*
          * У нас имеется иерархия из 3х сущностей Map <- 1:M -- Group <- 1:M -- Condition
          * Проверяем значение каждого состояния, на основании этого проводим
