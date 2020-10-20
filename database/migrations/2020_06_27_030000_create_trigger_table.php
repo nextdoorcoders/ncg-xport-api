@@ -17,8 +17,19 @@ class CreateTriggerTable extends Migration
             $table->uuid('id')->index()->primary();
 
             $table->string('callback');
-            $table->string('vendor_type')->index();
-            $table->string('value_type')->index();
+            $table->string('type')->index();
+            $table->string('source')->nullable();
+
+            $table->json('settings')->nullable();
+
+            $table->timestamps();
+        });
+
+        Schema::create('trigger_vendors_types', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
+            $table->uuid('vendor_id')->index();
+
+            $table->string('type')->index();
 
             $table->json('default_parameters')->nullable();
             $table->json('settings')->nullable();
@@ -26,7 +37,7 @@ class CreateTriggerTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('trigger_vendors_translate', function (Blueprint $table) {
+        Schema::create('trigger_vendors_types_translate', function (Blueprint $table) {
             $table->uuid('language_id')->index();
             $table->uuid('translatable_id')->index();
 
@@ -41,9 +52,9 @@ class CreateTriggerTable extends Migration
         Schema::create('trigger_vendors_locations', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('location_id')->index();
-            $table->uuid('vendor_id')->index();
+            $table->uuid('vendor_type_id')->index();
 
-            $table->unique(['location_id', 'vendor_id'], 'composite_primary_key');
+            $table->unique(['location_id', 'vendor_type_id'], 'composite_primary_key');
         });
 
         Schema::create('trigger_maps', function (Blueprint $table) {
@@ -83,7 +94,7 @@ class CreateTriggerTable extends Migration
         Schema::create('trigger_conditions', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('group_id')->index();
-            $table->uuid('vendor_id')->index();
+            $table->uuid('vendor_type_id')->index();
             $table->uuid('vendor_location_id')->index()->nullable();
 
             $table->json('parameters')->nullable();

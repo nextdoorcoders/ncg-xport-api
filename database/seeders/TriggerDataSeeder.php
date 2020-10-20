@@ -7,6 +7,7 @@ use App\Models\Trigger\Vendor as VendorModel;
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
 use App\Services\Vendor\Classes\Calendar;
 use App\Services\Vendor\Classes\Currency;
+use App\Services\Vendor\Classes\MediaSync;
 use App\Services\Vendor\Classes\Weather;
 use Illuminate\Database\Seeder;
 
@@ -19,11 +20,171 @@ class TriggerDataSeeder extends Seeder
      */
     public function run()
     {
-        VendorModel::query()
+        /** @var VendorModel $calendar */
+        $calendar = VendorModel::query()
             ->create([
-                'callback'           => Weather::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
-                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_TEMPERATURE,
+                'callback' => Calendar::class,
+                'type'     => VendorModel::TYPE_CALENDAR,
+                'source'   => null,
+                'settings' => null,
+            ]);
+
+        /** @var VendorModel $currency */
+        $currency = VendorModel::query()
+            ->create([
+                'callback' => Currency::class,
+                'type'     => VendorModel::TYPE_CURRENCY,
+                'source'   => 'minfin',
+                'settings' => null,
+            ]);
+
+        /** @var VendorModel $mediaSync */
+        $mediaSync = VendorModel::query()
+            ->create([
+                'callback' => MediaSync::class,
+                'type'     => VendorModel::TYPE_MEDIA_SYNC,
+                'source'   => 'ncg',
+                'settings' => null,
+            ]);
+
+        /** @var VendorModel $weather */
+        $weather = VendorModel::query()
+            ->create([
+                'callback' => Weather::class,
+                'type'     => VendorModel::TYPE_WEATHER,
+                'source'   => 'open_weather_map',
+                'settings' => null,
+            ]);
+
+        $calendar->vendorsTypes()
+            ->create([
+                'type'               => 'calendar',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Calendar',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'Calendar (date, time and timezone)',
+                ],
+                'default_parameters' => [
+                    'date_start_at' => null,
+                    'date_end_at'   => null,
+                    'time_start_at' => null,
+                    'time_end_at'   => null,
+                    'day_of_week'   => null,
+                    'timezone'      => null,
+                ],
+                'settings'           => [
+                    'color' => '#F64E60',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/time-schedule.svg')),
+                ],
+            ]);
+
+        $currency->vendorsTypes()
+            ->create([
+                'type'               => 'exchange',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Exchange currency rate',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'Exchange currency rate',
+                ],
+                'default_parameters' => [
+                    'type'             => 'exchange',
+                    'from_currency_id' => null,
+                    'to_currency_id'   => null,
+                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
+                    'rate_min'         => '5',
+                    'rate_max'         => '10',
+                ],
+                'settings'           => [
+                    'color' => '#1BC5BD',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/money.svg')),
+                ],
+            ]);
+
+        $currency->vendorsTypes()
+            ->create([
+                'type'               => 'interbank',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Interbank currency rate',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'Interbank currency rate',
+                ],
+                'default_parameters' => [
+                    'type'             => 'interbank',
+                    'from_currency_id' => null,
+                    'to_currency_id'   => null,
+                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
+                    'rate_min'         => '5',
+                    'rate_max'         => '10',
+                ],
+                'settings'           => [
+                    'color' => '#1BC5BD',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/money.svg')),
+                ],
+            ]);
+
+        $currency->vendorsTypes()
+            ->create([
+                'type'               => 'national',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'National bank currency rate',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'National bank currency rate',
+                ],
+                'default_parameters' => [
+                    'type'             => 'national',
+                    'from_currency_id' => null,
+                    'to_currency_id'   => null,
+                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
+                    'rate_min'         => '5',
+                    'rate_max'         => '10',
+                ],
+                'settings'           => [
+                    'color' => '#1BC5BD',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/money.svg')),
+                ],
+            ]);
+
+        $mediaSync->vendorsTypes()
+            ->create([
+                'type'               => 'inter',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'TV sync, Inter',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'TV sync, Inter',
+                ],
+                'default_parameters' => [
+                ],
+                'settings'           => [
+                    'color' => '#FF9800',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/tv.svg')),
+                ],
+            ]);
+
+        $mediaSync->vendorsTypes()
+            ->create([
+                'type'               => 'one_plus_one',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'TV sync, 1+1',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'TV sync, 1+1',
+                ],
+                'default_parameters' => [
+                ],
+                'settings'           => [
+                    'color' => '#FF9800',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/tv.svg')),
+                ],
+            ]);
+
+        $weather->vendorsTypes()
+            ->create([
+                'type'               => 'temperature',
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Air temperature (С°)',
                     LanguageModel::LANGUAGE_RU => 'Температура воздуха (С°)',
@@ -44,11 +205,9 @@ class TriggerDataSeeder extends Seeder
                 ],
             ]);
 
-        VendorModel::query()
+        $weather->vendorsTypes()
             ->create([
-                'callback'           => Weather::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
-                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_WIND,
+                'type'               => 'wind',
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Wind speed (m/s)',
                     LanguageModel::LANGUAGE_RU => 'Скорость ветра (м/с)',
@@ -69,11 +228,9 @@ class TriggerDataSeeder extends Seeder
                 ],
             ]);
 
-        VendorModel::query()
+        $weather->vendorsTypes()
             ->create([
-                'callback'           => Weather::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
-                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_CLOUDS,
+                'type'               => 'clouds',
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Cloudiness (%)',
                     LanguageModel::LANGUAGE_RU => 'Облачность (%)',
@@ -94,11 +251,9 @@ class TriggerDataSeeder extends Seeder
                 ],
             ]);
 
-        VendorModel::query()
+        $weather->vendorsTypes()
             ->create([
-                'callback'           => Weather::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
-                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_RAIN,
+                'type'               => 'rain',
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Rain precipitation (mm)',
                     LanguageModel::LANGUAGE_RU => 'Дождь осадки (мм)',
@@ -119,11 +274,9 @@ class TriggerDataSeeder extends Seeder
                 ],
             ]);
 
-        VendorModel::query()
+        $weather->vendorsTypes()
             ->create([
-                'callback'           => Weather::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
-                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_SNOW,
+                'type'               => 'snow',
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Snow precipitation (mm)',
                     LanguageModel::LANGUAGE_RU => 'Снег осадки (мм)',
@@ -144,11 +297,9 @@ class TriggerDataSeeder extends Seeder
                 ],
             ]);
 
-        VendorModel::query()
+        $weather->vendorsTypes()
             ->create([
-                'callback'           => Weather::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
-                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_PRESSURE,
+                'type'               => 'pressure',
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Atmosphere pressure (hPa)',
                     LanguageModel::LANGUAGE_RU => 'Атмосферное давление (hPa)',
@@ -169,11 +320,9 @@ class TriggerDataSeeder extends Seeder
                 ],
             ]);
 
-        VendorModel::query()
+        $weather->vendorsTypes()
             ->create([
-                'callback'           => Weather::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_WEATHER,
-                'value_type'         => VendorModel::VALUE_TYPE_WEATHER_HUMIDITY,
+                'type'               => 'humidity',
                 'name'               => [
                     LanguageModel::LANGUAGE_EN => 'Air humidity (%)',
                     LanguageModel::LANGUAGE_RU => 'Влажность воздуха (%)',
@@ -191,106 +340,6 @@ class TriggerDataSeeder extends Seeder
                 'settings'           => [
                     'color' => '#3699FF',
                     'icon'  => file_get_contents(resource_path('images/vendor-icons/humidity.svg')),
-                ],
-            ]);
-
-        VendorModel::query()
-            ->create([
-                'callback'           => Currency::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_CURRENCY,
-                'value_type'         => VendorModel::VALUE_TYPE_CURRENCY_EXCHANGE,
-                'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'Exchange currency rate',
-                ],
-                'desc'               => [
-                    LanguageModel::LANGUAGE_EN => 'Exchange currency rate',
-                ],
-                'default_parameters' => [
-                    'from_currency_id' => null,
-                    'to_currency_id'   => null,
-                    'type'             => CurrencyRateModel::TYPE_EXCHANGE_RATE,
-                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
-                    'rate_min'         => '5',
-                    'rate_max'         => '10',
-                ],
-                'settings'           => [
-                    'color' => '#1BC5BD',
-                    'icon'  => file_get_contents(resource_path('images/vendor-icons/money.svg')),
-                ],
-            ]);
-
-        VendorModel::query()
-            ->create([
-                'callback'           => Currency::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_CURRENCY,
-                'value_type'         => VendorModel::VALUE_TYPE_CURRENCY_NATIONAL,
-                'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'National bank currency rate',
-                ],
-                'desc'               => [
-                    LanguageModel::LANGUAGE_EN => 'National bank currency rate',
-                ],
-                'default_parameters' => [
-                    'type'             => CurrencyRateModel::TYPE_NATIONAL_RATE,
-                    'from_currency_id' => null,
-                    'to_currency_id'   => null,
-                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
-                    'rate_min'         => '5',
-                    'rate_max'         => '10',
-                ],
-                'settings'           => [
-                    'color' => '#1BC5BD',
-                    'icon'  => file_get_contents(resource_path('images/vendor-icons/money.svg')),
-                ],
-            ]);
-
-        VendorModel::query()
-            ->create([
-                'callback'           => Currency::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_CURRENCY,
-                'value_type'         => VendorModel::VALUE_TYPE_CURRENCY_INTERBANK,
-                'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'Interbank currency rate',
-                ],
-                'desc'               => [
-                    LanguageModel::LANGUAGE_EN => 'Interbank currency rate',
-                ],
-                'default_parameters' => [
-                    'type'             => CurrencyRateModel::TYPE_INTERBANK_RATE,
-                    'from_currency_id' => null,
-                    'to_currency_id'   => null,
-                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
-                    'rate_min'         => '5',
-                    'rate_max'         => '10',
-                ],
-                'settings'           => [
-                    'color' => '#1BC5BD',
-                    'icon'  => file_get_contents(resource_path('images/vendor-icons/money.svg')),
-                ],
-            ]);
-
-        VendorModel::query()
-            ->create([
-                'callback'           => Calendar::class,
-                'vendor_type'        => VendorModel::VENDOR_TYPE_CALENDAR,
-                'value_type'         => VendorModel::VENDOR_TYPE_CALENDAR,
-                'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'Calendar',
-                ],
-                'desc'               => [
-                    LanguageModel::LANGUAGE_EN => 'Calendar (date, time and timezone)',
-                ],
-                'default_parameters' => [
-                    'date_start_at' => null,
-                    'date_end_at'   => null,
-                    'time_start_at' => null,
-                    'time_end_at'   => null,
-                    'day_of_week'   => null,
-                    'timezone'      => null,
-                ],
-                'settings'           => [
-                    'color' => '#F64E60',
-                    'icon'  => file_get_contents(resource_path('images/vendor-icons/time-schedule.svg')),
                 ],
             ]);
     }

@@ -7,8 +7,8 @@ use App\Models\Marketing\Organization;
 use App\Models\Traits\NestedTreeTrait;
 use App\Models\Traits\TranslatableTrait;
 use App\Models\Traits\UuidTrait;
-use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorLocation;
+use App\Models\Trigger\VendorType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property array                    $name
  * @property Collection<Organization> $organization
  * @property Collection<User>         $users
- * @property Collection<Vendor>       $vendors
+ * @property Collection<VendorType>   $vendorsTypes
  */
 class Location extends Model
 {
@@ -82,9 +82,9 @@ class Location extends Model
     /**
      * @return BelongsToMany
      */
-    public function vendors(): BelongsToMany
+    public function vendorsTypes(): BelongsToMany
     {
-        return $this->belongsToMany(Vendor::class, 'trigger_vendors_locations', 'location_id', 'vendor_id')
+        return $this->belongsToMany(VendorType::class, 'trigger_vendors_locations', 'location_id', 'vendor_type_id')
             ->withPivot([
                 'id',
             ])

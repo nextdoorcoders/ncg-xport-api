@@ -6,6 +6,8 @@ use App\Models\Account\Language as LanguageModel;
 use App\Models\Geo\Location as LocationModel;
 use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorLocation;
+use App\Models\Trigger\VendorType as VendorTypeModel;
+use App\Models\Vendor\Weather as WeatherModel;
 use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
@@ -13,6 +15,26 @@ use Illuminate\Support\Facades\Http;
 
 class WeatherService
 {
+    const SOURCE_OWM = 'open_weather_map';
+
+    const VALUE_TEMPERATURE = 'temperature';
+    const VALUE_WIND = 'wind';
+    const VALUE_PRESSURE = 'pressure';
+    const VALUE_HUMIDITY = 'humidity';
+    const VALUE_CLOUDS = 'clouds';
+    const VALUE_RAIN = 'rain';
+    const VALUE_SNOW = 'snow';
+
+    const VALUES = [
+        self::VALUE_TEMPERATURE,
+        self::VALUE_WIND,
+        self::VALUE_PRESSURE,
+        self::VALUE_HUMIDITY,
+        self::VALUE_CLOUDS,
+        self::VALUE_RAIN,
+        self::VALUE_SNOW,
+    ];
+
     protected string $url = 'http://api.openweathermap.org/data/2.5/weather';
 
     /**
@@ -123,16 +145,14 @@ class WeatherService
     public function updateWeather()
     {
         $locations = LocationModel::query()
-            ->with([
-                'vendors' => function ($vendors) {
-                    $vendors->where('vendor_type', Vendor::VENDOR_TYPE_WEATHER);
-                },
-            ])
             ->where('type', LocationModel::TYPE_CITY)
             ->get();
 
-        $vendors = Vendor::query()
-            ->where('vendor_type', Vendor::VENDOR_TYPE_WEATHER)
+        $vendors = VendorTypeModel::query()
+            ->whereHas('vendor', function ($vendor) {
+                $vendor->where('type', Vendor::TYPE_WEATHER)
+                    ->where('source', self::SOURCE_OWM);
+            })
             ->get();
 
         $locations->each(function (LocationModel $location) use ($vendors) {
@@ -144,51 +164,51 @@ class WeatherService
                 }
 
                 if ($weather !== null) {
-                    $location->vendors()->sync($vendors);
-                    $location->refresh();
+                    $location->vendorsTypes()->sync($vendors);
+                    $location->load('vendorsTypes');
 
-                    foreach (Vendor::WEATHER_VALUES as $valueType) {
+                    foreach (self::VALUES as $valueType) {
                         $value = null;
 
                         switch ($valueType) {
-                            case Vendor::VALUE_TYPE_WEATHER_TEMPERATURE:
+                            case self::VALUE_TEMPERATURE:
                                 $value = round($weather['main']['temp'] ?? null, 1);
                                 break;
-                            case Vendor::VALUE_TYPE_WEATHER_WIND:
+                            case self::VALUE_WIND:
                                 $value = round($weather['wind']['speed'] ?? null, 1);
                                 break;
-                            case Vendor::VALUE_TYPE_WEATHER_PRESSURE:
+                            case self::VALUE_PRESSURE:
                                 $value = round($weather['main']['pressure'] ?? null);
                                 break;
-                            case Vendor::VALUE_TYPE_WEATHER_HUMIDITY:
+                            case self::VALUE_HUMIDITY:
                                 $value = round($weather['main']['humidity'] ?? null);
                                 break;
-                            case Vendor::VALUE_TYPE_WEATHER_CLOUDS:
+                            case self::VALUE_CLOUDS:
                                 $value = round($weather['clouds']['all'] ?? null);
                                 break;
-                            case Vendor::VALUE_TYPE_WEATHER_RAIN:
+                            case self::VALUE_RAIN:
                                 $value = round($weather['rain']['1h'] ?? null);
                                 break;
-                            case Vendor::VALUE_TYPE_WEATHER_SNOW:
+                            case self::VALUE_SNOW:
                                 $value = round($weather['snow']['1h'] ?? null);
                                 break;
                         }
 
                         if (!is_null($value)) {
-                            /** @var Vendor $vendor */
-                            $vendor = $location->vendors
-                                ->where('vendor_type', Vendor::VENDOR_TYPE_WEATHER)
-                                ->where('value_type', $valueType)
+                            /** @var Vendor $vendorType */
+                            $vendorType = $location->vendorsTypes()
+                                ->where('type', $valueType)
                                 ->first();
 
                             /** @var VendorLocation $vendorLocation */
-                            $vendorLocation = $vendor->pivot;
+                            $vendorLocation = $vendorType->pivot;
 
-                            $vendorLocation->weathers()->create([
-                                'source' => 'open_weather_map',
-                                'type'   => $valueType,
-                                'value'  => $value,
-                            ]);
+                            WeatherModel::query()
+                                ->create([
+                                    'vendor_type_id'     => $vendorType->id,
+                                    'vendor_location_id' => $vendorLocation->id,
+                                    'value'              => $value,
+                                ]);
                         }
                     }
                 }

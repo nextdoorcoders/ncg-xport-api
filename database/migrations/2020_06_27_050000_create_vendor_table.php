@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
+use App\Models\Vendor\MediaSync as MediaSyncModel;
 use App\Models\Vendor\Weather as WeatherModel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -27,24 +28,30 @@ class CreateVendorTable extends Migration
 
         Schema::create('vendor_currencies_rate', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
+            $table->uuid('vendor_type_id')->index();
             $table->uuid('vendor_location_id')->index();
             $table->uuid('from_currency_id')->index();
             $table->uuid('to_currency_id')->index();
-
-            $table->string('source')->default(CurrencyRateModel::SOURCE_MINFIN)->index();
-            $table->string('type')->default(CurrencyRateModel::TYPE_EXCHANGE_RATE)->index();
 
             $table->json('value');
 
             $table->timestamps();
         });
 
+        Schema::create('vendor_media_sync', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
+            $table->uuid('vendor_type_id')->index();
+            $table->uuid('vendor_location_id')->index()->nullable();
+
+            $table->string('value');
+
+            $table->timestamps();
+        });
+
         Schema::create('vendor_weather', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
+            $table->uuid('vendor_type_id')->index();
             $table->uuid('vendor_location_id')->index();
-
-            $table->string('source')->default(WeatherModel::SOURCE_OPEN_WEATHER_MAP)->index();
-            $table->string('type')->default(WeatherModel::TYPE_TEMPERATURE)->index();
 
             $table->string('value');
 
@@ -60,6 +67,7 @@ class CreateVendorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('vendor_weather');
+        Schema::dropIfExists('vendor_media_sync');
         Schema::dropIfExists('vendor_currencies_rate');
         Schema::dropIfExists('vendor_currency');
     }

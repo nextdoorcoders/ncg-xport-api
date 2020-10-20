@@ -7,7 +7,7 @@ use App\Models\Geo\Location as LocationModel;
 use App\Services\Geo\LocationService;
 use Illuminate\Database\Seeder;
 
-class GeoDataSeeder extends Seeder
+class GeoLocationDataSeeder extends Seeder
 {
     protected LocationService $locationService;
 

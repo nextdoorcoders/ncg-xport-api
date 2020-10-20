@@ -45,6 +45,11 @@ class CreateForeignKeyRelations extends Migration
         });
 
         Schema::table('vendor_currencies_rate', function (Blueprint $table) {
+            $table->foreign('vendor_type_id')
+                ->references('id')
+                ->on('trigger_vendors_types')
+                ->onDelete('cascade');
+
             $table->foreign('vendor_location_id')
                 ->references('id')
                 ->on('trigger_vendors_locations')
@@ -61,7 +66,24 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
+        Schema::table('vendor_media_sync', function (Blueprint $table) {
+            $table->foreign('vendor_type_id')
+                ->references('id')
+                ->on('trigger_vendors_types')
+                ->onDelete('cascade');
+
+            $table->foreign('vendor_location_id')
+                ->references('id')
+                ->on('trigger_vendors_locations')
+                ->onDelete('cascade');
+        });
+
         Schema::table('vendor_weather', function (Blueprint $table) {
+            $table->foreign('vendor_type_id')
+                ->references('id')
+                ->on('trigger_vendors_types')
+                ->onDelete('cascade');
+
             $table->foreign('vendor_location_id')
                 ->references('id')
                 ->on('trigger_vendors_locations')
@@ -93,9 +115,9 @@ class CreateForeignKeyRelations extends Migration
                 ->on('trigger_groups')
                 ->onDelete('cascade');
 
-            $table->foreign('vendor_id')
+            $table->foreign('vendor_type_id')
                 ->references('id')
-                ->on('trigger_vendors')
+                ->on('trigger_vendors_types')
                 ->onDelete('cascade');
 
             $table->foreign('vendor_location_id')
@@ -147,7 +169,14 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('trigger_vendors_translate', function (Blueprint $table) {
+        Schema::table('trigger_vendors_types', function (Blueprint $table) {
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('trigger_vendors')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('trigger_vendors_types_translate', function (Blueprint $table) {
             $table->foreign('language_id')
                 ->references('id')
                 ->on('account_languages')
@@ -155,14 +184,14 @@ class CreateForeignKeyRelations extends Migration
 
             $table->foreign('translatable_id')
                 ->references('id')
-                ->on('trigger_vendors')
+                ->on('trigger_vendors_types')
                 ->onDelete('cascade');
         });
 
         Schema::table('trigger_vendors_locations', function (Blueprint $table) {
-            $table->foreign('vendor_id')
+            $table->foreign('vendor_type_id')
                 ->references('id')
-                ->on('trigger_vendors')
+                ->on('trigger_vendors_types')
                 ->onDelete('cascade');
 
             $table->foreign('location_id')
