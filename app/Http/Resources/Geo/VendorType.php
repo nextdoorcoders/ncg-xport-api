@@ -3,11 +3,11 @@
 namespace App\Http\Resources\Geo;
 
 use App\Http\Resources\Traits\ResourceTrait;
-use App\Models\Trigger\Vendor as VendorModel;
+use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Trigger\VendorLocation as VendorLocationModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Vendor extends JsonResource
+class VendorType extends JsonResource
 {
     use ResourceTrait;
 
@@ -21,11 +21,11 @@ class Vendor extends JsonResource
     {
         $resource = $this->resource;
 
-        if ($resource instanceof VendorModel) {
-            /** @var VendorModel $resource */
+        if ($resource instanceof VendorTypeModel) {
+            /** @var VendorTypeModel $resource */
             $response = [
                 'id'       => $resource->id,
-                'type'     => VendorModel::LOCATION_GLOBAL,
+                'type'     => 'global',
                 'name'     => $resource->name,
                 'desc'     => $resource->desc,
                 'location' => null,
@@ -34,9 +34,9 @@ class Vendor extends JsonResource
             /** @var VendorLocationModel $resource */
             $response = [
                 'id'       => $resource->id,
-                'type'     => VendorModel::LOCATION_LOCAL,
-                'name'     => $resource->vendor->name,
-                'desc'     => $resource->vendor->desc,
+                'type'     => 'local',
+                'name'     => $resource->vendorType->name,
+                'desc'     => $resource->vendorType->desc,
                 'location' => new Location($resource->location),
             ];
         } else {

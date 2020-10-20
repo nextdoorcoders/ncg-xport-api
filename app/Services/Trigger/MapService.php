@@ -219,14 +219,18 @@ class MapService
             ->with([
                 'conditions' => function ($query) {
                     $query->with([
-                        'vendor',
+                        'vendorType' => function ($query) {
+                            $query->with('vendor');
+                        },
                         'vendorLocation' => function ($query) {
                             $query->with('location');
                         },
                     ])
+                        ->orderBy('order_index', 'asc')
                         ->orderBy('created_at', 'asc');
                 },
             ])
+            ->orderBy('order_index', 'asc')
             ->orderBy('created_at', 'asc')
             ->get();
     }
@@ -246,16 +250,20 @@ class MapService
         $groups = collect($data);
 
         $groups->each(function ($group) {
-            foreach ($group['conditions'] as $card) {
-                /** @var ConditionModel $condition */
-                if ($group['id'] !== $card['group_id']) {
-                    $condition = ConditionModel::query()
-                        ->where('id', $card['id'])
-                        ->first();
+            // TODO: Update order_index for groups
 
+            foreach ($group['conditions'] as $index => $card) {
+                /** @var ConditionModel $condition */
+                $condition = ConditionModel::query()
+                    ->where('id', $card['id'])
+                    ->first();
+
+                if ($group['id'] !== $card['group_id']) {
                     $condition->group()->associate($group['id']);
-                    $condition->save();
                 }
+
+                $condition->order_index = $index + 1;
+                $condition->save();
             }
         });
 

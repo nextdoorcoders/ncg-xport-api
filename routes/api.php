@@ -16,6 +16,7 @@ use App\Http\Controllers\Trigger\GroupController;
 use App\Http\Controllers\Trigger\MapController;
 use App\Http\Controllers\Trigger\VendorController;
 use App\Http\Controllers\Vendor\CurrencyController;
+use App\Http\Controllers\Vendor\MediaSyncController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -278,6 +279,12 @@ Route::group([
         'prefix' => 'currencies',
     ], function () {
         Route::get('', [CurrencyController::class, 'allCurrencies']);
+    });
+
+    Route::group([
+        'prefix' => 'media-syncs',
+    ], function () {
+        Route::post('', [MediaSyncController::class, 'createMediaSync']);
     });
 });
 

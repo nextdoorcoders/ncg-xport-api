@@ -27,7 +27,7 @@ class Vendor extends FormRequest
             'name'               => 'required',
             'callback'           => 'required',
             'vendor_type'        => 'required',
-            'value_type'         => 'required',
+            'type'               => 'required',
             'default_parameters' => 'sometimes',
             'settings'           => 'sometimes',
         ];

@@ -89,7 +89,6 @@ class TriggerDataSeeder extends Seeder
                     LanguageModel::LANGUAGE_EN => 'Exchange currency rate',
                 ],
                 'default_parameters' => [
-                    'type'             => 'exchange',
                     'from_currency_id' => null,
                     'to_currency_id'   => null,
                     'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
@@ -112,7 +111,6 @@ class TriggerDataSeeder extends Seeder
                     LanguageModel::LANGUAGE_EN => 'Interbank currency rate',
                 ],
                 'default_parameters' => [
-                    'type'             => 'interbank',
                     'from_currency_id' => null,
                     'to_currency_id'   => null,
                     'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
@@ -135,7 +133,6 @@ class TriggerDataSeeder extends Seeder
                     LanguageModel::LANGUAGE_EN => 'National bank currency rate',
                 ],
                 'default_parameters' => [
-                    'type'             => 'national',
                     'from_currency_id' => null,
                     'to_currency_id'   => null,
                     'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
@@ -150,12 +147,12 @@ class TriggerDataSeeder extends Seeder
 
         $mediaSync->vendorsTypes()
             ->create([
-                'type'               => 'inter',
+                'type'               => 'tv',
                 'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'TV sync, Inter',
+                    LanguageModel::LANGUAGE_EN => 'Inter',
                 ],
                 'desc'               => [
-                    LanguageModel::LANGUAGE_EN => 'TV sync, Inter',
+                    LanguageModel::LANGUAGE_EN => 'NCG TV sync',
                 ],
                 'default_parameters' => [
                 ],
@@ -167,12 +164,29 @@ class TriggerDataSeeder extends Seeder
 
         $mediaSync->vendorsTypes()
             ->create([
-                'type'               => 'one_plus_one',
+                'type'               => 'tv',
                 'name'               => [
-                    LanguageModel::LANGUAGE_EN => 'TV sync, 1+1',
+                    LanguageModel::LANGUAGE_EN => '1+1',
                 ],
                 'desc'               => [
-                    LanguageModel::LANGUAGE_EN => 'TV sync, 1+1',
+                    LanguageModel::LANGUAGE_EN => 'NCG TV sync',
+                ],
+                'default_parameters' => [
+                ],
+                'settings'           => [
+                    'color' => '#FF9800',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/tv.svg')),
+                ],
+            ]);
+
+        $mediaSync->vendorsTypes()
+            ->create([
+                'type'               => 'tv',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'ICTV',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'NCG TV sync',
                 ],
                 'default_parameters' => [
                 ],

@@ -13,14 +13,11 @@ abstract class BaseVendor
     public function getCurrentValue(ConditionModel $condition)
     {
         $condition->loadMissing([
-            'vendor',
+            'vendorType',
             'vendorLocation',
         ]);
 
-        /** @var Calendar|Currency|Weather $instance */
-        $instance = app($condition->vendor->callback);
-
-        return $instance->{$condition->vendor->value_type}($condition);
+        return $this->{$condition->vendorType->type}($condition);
     }
 
     /**
@@ -30,15 +27,12 @@ abstract class BaseVendor
     public function checkCondition(ConditionModel $condition): bool
     {
         $condition->loadMissing([
-            'vendor',
+            'vendorType',
             'vendorLocation',
         ]);
 
         $currentValue = self::getCurrentValue($condition);
 
-        /** @var Calendar|Currency|Weather $instance */
-        $instance = app($condition->vendor->callback);
-
-        return $instance->check($condition, $currentValue);
+        return $this->check($condition, $currentValue);
     }
 }

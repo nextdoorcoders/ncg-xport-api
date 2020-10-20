@@ -4,7 +4,8 @@ namespace App\Services\Geo;
 
 use App\Models\Account\User as UserModel;
 use App\Models\Geo\Location as LocationModel;
-use App\Models\Trigger\Vendor as VendorModel;
+use App\Models\Trigger\VendorType;
+use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Trigger\VendorLocation as VendorLocationModel;
 use App\Services\Vendor\WeatherService;
 use Exception;
@@ -90,7 +91,7 @@ class LocationService
      */
     public function readVendors(LocationModel $location = null, UserModel $user)
     {
-        $vendors = VendorModel::query()
+        $vendors = VendorTypeModel::query()
             ->whereDoesntHave('locations')
             ->get();
 
@@ -103,7 +104,7 @@ class LocationService
                     'location' => function ($query) {
                         $query->with('parent');
                     },
-                    'vendor',
+                    'vendorType',
                 ])
                 ->whereIn('location_id', $parentIds)
                 ->get();

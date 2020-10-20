@@ -6,8 +6,8 @@ use App\Exceptions\MessageException;
 use App\Models\Account\User as UserModel;
 use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
-use App\Models\Trigger\Vendor as VendorModel;
 use App\Models\Trigger\VendorLocation as VendorLocationModel;
+use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Services\Vendor\Classes\BaseVendor;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -38,11 +38,11 @@ class ConditionService
     }
 
     /**
-     * @param VendorModel $vendor
-     * @param UserModel   $user
+     * @param VendorTypeModel $vendor
+     * @param UserModel       $user
      * @return Collection
      */
-    public function allByVendor(VendorModel $vendor, UserModel $user)
+    public function allByVendor(VendorTypeModel $vendor, UserModel $user)
     {
         return $vendor->conditions()
             ->get();
@@ -61,30 +61,30 @@ class ConditionService
         $vendorType = $data['type'];
 
         /** @var ConditionModel $condition */
-        if ($vendorType === VendorModel::LOCATION_GLOBAL) {
-            /** @var VendorModel $vendor */
-            $vendor = VendorModel::query()
+        if ($vendorType === 'global') {
+            /** @var VendorTypeModel $vendorType */
+            $vendorType = VendorTypeModel::query()
                 ->where('id', $vendorId)
                 ->first();
 
             $data = [
                 'group_id'           => $group->id,
-                'vendor_id'          => $vendor->id,
+                'vendor_type_id'     => $vendorType->id,
                 'vendor_location_id' => null,
-                'parameters'         => $vendor->default_parameters,
+                'parameters'         => $vendorType->default_parameters,
             ];
-        } elseif ($vendorType === VendorModel::LOCATION_LOCAL) {
+        } elseif ($vendorType === 'local') {
             /** @var VendorLocationModel $vendorLocation */
             $vendorLocation = VendorLocationModel::query()
-                ->with('vendor')
+                ->with('vendorType')
                 ->where('id', $vendorId)
                 ->first();
 
             $data = [
                 'group_id'           => $group->id,
-                'vendor_id'          => $vendorLocation->vendor_id,
+                'vendor_type_id'     => $vendorLocation->vendor_type_id,
                 'vendor_location_id' => $vendorLocation->id,
-                'parameters'         => $vendorLocation->vendor->default_parameters,
+                'parameters'         => $vendorLocation->vendorType->default_parameters,
             ];
         } else {
             throw new MessageException('Unknown trigger location');
@@ -181,10 +181,10 @@ class ConditionService
      */
     public function updateStatus(ConditionModel $condition, bool $checkParent = false): void
     {
-        $vendor = $condition->vendor;
+        $vendorType = $condition->vendorType;
 
         /** @var BaseVendor $triggerClass */
-        $triggerClass = app($vendor->callback);
+        $triggerClass = app($vendorType->vendor->callback);
         $isEnabled = $triggerClass->checkCondition($condition);
 
         $condition->is_enabled = $isEnabled;

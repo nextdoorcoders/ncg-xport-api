@@ -3,7 +3,6 @@
 namespace App\Models\Trigger;
 
 use App\Models\Traits\UuidTrait;
-use App\Services\Vendor\Classes\BaseVendor;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @package App\Models\Trigger
  * @property string         $id
  * @property string         $group_id
- * @property string         $vendor_id
+ * @property string         $vendor_type_id
  * @property string         $vendor_location_id
  * @property array          $parameters
  * @property integer        $order_index
@@ -26,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon         $updated_at
  * @property string|null    $current_value
  * @property Group          $group
- * @property Vendor         $vendor
+ * @property VendorType     $vendorType
  * @property VendorLocation $vendorLocation
  */
 class Condition extends Model
@@ -37,7 +36,7 @@ class Condition extends Model
 
     protected $fillable = [
         'group_id',
-        'vendor_id',
+        'vendor_type_id',
         'vendor_location_id',
         'parameters',
         'order_index',
@@ -74,9 +73,9 @@ class Condition extends Model
     /**
      * @return BelongsTo
      */
-    public function vendor(): BelongsTo
+    public function vendorType(): BelongsTo
     {
-        return $this->belongsTo(Vendor::class, 'vendor_id');
+        return $this->belongsTo(VendorType::class, 'vendor_type_id');
     }
 
     /**
@@ -96,8 +95,11 @@ class Condition extends Model
      */
     public function getCurrentValueAttribute()
     {
-        /** @var BaseVendor $vendorInstance */
-        $vendorInstance = app($this->vendor->callback);
+        $this->loadMissing([
+            'vendorType.vendor',
+        ]);
+
+        $vendorInstance = app($this->vendorType->vendor->callback);
 
         return $vendorInstance->getCurrentValue($this);
     }

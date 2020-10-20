@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Geo;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Geo\Location as LocationResource;
 use App\Http\Resources\Geo\LocationCollection;
-use App\Http\Resources\Geo\VendorCollection;
+use App\Http\Resources\Geo\VendorTypeCollection;
 use App\Models\Account\User as UserModel;
 use App\Models\Geo\Location as LocationModel;
 use App\Services\Geo\LocationService;
@@ -98,7 +98,7 @@ class LocationController extends Controller
 
     /**
      * @param LocationModel|null $location
-     * @return VendorCollection
+     * @return VendorTypeCollection
      */
     public function readVendors(LocationModel $location = null)
     {
@@ -107,6 +107,6 @@ class LocationController extends Controller
 
         $response = $this->locationService->readVendors($location, $user);
 
-        return new VendorCollection($response);
+        return new VendorTypeCollection($response);
     }
 }

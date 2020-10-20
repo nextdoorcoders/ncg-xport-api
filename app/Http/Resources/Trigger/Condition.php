@@ -3,9 +3,8 @@
 namespace App\Http\Resources\Trigger;
 
 use App\Http\Resources\Traits\ResourceTrait;
+use App\Http\Resources\Vendor\Currency;
 use App\Models\Trigger\Condition as ConditionModel;
-use App\Models\Vendor\Currency as CurrencyModel;
-use App\Services\Vendor\Classes\Currency;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Condition extends JsonResource
@@ -26,7 +25,7 @@ class Condition extends JsonResource
         $response = [
             'id'                 => $resource->id,
             'group_id'           => $resource->group_id,
-            'vendor_id'          => $resource->vendor_id,
+            'vendor_type_id'     => $resource->vendor_type_id,
             'vendor_location_id' => $resource->vendor_location_id,
             'parameters'         => $resource->parameters,
             'order_index'        => $resource->order_index,
@@ -42,27 +41,24 @@ class Condition extends JsonResource
             ]);
         }
 
-        if ($resource->relationLoaded('vendor')) {
+        if ($resource->relationLoaded('vendorType')) {
             $response = array_merge($response, [
-                'vendor' => new Vendor($resource->vendor),
+                'vendorType' => new VendorType($resource->vendorType),
             ]);
+        }
 
-            if ($resource->vendor->callback === Currency::class) {
-                // TODO: Change DB structure and remove this shit!!!
+        if ($resource->relationLoaded('fromCurrency')) {
+            // It's dynamic relation
+            $response = array_merge($response, [
+                'fromCurrency' => new Currency($resource->fromCurrency),
+            ]);
+        }
 
-                $fromCurrency = CurrencyModel::query()
-                    ->where('id', $resource->parameters['from_currency_id'])
-                    ->first();
-
-                $toCurrency = CurrencyModel::query()
-                    ->where('id', $resource->parameters['to_currency_id'])
-                    ->first();
-
-                $response = array_merge($response, [
-                    'fromCurrency' => $fromCurrency,
-                    'toCurrency'   => $toCurrency,
-                ]);
-            }
+        if ($resource->relationLoaded('toCurrency')) {
+            // It's dynamic relation
+            $response = array_merge($response, [
+                'toCurrency'   => new Currency($resource->toCurrency),
+            ]);
         }
 
         if ($resource->relationLoaded('vendorLocation')) {

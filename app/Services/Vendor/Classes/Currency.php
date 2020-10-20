@@ -31,7 +31,7 @@ class Currency extends BaseVendor
      * @param ConditionModel $condition
      * @return CurrencyRate
      */
-    protected function getVendor(ConditionModel $condition)
+    protected function getCurrencyRate(ConditionModel $condition)
     {
         $condition->loadMissing('vendorLocation');
 
@@ -39,14 +39,17 @@ class Currency extends BaseVendor
 
         $formCurrencyId = $parameters['from_currency_id'];
         $toCurrencyId = $parameters['to_currency_id'];
-        $type = $parameters['type'];
 
         /** @var CurrencyRate $currencyRate */
         $currencyRate = CurrencyRate::query()
+            ->with([
+                'fromCurrency',
+                'toCurrency',
+            ])
+            ->where('vendor_type_id', $condition->vendor_type_id)
             ->where('vendor_location_id', $condition->vendor_location_id)
             ->where('from_currency_id', $formCurrencyId)
             ->where('to_currency_id', $toCurrencyId)
-            ->where('type', $type)
             ->orderBy('created_at', 'desc')
             ->first();
 
@@ -59,16 +62,20 @@ class Currency extends BaseVendor
      */
     protected function getValue(ConditionModel $condition)
     {
-        $currencyRate = $this->getVendor($condition);
+        $currencyRate = $this->getCurrencyRate($condition);
 
         if (!$currencyRate) {
             return null;
         }
 
+        // Set dynamic relations
+        $condition->setRelation('fromCurrency', $currencyRate->fromCurrency);
+        $condition->setRelation('toCurrency', $currencyRate->toCurrency);
+
         $parameters = $condition->parameters;
 
         $rate = $currencyRate->value;
-        $rateType = $parameters['rate_type'];
+        $rateType = $parameters['rate_type']; // минимальное, среднее или максимальное
 
         return $rate[$rateType] ?? null;
     }
