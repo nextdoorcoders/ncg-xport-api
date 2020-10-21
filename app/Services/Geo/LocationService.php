@@ -89,9 +89,10 @@ class LocationService
      * @param UserModel          $user
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function readVendors(LocationModel $location = null, UserModel $user)
+    public function readVendors(?LocationModel $location, UserModel $user)
     {
         $vendors = VendorTypeModel::query()
+            ->with('vendor')
             ->whereDoesntHave('locations')
             ->get();
 
@@ -101,10 +102,8 @@ class LocationService
 
             $locationVendors = VendorLocationModel::query()
                 ->with([
-                    'location' => function ($query) {
-                        $query->with('parent');
-                    },
-                    'vendorType',
+                    'location.parent',
+                    'vendorType.vendor',
                 ])
                 ->whereIn('location_id', $parentIds)
                 ->get();

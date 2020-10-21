@@ -25,7 +25,7 @@ class TriggerDataSeeder extends Seeder
             ->create([
                 'callback' => Calendar::class,
                 'type'     => VendorModel::TYPE_CALENDAR,
-                'source'   => null,
+                'source'   => 'system',
                 'settings' => null,
             ]);
 

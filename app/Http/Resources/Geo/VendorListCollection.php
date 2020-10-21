@@ -5,7 +5,7 @@ namespace App\Http\Resources\Geo;
 use App\Http\Resources\Traits\ResourceTrait;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class VendorTypeCollection extends ResourceCollection
+class VendorListCollection extends ResourceCollection
 {
     use ResourceTrait;
 
