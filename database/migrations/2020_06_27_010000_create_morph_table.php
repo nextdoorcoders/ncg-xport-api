@@ -13,16 +13,19 @@ class CreateMorphTable extends Migration
      */
     public function up()
     {
-        Schema::create('morph_files', function (Blueprint $table) {
+        Schema::create('morph_storages', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->string('fileable_type')->index()->nullable();
             $table->uuid('fileable_id')->index()->nullable();
 
-            $table->string('field')->index();
-            $table->string('name');
-            $table->integer('size', false, true);
-            $table->string('type');
-            $table->string('disk_name');
+            $table->string('name')->nullable();
+            $table->string('desc')->nullable();
+            $table->string('field')->index()->nullable();
+
+            $table->string('file_name');
+            $table->string('file_extension');
+            $table->string('file_mime_type');
+            $table->bigInteger('file_size', false, true);
 
             $table->timestamps();
         });

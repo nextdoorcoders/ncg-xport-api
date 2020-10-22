@@ -258,12 +258,15 @@ class MapService
                     ->where('id', $card['id'])
                     ->first();
 
-                if ($group['id'] !== $card['group_id']) {
-                    $condition->group()->associate($group['id']);
-                }
+                if ($condition) {
+                    if ($group['id'] !== $card['group_id']) {
+                        // Mode condition to another group
+                        $condition->group()->associate($group['id']);
+                    }
 
-                $condition->order_index = $index + 1;
-                $condition->save();
+                    $condition->order_index = $index + 1;
+                    $condition->save();
+                }
             }
         });
 

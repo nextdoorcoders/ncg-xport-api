@@ -11,6 +11,7 @@ use App\Http\Controllers\Marketing\AccountController;
 use App\Http\Controllers\Marketing\CampaignController;
 use App\Http\Controllers\Marketing\OrganizationController;
 use App\Http\Controllers\Marketing\ProjectController;
+use App\Http\Controllers\StorageController;
 use App\Http\Controllers\Trigger\ConditionController;
 use App\Http\Controllers\Trigger\GroupController;
 use App\Http\Controllers\Trigger\MapController;
@@ -268,6 +269,19 @@ Route::group([
             Route::put('', [VendorController::class, 'updateVendor']);
             Route::delete('', [VendorController::class, 'deleteVendor']);
         });
+    });
+});
+
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix'     => 'storages',
+], function () {
+    Route::post('', [StorageController::class, 'uploadFile']);
+
+    Route::group([
+        'prefix' => 'storage-{store}'
+    ], function () {
+        Route::delete('', [StorageController::class, 'deleteFile']);
     });
 });
 

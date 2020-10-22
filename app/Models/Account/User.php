@@ -2,11 +2,11 @@
 
 namespace App\Models\Account;
 
-use App\Models\File;
 use App\Models\Geo\Location;
 use App\Models\Marketing\Account;
 use App\Models\Marketing\Organization;
 use App\Models\Marketing\Project;
+use App\Models\Storage;
 use App\Models\Traits\UserTrait;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Map;
@@ -36,7 +36,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Collection<Project>      $projects
  * @property Collection<Map>          $maps
  * @property Collection<Organization> $organizations
- * @property File                     $picture
+ * @property Storage                  $picture
  */
 class User extends Authenticatable
 {
@@ -114,7 +114,7 @@ class User extends Authenticatable
      */
     public function picture(): MorphOne
     {
-        return $this->morphOne(File::class, 'fileable')
+        return $this->morphOne(Storage::class, 'fileable')
             ->where('field', 'picture');
     }
 }
