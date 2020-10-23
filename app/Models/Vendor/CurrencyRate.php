@@ -31,10 +31,6 @@ class CurrencyRate extends Model
 {
     use HasFactory, UuidTrait;
 
-    const TYPE_OF_RATE_MIN = 'min';
-    const TYPE_OF_RATE_AVG = 'average';
-    const TYPE_OF_RATE_MAX = 'max';
-
     protected $table = 'vendor_currencies_rate';
 
     protected $fillable = [
@@ -42,7 +38,6 @@ class CurrencyRate extends Model
         'vendor_location_id',
         'from_currency_id',
         'to_currency_id',
-        'source',
         'value',
     ];
 

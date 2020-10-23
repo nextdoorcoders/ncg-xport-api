@@ -91,7 +91,7 @@ class TriggerDataSeeder extends Seeder
                 'default_parameters' => [
                     'from_currency_id' => null,
                     'to_currency_id'   => null,
-                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
+                    'rate_type'        => 'average',
                     'rate_min'         => '5',
                     'rate_max'         => '10',
                 ],
@@ -113,7 +113,7 @@ class TriggerDataSeeder extends Seeder
                 'default_parameters' => [
                     'from_currency_id' => null,
                     'to_currency_id'   => null,
-                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
+                    'rate_type'        => 'average',
                     'rate_min'         => '5',
                     'rate_max'         => '10',
                 ],
@@ -135,7 +135,7 @@ class TriggerDataSeeder extends Seeder
                 'default_parameters' => [
                     'from_currency_id' => null,
                     'to_currency_id'   => null,
-                    'rate_type'        => CurrencyRateModel::TYPE_OF_RATE_AVG,
+                    'rate_type'        => 'average',
                     'rate_min'         => '5',
                     'rate_max'         => '10',
                 ],
