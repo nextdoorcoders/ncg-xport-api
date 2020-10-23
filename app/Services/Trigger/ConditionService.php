@@ -162,7 +162,7 @@ class ConditionService
     public function updateAllStatuses(): void
     {
         $conditions = ConditionModel::query()
-            ->with('vendor')
+            ->with('vendorType.vendor')
             ->get();
 
         $conditions->each(function (ConditionModel $condition) {
