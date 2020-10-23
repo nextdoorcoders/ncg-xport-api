@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Storage as StorageRequest;
+use App\Http\Resources\DataResource;
 use App\Models\Storage as StorageModel;
 use App\Services\StorageService;
 use Exception;
@@ -28,7 +29,7 @@ class StorageController extends Controller
 
     /**
      * @param StorageRequest $request
-     * @return JsonResponse
+     * @return DataResource
      * @throws Exception
      */
     public function uploadFile(StorageRequest $request)
@@ -38,7 +39,7 @@ class StorageController extends Controller
 
         $response = $this->storageService->uploadFile($data, $file);
 
-        return response()->json($response);
+        return new DataResource($response);
     }
 
     /**

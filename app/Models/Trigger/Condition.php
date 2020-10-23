@@ -2,11 +2,13 @@
 
 namespace App\Models\Trigger;
 
+use App\Models\Storage;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * Class Condition
@@ -84,6 +86,15 @@ class Condition extends Model
     public function vendorLocation(): BelongsTo
     {
         return $this->belongsTo(VendorLocation::class, 'vendor_location_id');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function media(): MorphOne
+    {
+        return $this->morphOne(Storage::class, 'fileable')
+            ->where('field', 'media');
     }
 
     /*
