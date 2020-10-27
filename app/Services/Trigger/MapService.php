@@ -164,7 +164,6 @@ class MapService
      *
      * @param MapModel $map
      * @param bool     $checkParent
-     * @throws MessageException
      */
     public function updateStatus(MapModel $map, bool $checkParent = false): void
     {
@@ -244,6 +243,7 @@ class MapService
      * @param UserModel $user
      * @param array     $data
      * @return Collection
+     * @throws MessageException
      */
     public function updateConditions(MapModel $map, UserModel $user, array $data)
     {
@@ -260,7 +260,7 @@ class MapService
 
                 if ($condition) {
                     if ($group['id'] !== $card['group_id']) {
-                        // Mode condition to another group
+                        // Move condition to another group
                         $condition->group()->associate($group['id']);
                     }
 
@@ -269,6 +269,10 @@ class MapService
                 }
             }
         });
+
+        /** @var ConditionService $conditionService */
+        $conditionService = app(ConditionService::class);
+        $conditionService->updateAllStatuses();
 
         return $this->readConditions($map, $user);
     }

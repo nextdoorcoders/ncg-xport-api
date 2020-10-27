@@ -54,6 +54,7 @@ class ProjectService
      * @param UserModel    $user
      * @param array        $data
      * @return ProjectModel|null
+     * @throws Exception
      */
     public function updateProject(ProjectModel $project, UserModel $user, array $data)
     {

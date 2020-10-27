@@ -132,7 +132,7 @@ class GroupService
             ->where('is_enabled', true)
             ->count();
 
-        if ($totalCountOfConditions == 0 || $countOfEnabledConditions > 0) {
+        if ($countOfEnabledConditions > 0 && $totalCountOfConditions == $countOfEnabledConditions) {
             $group->is_enabled = true;
         } else {
             $group->is_enabled = false;
