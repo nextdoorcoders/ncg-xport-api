@@ -125,14 +125,11 @@ class GroupService
      */
     public function updateStatus(GroupModel $group, bool $checkParent = false): void
     {
-        $totalCountOfConditions = $group->conditions
-            ->count();
-
         $countOfEnabledConditions = $group->conditions
             ->where('is_enabled', true)
             ->count();
 
-        if ($countOfEnabledConditions > 0 && $totalCountOfConditions == $countOfEnabledConditions) {
+        if ($countOfEnabledConditions > 0) {
             $group->is_enabled = true;
         } else {
             $group->is_enabled = false;
