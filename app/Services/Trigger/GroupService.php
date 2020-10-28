@@ -121,7 +121,6 @@ class GroupService
      *
      * @param GroupModel $group
      * @param bool       $checkParent
-     * @throws MessageException
      */
     public function updateStatus(GroupModel $group, bool $checkParent = false): void
     {

@@ -7,7 +7,6 @@ use App\Jobs\Google\UpdateCampaignStatus;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Trigger\Map as MapModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class CampaignService
@@ -38,13 +37,20 @@ class CampaignService
 
             $campaigns = $this->campaignRepository->paginate();
 
-            $existedCampaigns = $map->campaigns()
-                ->get()
-                ->pluck('id', 'foreign_campaign_id')
-                ->toArray();
+            $importedCampaigns = CampaignModel::query()
+                ->whereIn('foreign_campaign_id', $campaigns->pluck('id'))
+                ->get();
 
-            $campaigns->each(function ($campaign) use ($existedCampaigns) {
-                $campaign->campaign_imported = array_key_exists($campaign->id, $existedCampaigns);
+            $attachedCampaigns = $map->campaigns()
+                ->get()
+                ->pluck('id', 'foreign_campaign_id');
+
+            $campaigns->each(function ($campaign) use ($importedCampaigns, $attachedCampaigns) {
+                $count = $importedCampaigns->where('foreign_campaign_id', $campaign->id)->count();
+                $isCampaignAttached = array_key_exists($campaign->id, $attachedCampaigns->toArray());
+
+                $campaign->campaign_count = $count;
+                $campaign->is_campaign_attached = $isCampaignAttached;
             });
 
             return $campaigns;
