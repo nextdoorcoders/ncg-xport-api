@@ -3,6 +3,7 @@
 namespace App\Services\Google;
 
 use App\Exceptions\MessageException;
+use App\Jobs\Google\UpdateCampaignBudget;
 use App\Jobs\Google\UpdateCampaignStatus;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Trigger\Map as MapModel;
@@ -66,5 +67,14 @@ class CampaignService
     {
         // Создаём Job для обновления статуса кампании
         UpdateCampaignStatus::dispatch($campaign);
+    }
+
+    /**
+     * @param CampaignModel $campaign
+     */
+    public function updateCampaignBudget(CampaignModel $campaign)
+    {
+        // Создаём Job для обновления бюджета кампании
+        UpdateCampaignBudget::dispatch($campaign);
     }
 }

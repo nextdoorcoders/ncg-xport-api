@@ -2,14 +2,16 @@
 
 namespace App\Repositories\Google\AdWords;
 
-use App\Exceptions\MessageException;
 use App\Models\Marketing\Campaign as CampaignModel;
 use Carbon\Carbon;
 use Google\AdsApi\AdWords\AdWordsSession;
-use Google\AdsApi\AdWords\v201809\cm\ApiException;
+use Google\AdsApi\AdWords\v201809\cm\Budget;
+use Google\AdsApi\AdWords\v201809\cm\BudgetOperation;
+use Google\AdsApi\AdWords\v201809\cm\BudgetService;
 use Google\AdsApi\AdWords\v201809\cm\Campaign;
 use Google\AdsApi\AdWords\v201809\cm\CampaignOperation;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
+use Google\AdsApi\AdWords\v201809\cm\Money;
 use Google\AdsApi\AdWords\v201809\cm\Operator;
 use Google\AdsApi\AdWords\v201809\cm\OrderBy;
 use Google\AdsApi\AdWords\v201809\cm\Paging;
@@ -70,7 +72,12 @@ class CampaignRepository extends AdWords
         return collect($campaigns)->first();
     }
 
-    public function update(CampaignModel $campaignModel, string $status)
+    /**
+     * @param CampaignModel $campaignModel
+     * @param string        $status
+     * @return mixed
+     */
+    public function updateStatus(CampaignModel $campaignModel, string $status)
     {
         /** @var AdWordsSession $session */
         $session = $this->sessionBuilder->build();
@@ -95,11 +102,59 @@ class CampaignRepository extends AdWords
         return collect($result->getValue())->first();
     }
 
+    /**
+     * @param CampaignModel $campaignModel
+     * @param float         $amount
+     * @return mixed
+     */
+    public function updateBudget(CampaignModel $campaignModel, float $amount)
+    {
+        $campaign = $this->find($campaignModel);
+
+        /** @var AdWordsSession $session */
+        $session = $this->sessionBuilder->build();
+
+        $budgetService = $this->services->get($session, BudgetService::class);
+
+        // Create the shared budget (required).
+        $money = new Money();
+        $money->setMicroAmount($amount * 1000000);
+
+        $budget = new Budget();
+        $budget->setBudgetId($campaign->budget_id);
+        $budget->setAmount($money);
+
+        $operations = [];
+
+        // Create a budget operation.
+        $operation = new BudgetOperation();
+        $operation->setOperand($budget);
+        $operation->setOperator(Operator::SET);
+        $operations[] = $operation;
+
+        // Create the budget on the server.
+        $result = $budgetService->mutate($operations);
+
+        return collect($result->getValue())->first();
+    }
+
     protected function select($campaignService, $predicates = [], $orderings = [])
     {
         // Create selector.
         $selector = new Selector();
-        $selector->setFields(['Id', 'Name', 'Status', 'StartDate', 'EndDate']);
+        $selector->setFields([
+            'Id',
+            'Name',
+            'Status',
+            'StartDate',
+            'EndDate',
+            'BudgetId',
+            'BudgetName',
+            'BudgetReferenceCount',
+            'BudgetStatus',
+            'Amount',
+            'IsBudgetExplicitlyShared',
+        ]);
         $selector->setPredicates($predicates);
         $selector->setOrdering($orderings);
         $selector->setPaging(new Paging(0, self::PAGE_LIMIT));
@@ -115,12 +170,16 @@ class CampaignRepository extends AdWords
             if ($page->getEntries() !== null) {
                 $totalNumEntries = $page->getTotalNumEntries();
                 foreach ($page->getEntries() as $campaign) {
+                    /** @var $campaign Campaign */
                     $campaigns[] = (object)[
-                        'id'         => $campaign->getId(),
-                        'name'       => str_replace('_', ' ', $campaign->getName()),
-                        'status'     => $campaign->getStatus(),
-                        'start_date' => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getStartDate()))->toDateString(),
-                        'end_date'   => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getEndDate()))->toDateString(),
+                        'id'          => $campaign->getId(),
+                        'name'        => str_replace('_', ' ', $campaign->getName()),
+                        'status'      => $campaign->getStatus(),
+                        'start_date'  => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getStartDate()))->toDateString(),
+                        'end_date'    => Carbon::createFromFormat('Y-m-d', preg_replace('/(\d{4})(\d{2})(\d{2})/', '$1-$2-$3', $campaign->getEndDate()))->toDateString(),
+                        'budget_id'   => $campaign->getBudget()->getBudgetId(),
+                        'budget_name' => $campaign->getBudget()->getName(),
+                        'amount'      => $campaign->getBudget()->getAmount()->getMicroAmount(),
                     ];
                 }
             }

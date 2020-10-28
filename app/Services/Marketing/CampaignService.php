@@ -8,7 +8,6 @@ use App\Models\Marketing\Campaign as CampaignModel;
 use App\Models\Trigger\Map as MapModel;
 use App\Services\Google\CampaignService as GoogleCampaignService;
 use Exception;
-use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Illuminate\Database\Eloquent\Collection;
 
 class CampaignService
@@ -32,8 +31,18 @@ class CampaignService
      */
     public function allCampaigns(MapModel $map, UserModel $user)
     {
-        return $map->campaigns()
+        $campaigns = $map->campaigns()
             ->get();
+
+        $importedCampaigns = CampaignModel::query()
+            ->whereIn('foreign_campaign_id', $campaigns->pluck('foreign_campaign_id'))
+            ->get();
+
+        $campaigns->each(function (CampaignModel $campaign) use ($importedCampaigns) {
+            $campaign->setAttribute('campaign_count', $importedCampaigns->where('foreign_campaign_id', $campaign->foreign_campaign_id)->count());
+        });
+
+        return $campaigns;
     }
 
     /**

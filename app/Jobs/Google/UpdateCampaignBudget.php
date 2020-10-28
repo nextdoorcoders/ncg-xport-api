@@ -4,15 +4,13 @@ namespace App\Jobs\Google;
 
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
-use Carbon\Carbon;
-use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateCampaignStatus implements ShouldQueue
+class UpdateCampaignBudget implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,7 +19,7 @@ class UpdateCampaignStatus implements ShouldQueue
     public CampaignRepository $campaignRepository;
 
     /**
-     * UpdateCampaignStatus constructor.
+     * Create a new job instance.
      *
      * @param CampaignModel $campaign
      */
@@ -53,18 +51,12 @@ class UpdateCampaignStatus implements ShouldQueue
 
             if ($googleCampaign) {
                 if ($campaign->is_enabled) {
-                    $status = CampaignStatus::ENABLED;
+                    $amount = 1000000;
                 } else {
-                    $status = CampaignStatus::PAUSED;
+                    $amount = 1;
                 }
 
-                if (
-                    $googleCampaign->status !== $status &&
-                    Carbon::parse($googleCampaign->start_date) <= now() &&
-                    now() <= Carbon::parse($googleCampaign->end_date)
-                ) {
-                    $this->campaignRepository->updateStatus($campaign, $status);
-                }
+                $this->campaignRepository->updateBudget($campaign, $amount);
             }
         }
     }
