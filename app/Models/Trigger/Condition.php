@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property array          $parameters
  * @property integer        $order_index
  * @property boolean        $is_enabled
+ * @property boolean        $is_inverted
  * @property Carbon         $refreshed_at
  * @property Carbon         $changed_at
  * @property Carbon         $created_at
@@ -43,6 +44,7 @@ class Condition extends Model
         'parameters',
         'order_index',
         'is_enabled',
+        'is_inverted',
         'refreshed_at',
         'changed_at',
     ];

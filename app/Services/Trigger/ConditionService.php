@@ -177,7 +177,6 @@ class ConditionService
      *
      * @param ConditionModel $condition
      * @param bool           $checkParent
-     * @throws MessageException
      */
     public function updateStatus(ConditionModel $condition, bool $checkParent = false): void
     {

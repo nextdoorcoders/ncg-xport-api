@@ -30,6 +30,7 @@ class Condition extends JsonResource
             'parameters'         => $resource->parameters,
             'order_index'        => $resource->order_index,
             'is_enabled'         => $resource->is_enabled,
+            'is_inverted'        => $resource->is_inverted,
             'refreshed_at'       => $resource->refreshed_at,
             'changed_at'         => $resource->changed_at,
             'current_value'      => $resource->current_value,
@@ -57,7 +58,7 @@ class Condition extends JsonResource
         if ($resource->relationLoaded('toCurrency')) {
             // It's dynamic relation
             $response = array_merge($response, [
-                'toCurrency'   => new Currency($resource->toCurrency),
+                'toCurrency' => new Currency($resource->toCurrency),
             ]);
         }
 

@@ -101,6 +101,7 @@ class CreateTriggerTable extends Migration
             $table->bigInteger('order_index')->default(0);
 
             $table->boolean('is_enabled')->default(false);
+            $table->boolean('is_inverted')->default(false);
             $table->timestamp('refreshed_at')->nullable();
             $table->timestamp('changed_at')->nullable();
 

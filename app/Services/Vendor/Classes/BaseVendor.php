@@ -33,6 +33,8 @@ abstract class BaseVendor
 
         $currentValue = self::getCurrentValue($condition);
 
-        return $this->check($condition, $currentValue);
+        $check = $this->check($condition, $currentValue);
+
+        return $condition->is_inverted ? !$check : $check;
     }
 }
