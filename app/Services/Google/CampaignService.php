@@ -55,10 +55,10 @@ class CampaignService
 
     /**
      * @param CampaignModel $campaign
-     * @param string        $status
      */
-    public function updateCampaignStatus(CampaignModel $campaign, string $status)
+    public function updateCampaignStatus(CampaignModel $campaign)
     {
-        UpdateCampaignStatus::dispatch($campaign, $status);
+        // Создаём Job для обновления статуса кампании
+        UpdateCampaignStatus::dispatch($campaign);
     }
 }

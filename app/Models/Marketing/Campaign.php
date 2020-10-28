@@ -13,13 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class Campaign
  *
  * @package App\Models\Marketing
- * @property string $id
- * @property string $map_id
- * @property string $foreign_campaign_id
- * @property string $name
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Map    $map
+ * @property string  $id
+ * @property string  $map_id
+ * @property string  $foreign_campaign_id
+ * @property string  $name
+ * @property boolean $is_enabled
+ * @property Carbon  $created_at
+ * @property Carbon  $updated_at
+ * @property Map     $map
  */
 class Campaign extends Model
 {
@@ -31,6 +32,7 @@ class Campaign extends Model
         'map_id',
         'foreign_campaign_id',
         'name',
+        'is_enabled',
     ];
 
     /*

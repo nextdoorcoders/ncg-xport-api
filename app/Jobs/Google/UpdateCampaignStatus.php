@@ -5,6 +5,7 @@ namespace App\Jobs\Google;
 use App\Models\Marketing\Campaign as CampaignModel;
 use App\Repositories\Google\AdWords\CampaignRepository;
 use Carbon\Carbon;
+use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,21 +18,16 @@ class UpdateCampaignStatus implements ShouldQueue
 
     public CampaignModel $campaign;
 
-    public string $status;
-
     public CampaignRepository $campaignRepository;
 
     /**
      * UpdateCampaignStatus constructor.
      *
      * @param CampaignModel $campaign
-     * @param string        $status
      */
-    public function __construct(CampaignModel $campaign, string $status)
+    public function __construct(CampaignModel $campaign)
     {
         $this->campaign = $campaign;
-
-        $this->status = $status;
 
         $this->campaignRepository = app(CampaignRepository::class);
     }
@@ -55,13 +51,20 @@ class UpdateCampaignStatus implements ShouldQueue
 
             $googleCampaign = $this->campaignRepository->find($campaign);
 
-            if (
-                $googleCampaign &&
-                $googleCampaign->status !== $this->status &&
-                Carbon::parse($googleCampaign->start_date) <= now() &&
-                now() <= Carbon::parse($googleCampaign->end_date)
-            ) {
-                $this->campaignRepository->update($campaign, $this->status);
+            if ($googleCampaign) {
+                if ($campaign->is_enabled) {
+                    $status = CampaignStatus::ENABLED;
+                } else {
+                    $status = CampaignStatus::PAUSED;
+                }
+
+                if (
+                    $googleCampaign->status !== $status &&
+                    Carbon::parse($googleCampaign->start_date) <= now() &&
+                    now() <= Carbon::parse($googleCampaign->end_date)
+                ) {
+                    $this->campaignRepository->update($campaign, $status);
+                }
             }
         }
     }

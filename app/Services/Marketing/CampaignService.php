@@ -116,11 +116,15 @@ class CampaignService
             (is_null($project->date_start_at) || now()->greaterThanOrEqualTo($project->date_start_at)) &&
             (is_null($project->date_end_at) || now()->lessThanOrEqualTo($project->date_end_at))
         ) {
-            $status = CampaignStatus::ENABLED;
+            $campaign->is_enabled = true;
         } else {
-            $status = CampaignStatus::PAUSED;
+            $campaign->is_enabled = false;
         }
 
-        $this->googleCampaignService->updateCampaignStatus($campaign, $status);
+        if ($campaign->isDirty('is_enabled')) {
+            $campaign->save();
+        }
+
+        $this->googleCampaignService->updateCampaignStatus($campaign);
     }
 }

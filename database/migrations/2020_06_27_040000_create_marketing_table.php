@@ -57,9 +57,9 @@ class CreateMarketingTable extends Migration
             $table->string('desc')->nullable();
 
             $table->json('parameters');
-            $table->boolean('is_enabled')->default(false);
-            $table->date('date_start_at')->nullable();
-            $table->date('date_end_at')->nullable();
+            $table->boolean('is_enabled')->default(false)->index();
+            $table->date('date_start_at')->index()->nullable();
+            $table->date('date_end_at')->index()->nullable();
 
             $table->timestamps();
         });
@@ -70,6 +70,8 @@ class CreateMarketingTable extends Migration
 
             $table->string('foreign_campaign_id')->index();
             $table->string('name');
+
+            $table->boolean('is_enabled')->default(false)->index();
 
             $table->timestamps();
         });
