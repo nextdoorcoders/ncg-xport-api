@@ -25,13 +25,13 @@ class CampaignService
     }
 
     /**
-     * @param MapModel  $map
      * @param UserModel $user
      * @return Collection
      */
-    public function allCampaigns(MapModel $map, UserModel $user)
+    public function allCampaigns(UserModel $user)
     {
-        $campaigns = $map->campaigns()
+        $campaigns = $user->campaigns()
+            ->with('map')
             ->get();
 
         $importedCampaigns = CampaignModel::query()
@@ -39,7 +39,33 @@ class CampaignService
             ->get();
 
         $campaigns->each(function (CampaignModel $campaign) use ($importedCampaigns) {
-            $campaign->setAttribute('campaign_count', $importedCampaigns->where('foreign_campaign_id', $campaign->foreign_campaign_id)->count());
+            $count = $importedCampaigns->where('foreign_campaign_id', $campaign->foreign_campaign_id)->count();
+
+            $campaign->setAttribute('campaign_count', $count);
+        });
+
+        return $campaigns;
+    }
+
+    /**
+     * @param MapModel  $map
+     * @param UserModel $user
+     * @return Collection
+     */
+    public function allMapCampaigns(MapModel $map, UserModel $user)
+    {
+        $campaigns = $map->campaigns()
+            ->with('map')
+            ->get();
+
+        $importedCampaigns = CampaignModel::query()
+            ->whereIn('foreign_campaign_id', $campaigns->pluck('foreign_campaign_id'))
+            ->get();
+
+        $campaigns->each(function (CampaignModel $campaign) use ($importedCampaigns) {
+            $count = $importedCampaigns->where('foreign_campaign_id', $campaign->foreign_campaign_id)->count();
+
+            $campaign->setAttribute('campaign_count', $count);
         });
 
         return $campaigns;
@@ -52,7 +78,7 @@ class CampaignService
      * @return CampaignModel|null
      * @throws MessageException
      */
-    public function createCampaign(MapModel $map, UserModel $user, array $data)
+    public function createMapCampaign(MapModel $map, UserModel $user, array $data)
     {
         $campaign = CampaignModel::query()
             ->where('map_id', $map->id)

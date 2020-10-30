@@ -34,11 +34,13 @@ class MapService
     public function allMaps(UserModel $user)
     {
         $templates = MapModel::query()
+            ->with('project')
             ->where('user_id', $user->id)
             ->where('project_id', null)
             ->get();
 
         $maps = MapModel::query()
+            ->with('project')
             ->where('user_id', $user->id)
             ->where('project_id', '!=', null)
             ->get();

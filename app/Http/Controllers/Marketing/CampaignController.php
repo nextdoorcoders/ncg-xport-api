@@ -32,12 +32,26 @@ class CampaignController extends Controller
      * @param MapModel $map
      * @return CampaignCollection
      */
-    public function allCampaigns(MapModel $map)
+    public function allCampaigns()
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
-        $response = $this->campaignService->allCampaigns($map, $user);
+        $response = $this->campaignService->allCampaigns($user);
+
+        return new CampaignCollection($response);
+    }
+
+    /**
+     * @param MapModel $map
+     * @return CampaignCollection
+     */
+    public function allMapCampaigns(MapModel $map)
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->campaignService->allMapCampaigns($map, $user);
 
         return new CampaignCollection($response);
     }
@@ -48,14 +62,14 @@ class CampaignController extends Controller
      * @return CampaignResource
      * @throws MessageException
      */
-    public function createCampaign(Request $request, MapModel $map)
+    public function createMapCampaign(Request $request, MapModel $map)
     {
         /** @var UserModel $user */
         $user = auth()->user();
 
         $data = $request->all();
 
-        $response = $this->campaignService->createCampaign($map, $user, $data);
+        $response = $this->campaignService->createMapCampaign($map, $user, $data);
 
         return new CampaignResource($response);
     }

@@ -4,6 +4,7 @@ namespace App\Models\Account;
 
 use App\Models\Geo\Location;
 use App\Models\Marketing\Account;
+use App\Models\Marketing\Campaign;
 use App\Models\Marketing\Organization;
 use App\Models\Marketing\Project;
 use App\Models\Storage;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -99,6 +101,14 @@ class User extends Authenticatable
     public function maps(): HasMany
     {
         return $this->hasMany(Map::class, 'user_id');
+    }
+
+    /**
+     * @return HasManyThrough
+     */
+    public function campaigns(): HasManyThrough
+    {
+        return $this->hasManyThrough(Campaign::class, Map::class, 'user_id', 'map_id');
     }
 
     /**

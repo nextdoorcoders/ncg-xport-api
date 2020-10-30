@@ -177,8 +177,10 @@ Route::group([
         'middleware' => 'auth:api',
         'prefix'     => 'campaigns',
     ], function () {
-        Route::get('map-{map}', [CampaignController::class, 'allCampaigns']);
-        Route::post('map-{map}', [CampaignController::class, 'createCampaign']);
+        Route::get('', [CampaignController::class, 'allCampaigns']);
+
+        Route::get('map-{map}', [CampaignController::class, 'allMapCampaigns']);
+        Route::post('map-{map}', [CampaignController::class, 'createMapCampaign']);
 
         Route::group([
             'prefix' => 'campaign-{campaign}',
