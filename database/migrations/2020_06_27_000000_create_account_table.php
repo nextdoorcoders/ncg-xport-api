@@ -52,23 +52,6 @@ class CreateAccountTable extends Migration
 
             $table->timestamps();
         });
-
-
-        Schema::create('account_workers', function (Blueprint $table) {
-            $table->uuid('id')->index()->primary();
-
-            $table->string('role')->index()->nullable();
-
-            $table->string('name')->nullable();
-            $table->string('email')->index()->unique();
-
-            $table->string('password');
-            $table->string('password_reset_code')->nullable();
-
-            $table->timestamps();
-            $table->timestamp('last_login_at')->nullable();
-            $table->timestamp('last_seen_at')->nullable();
-        });
     }
 
     /**
@@ -78,7 +61,6 @@ class CreateAccountTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('account_workers');
         Schema::dropIfExists('account_contacts');
         Schema::dropIfExists('account_users');
         Schema::dropIfExists('account_languages');

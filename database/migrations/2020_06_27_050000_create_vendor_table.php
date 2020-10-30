@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
-use App\Models\Vendor\MediaSync as MediaSyncModel;
-use App\Models\Vendor\Weather as WeatherModel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +16,7 @@ class CreateVendorTable extends Migration
         Schema::create('vendor_currencies', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
 
-            $table->string('code');
+            $table->string('code')->index();
             $table->string('symbol')->nullable();
             $table->boolean('symbol_before')->default(true);
 
