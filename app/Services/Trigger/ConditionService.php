@@ -122,14 +122,13 @@ class ConditionService
      * @param UserModel      $user
      * @param array          $data
      * @return ConditionModel|null
-     * @throws MessageException
      */
     public function updateCondition(ConditionModel $condition, UserModel $user, array $data)
     {
         $condition->fill($data);
 
         $isNeedCheckStatus = false;
-        if ($condition->isDirty('parameters')) {
+        if ($condition->isDirty(['parameters', 'is_inverted'])) {
             $isNeedCheckStatus = true;
         }
 
