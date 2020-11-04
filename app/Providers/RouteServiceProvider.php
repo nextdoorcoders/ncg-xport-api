@@ -38,6 +38,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $params = [
+            // Access
+            'permission', 'role',
             // Account
             'user', 'contact',
             // Geo

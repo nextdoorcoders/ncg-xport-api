@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Access\PermissionController;
+use App\Http\Controllers\Access\RoleController;
 use App\Http\Controllers\Account\ContactController;
 use App\Http\Controllers\Account\UserController;
 use App\Http\Controllers\Geo\LocationController;
@@ -114,6 +116,55 @@ Route::group([
         'prefix' => 'timezones',
     ], function () {
         Route::get('', [TimezoneController::class, 'allTimezones']);
+    });
+});
+
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix'     => 'access',
+], function () {
+    Route::group([
+        'prefix' => 'permissions'
+    ], function () {
+        Route::get('', [PermissionController::class, 'allPermissions']);
+        Route::post('', [PermissionController::class, 'createPermission']);
+
+        Route::group([
+            'prefix' => 'permission-{permission}',
+        ], function () {
+            Route::get('', [PermissionController::class, 'readPermission']);
+            Route::put('', [PermissionController::class, 'updatePermission']);
+            Route::delete('', [PermissionController::class, 'deletePermission']);
+
+            Route::group([
+                'prefix' => 'role-{role}'
+            ], function () {
+                Route::post('', [PermissionController::class, 'assignRole']);
+                Route::delete('', [PermissionController::class, 'removeRole']);
+            });
+        });
+    });
+
+    Route::group([
+        'prefix' => 'roles'
+    ], function () {
+        Route::get('', [RoleController::class, 'allRoles']);
+        Route::post('', [RoleController::class, 'createRoles']);
+
+        Route::group([
+            'prefix' => 'role-{role}',
+        ], function () {
+            Route::get('', [RoleController::class, 'readRoles']);
+            Route::put('', [RoleController::class, 'updateRoles']);
+            Route::delete('', [RoleController::class, 'deleteRoles']);
+
+            Route::group([
+                'prefix' => 'permission-{permission}'
+            ], function () {
+                Route::post('', [RoleController::class, 'givePermissionTo']);
+                Route::delete('', [RoleController::class, 'revokePermissionTo']);
+            });
+        });
     });
 });
 
@@ -281,7 +332,7 @@ Route::group([
     Route::post('', [StorageController::class, 'uploadFile']);
 
     Route::group([
-        'prefix' => 'storage-{store}'
+        'prefix' => 'storage-{store}',
     ], function () {
         Route::delete('', [StorageController::class, 'deleteFile']);
     });

@@ -3,6 +3,8 @@
 namespace App\Models\Account;
 
 use App\Casts\Encrypt;
+use App\Models\Access\Permission;
+use App\Models\Access\Role;
 use App\Models\Geo\Location;
 use App\Models\Marketing\Account;
 use App\Models\Marketing\Campaign;
@@ -48,6 +50,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Collection<Map>          $maps
  * @property Collection<Organization> $organizations
  * @property Storage                  $picture
+ * @property Collection<Permission>   $permissions
+ * @property Collection<Role>         $roles
  */
 class User extends Authenticatable
 {

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(AccessDataSeeder::class);
         $this->call(LanguageDataSeeder::class);
         $this->call(TriggerDataSeeder::class);
         $this->call(GeoLocationDataSeeder::class);

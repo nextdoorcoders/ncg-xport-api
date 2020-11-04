@@ -21,7 +21,7 @@ trait UuidTrait
     protected static function bootUuidTrait()
     {
         self::creating(function (Model $model) {
-            $model->setAttribute($model->getKeyName(), Str::orderedUuid());
+            $model->setAttribute($model->getKeyName(), $model->getAttribute($model->getKeyName()) ?: (string)Str::orderedUuid());
         });
     }
 }
