@@ -69,6 +69,9 @@ Route::group([
         ], function () {
             Route::get('', [UserController::class, 'readCurrentUser']);
             Route::put('', [UserController::class, 'updateCurrentUser']);
+
+            Route::get('permissions', [UserController::class, 'readCurrentUserPermissions']);
+            Route::get('roles', [UserController::class, 'readCurrentUserRoles']);
         });
     });
 

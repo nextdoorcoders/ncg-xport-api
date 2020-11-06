@@ -87,22 +87,6 @@ class CreateAccessTable extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
-
-
-
-        Schema::table($tableNames['model_has_permissions'], function (Blueprint $table) use ($columnNames) {
-            $table->foreign($columnNames['model_morph_key'])
-                ->references('id')
-                ->on('account_users')
-                ->onDelete('cascade');
-        });
-
-        Schema::table($tableNames['model_has_roles'], function (Blueprint $table) use ($columnNames) {
-            $table->foreign($columnNames['model_morph_key'])
-                ->references('id')
-                ->on('account_users')
-                ->onDelete('cascade');
-        });
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Policies\Marketing\CampaignPolicy;
 use App\Policies\Marketing\ProjectPolicy;
 use App\Policies\Trigger\MapPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Sanctum\Sanctum;
 
 class AuthServiceProvider extends ServiceProvider
@@ -34,7 +35,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::before(function ($user, $ability) {
+            if ($user->hasRole('supervisor')) {
+                return true;
+            }
+        });
     }
 
     public function register()

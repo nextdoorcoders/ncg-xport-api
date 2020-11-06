@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Account;
 
+use App\Http\Resources\Access\PermissionCollection;
+use App\Http\Resources\Access\RoleCollection;
 use App\Http\Resources\Geo\Location;
 use App\Http\Resources\Marketing\AccountCollection;
 use App\Http\Resources\Marketing\OrganizationCollection;
@@ -68,6 +70,18 @@ class User extends JsonResource
         if ($resource->relationLoaded('projects')) {
             $response = array_merge($response, [
                 'projects' => new ProjectCollection($resource->projects),
+            ]);
+        }
+
+        if ($resource->relationLoaded('permissions')) {
+            $response = array_merge($response, [
+                'permissions' => new PermissionCollection($resource->permissions),
+            ]);
+        }
+
+        if ($resource->relationLoaded('roles')) {
+            $response = array_merge($response, [
+                'roles' => new RoleCollection($resource->roles),
             ]);
         }
 

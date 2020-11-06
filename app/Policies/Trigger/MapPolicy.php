@@ -30,7 +30,11 @@ class MapPolicy
      */
     public function view(User $user, Map $map)
     {
-        //
+        if ($user->can('view all maps')) {
+            return true;
+        }
+
+        return $user->id === $map->user_id;
     }
 
     /**

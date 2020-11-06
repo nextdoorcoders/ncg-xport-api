@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Access\Permission as PermissionModel;
 use App\Models\Access\Role as RoleModel;
+use App\Models\Account\Language;
+use App\Models\Account\User as UserModel;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\PermissionRegistrar;
 
 class AccessDataSeeder extends Seeder
 {
@@ -15,40 +18,72 @@ class AccessDataSeeder extends Seeder
      */
     public function run()
     {
-        /** @var PermissionModel $permission */
-        $permission = PermissionModel::query()
-            ->create([
-                'name' => 'create maps'
-            ]);
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        /** @var RoleModel $role */
-        $role = RoleModel::query()
-            ->create([
-                'name' => 'User',
-            ]);
+        $rolesAndPermissions = collect([
+            'user'       => collect([
+                'view own maps',
+                'create own maps',
+                'read own maps',
+                'update own maps',
+                'delete own maps',
 
-        $role->givePermissionTo($permission);
+                'view own projects',
+                'create own projects',
+                'read own projects',
+                'update own projects',
+                'delete own projects',
+            ]),
+            'moderator'  => collect([
+                'view all maps',
 
-        $role = RoleModel::query()
-            ->create([
-                'name' => 'Moderator',
-            ]);
+                'view all projects',
+            ]),
+            'admin'      => collect([
+                'view all maps',
+                'update all maps',
 
-        $role = RoleModel::query()
-            ->create([
-                'name' => 'Admin',
-            ]);
+                'view all projects',
+                'update all projects',
+            ]),
+            'supervisor' => collect(),
+        ]);
 
-        $permission = PermissionModel::query()
-            ->create([
-                'name' => 'switch user'
-            ]);
+        $rolesAndPermissions->each(function ($permissions, $roleName) {
+            $permissions->map(function ($permissionName) {
+                return PermissionModel::query()
+                    ->create([
+                        'name' => $permissionName,
+                    ]);
+            });
 
-        $role = RoleModel::query()
-            ->create([
-                'name' => 'Supervisor',
-            ]);
+            /** @var RoleModel $role */
+            $role = RoleModel::query()
+                ->create([
+                    'name' => $roleName,
+                ]);
 
-        $role->givePermissionTo($permission);
+            $role->givePermissionTo($permissions);
+        });
+
+        $language = Language::query()
+            ->where('code', Language::LANGUAGE_EN)
+            ->first();
+
+        $roles = RoleModel::query()
+            ->get();
+
+        $roles->each(function (RoleModel $role) use ($language) {
+            /** @var UserModel $user */
+            $user = UserModel::query()
+                ->create([
+                    'language_id' => $language->id,
+                    'name'        => $role->name,
+                    'email'       => sprintf('%s@gmail.com', $role->name),
+                    'password'    => 'password',
+                ]);
+
+            $user->assignRole($role);
+        });
     }
 }

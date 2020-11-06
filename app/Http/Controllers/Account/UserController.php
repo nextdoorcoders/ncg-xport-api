@@ -10,6 +10,8 @@ use App\Http\Requests\Account\Login as LoginRequest;
 use App\Http\Requests\Account\Logout as LogoutRequest;
 use App\Http\Requests\Account\Register as RegisterRequest;
 use App\Http\Requests\Account\User as UserRequest;
+use App\Http\Resources\Access\PermissionCollection;
+use App\Http\Resources\Access\RoleCollection;
 use App\Http\Resources\Account\User as UserResource;
 use App\Http\Resources\Account\UserCollection;
 use App\Http\Resources\DataResource;
@@ -177,5 +179,31 @@ class UserController extends Controller
         $response = $this->userService->updateUser($user, $data);
 
         return new UserResource($response, 'Successfully updated', 'Your account information has been saved');
+    }
+
+    /**
+     * @return PermissionCollection
+     */
+    public function readCurrentUserPermissions()
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->userService->readUserPermissions($user);
+
+        return new PermissionCollection($response);
+    }
+
+    /**
+     * @return RoleCollection
+     */
+    public function readCurrentUserRoles()
+    {
+        /** @var UserModel $user */
+        $user = auth()->user();
+
+        $response = $this->userService->readUserRoles($user);
+
+        return new RoleCollection($response);
     }
 }

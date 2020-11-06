@@ -30,7 +30,11 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project)
     {
-        //
+        if ($user->can('view all projects')) {
+            return true;
+        }
+
+        return $user->id === $project->user_id;
     }
 
     /**

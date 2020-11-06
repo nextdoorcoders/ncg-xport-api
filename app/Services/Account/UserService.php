@@ -230,4 +230,26 @@ class UserService
 
         return $this->readUser($user);
     }
+
+    /**
+     * @param UserModel $user
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function readUserPermissions(UserModel $user)
+    {
+        return $user->permissions()
+            ->with('roles')
+            ->get();
+    }
+
+    /**
+     * @param UserModel $user
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function readUserRoles(UserModel $user)
+    {
+        return $user->roles()
+            ->with('permissions')
+            ->get();
+    }
 }
