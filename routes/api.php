@@ -41,6 +41,9 @@ Route::group([
     ], function () {
         Route::post('login', [UserController::class, 'login'])->middleware('guest:api');
         Route::delete('logout', [UserController::class, 'logout'])->middleware('auth:api');
+
+        Route::post('switch/{victim}', [UserController::class, 'switch'])->middleware('auth:api');
+
         Route::post('register', [UserController::class, 'register'])->middleware('guest:api');
 
         Route::group([

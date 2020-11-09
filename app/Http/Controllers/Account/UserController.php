@@ -73,6 +73,30 @@ class UserController extends Controller
     }
 
     /**
+     * @param Request   $request
+     * @param UserModel $victim
+     * @return DataResource
+     * @throws MessageException
+     */
+    public function switch(Request $request, UserModel $victim)
+    {
+        /** @var UserModel $werewolf */
+        $werewolf = auth('api')->user();
+
+//        if ($this->authorize('switch-all-users')) {
+//            throw new MessageException('You cannot perform this action.');
+//        }
+
+        $ip = $request->getClientIp();
+        $agent = $request->userAgent();
+        $abilities = $request->get('abilities', ['*']);
+
+        $response = $this->userService->switch($victim, $ip, $agent, $abilities);
+
+        return new DataResource($response);
+    }
+
+    /**
      * @param RegisterRequest $request
      * @return JsonResponse|object
      * @throws Exception

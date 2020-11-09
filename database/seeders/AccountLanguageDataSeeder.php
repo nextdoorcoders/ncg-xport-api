@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Account\Language as LanguageModel;
 use Illuminate\Database\Seeder;
 
-class LanguageDataSeeder extends Seeder
+class AccountLanguageDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.

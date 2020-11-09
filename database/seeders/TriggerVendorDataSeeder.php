@@ -4,14 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Trigger\Vendor as VendorModel;
-use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
 use App\Services\Vendor\Classes\Calendar;
 use App\Services\Vendor\Classes\Currency;
 use App\Services\Vendor\Classes\MediaSync;
 use App\Services\Vendor\Classes\Weather;
 use Illuminate\Database\Seeder;
 
-class TriggerDataSeeder extends Seeder
+class TriggerVendorDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.

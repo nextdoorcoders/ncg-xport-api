@@ -52,6 +52,18 @@ class UserService
     }
 
     /**
+     * @param UserModel $victim
+     * @param string    $ip
+     * @param string    $agent
+     * @param array     $abilities
+     * @return array
+     */
+    public function switch(UserModel $victim, string $ip, string $agent, array $abilities)
+    {
+        return $this->generateBearerToken($victim, $ip, $agent, $abilities);
+    }
+
+    /**
      * @param UserModel $user
      * @param string    $ip
      * @param string    $agent

@@ -13,10 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(LanguageDataSeeder::class);
-        $this->call(AccessDataSeeder::class);
-        $this->call(TriggerDataSeeder::class);
+        $this->call(AccountLanguageDataSeeder::class);
         $this->call(GeoLocationDataSeeder::class);
+
+        $this->call(AccessDataSeeder::class);
+        $this->call(AccountUserDataSeeder::class);
+
+        $this->call(TriggerVendorDataSeeder::class);
         $this->call(VendorCurrencyDataSeeder::class);
         $this->call(VendorWeatherDataSeeder::class);
     }

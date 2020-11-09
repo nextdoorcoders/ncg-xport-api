@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Access\Permission as PermissionModel;
 use App\Models\Access\Role as RoleModel;
-use App\Models\Account\Language;
-use App\Models\Account\User as UserModel;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -40,6 +38,8 @@ class AccessDataSeeder extends Seeder
                 'view all projects',
             ]),
             'admin'      => collect([
+                'view all users',
+
                 'view all maps',
                 'update all maps',
 
@@ -64,26 +64,6 @@ class AccessDataSeeder extends Seeder
                 ]);
 
             $role->givePermissionTo($permissions);
-        });
-
-        $language = Language::query()
-            ->where('code', Language::LANGUAGE_EN)
-            ->first();
-
-        $roles = RoleModel::query()
-            ->get();
-
-        $roles->each(function (RoleModel $role) use ($language) {
-            /** @var UserModel $user */
-            $user = UserModel::query()
-                ->create([
-                    'language_id' => $language->id,
-                    'name'        => $role->name,
-                    'email'       => sprintf('%s@gmail.com', $role->name),
-                    'password'    => 'password',
-                ]);
-
-            $user->assignRole($role);
         });
     }
 }
