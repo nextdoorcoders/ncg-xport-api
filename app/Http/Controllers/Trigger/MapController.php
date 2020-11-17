@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Trigger;
 
+use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Trigger\Map as MapRequest;
 use App\Http\Resources\Trigger\GroupCollection;
@@ -136,6 +137,7 @@ class MapController extends Controller
      * @param Request  $request
      * @param MapModel $map
      * @return GroupCollection
+     * @throws MessageException
      */
     public function updateConditions(Request $request, MapModel $map)
     {

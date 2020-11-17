@@ -156,6 +156,19 @@ class ConditionService
     }
 
     /**
+     * @param ConditionModel $condition
+     * @param UserModel      $user
+     * @return ConditionModel|null
+     */
+    public function replicateCondition(ConditionModel $condition, UserModel $user)
+    {
+        $replicateCondition = $condition->replicate();
+        $replicateCondition->push();
+
+        return $this->readCondition($replicateCondition, $user);
+    }
+
+    /**
      * @throws MessageException
      */
     public function updateAllStatuses(): void

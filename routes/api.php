@@ -312,6 +312,7 @@ Route::group([
             Route::get('', [ConditionController::class, 'readCondition']);
             Route::put('', [ConditionController::class, 'updateCondition']);
             Route::delete('', [ConditionController::class, 'deleteCondition']);
+            Route::post('replicate', [ConditionController::class, 'replicateCondition']);
         });
     });
 
