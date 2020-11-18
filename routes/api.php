@@ -130,7 +130,7 @@ Route::group([
     'prefix'     => 'access',
 ], function () {
     Route::group([
-        'prefix' => 'permissions'
+        'prefix' => 'permissions',
     ], function () {
         Route::get('', [PermissionController::class, 'allPermissions']);
         Route::post('', [PermissionController::class, 'createPermission']);
@@ -143,7 +143,7 @@ Route::group([
             Route::delete('', [PermissionController::class, 'deletePermission']);
 
             Route::group([
-                'prefix' => 'role-{role}'
+                'prefix' => 'role-{role}',
             ], function () {
                 Route::post('', [PermissionController::class, 'assignRole']);
                 Route::delete('', [PermissionController::class, 'removeRole']);
@@ -152,7 +152,7 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'roles'
+        'prefix' => 'roles',
     ], function () {
         Route::get('', [RoleController::class, 'allRoles']);
         Route::post('', [RoleController::class, 'createRoles']);
@@ -165,7 +165,7 @@ Route::group([
             Route::delete('', [RoleController::class, 'deleteRoles']);
 
             Route::group([
-                'prefix' => 'permission-{permission}'
+                'prefix' => 'permission-{permission}',
             ], function () {
                 Route::post('', [RoleController::class, 'givePermissionTo']);
                 Route::delete('', [RoleController::class, 'revokePermissionTo']);
