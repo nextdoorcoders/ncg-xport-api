@@ -16,6 +16,7 @@ use App\Http\Controllers\Marketing\ProjectController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\Trigger\ConditionController;
 use App\Http\Controllers\Trigger\GroupController;
+use App\Http\Controllers\Trigger\HistoryController;
 use App\Http\Controllers\Trigger\MapController;
 use App\Http\Controllers\Trigger\VendorController;
 use App\Http\Controllers\Vendor\CurrencyController;
@@ -274,6 +275,8 @@ Route::group([
                 Route::get('', [MapController::class, 'readConditions']);
                 Route::put('', [MapController::class, 'updateConditions']);
             });
+
+            Route::get('histories', [HistoryController::class, 'allHistories']);
         });
     });
 

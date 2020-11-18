@@ -15,16 +15,20 @@ use Illuminate\Support\Facades\DB;
 
 class MapService
 {
-    protected CampaignService $campaignService;
+    private CampaignService $campaignService;
+
+    private HistoryService $historyService;
 
     /**
      * MapService constructor.
      *
      * @param CampaignService $campaignService
      */
-    public function __construct(CampaignService $campaignService)
+    public function __construct(CampaignService $campaignService, HistoryService $historyService)
     {
         $this->campaignService = $campaignService;
+
+        $this->historyService = $historyService;
     }
 
     /**
@@ -165,46 +169,58 @@ class MapService
      * Проверка текущего состояние триггера
      *
      * @param MapModel $map
-     * @param bool     $checkParent
+     * @throws Exception
      */
-    public function updateStatus(MapModel $map, bool $checkParent = false): void
+    public function updateStatus(MapModel $map): void
     {
-        $totalCountOfGroups = $map->groups
-            ->count();
+        try {
+            DB::beginTransaction();
 
-        $countOfEnabledGroups = $map->groups
-            ->where('is_enabled', true)
-            ->count();
+            $totalCountOfGroups = $map->groups
+                ->count();
 
-        if ($totalCountOfGroups > 0 && $totalCountOfGroups === $countOfEnabledGroups) {
-            // Если общее количество групп равно количеству включённых групп - включаем карту
-            $map->is_enabled = true;
+            $countOfEnabledGroups = $map->groups
+                ->where('is_enabled', true)
+                ->count();
 
-            // Обновляем время после которого карта будет автоматически отключена
-            $map->shutdown_in = now()->addSeconds($map->shutdown_delay);
-        } elseif (now()->greaterThan($map->shutdown_in)) {
-            // Карта должна работать до тех пор пока не истечёт время.
-            // Если время выключения настоло - выключаем карту
-            $map->is_enabled = false;
+            if ($totalCountOfGroups > 0 && $totalCountOfGroups === $countOfEnabledGroups) {
+                // Если общее количество групп равно количеству включённых групп - включаем карту
+                $map->is_enabled = true;
+
+                // Обновляем время после которого карта будет автоматически отключена
+                $map->shutdown_in = now()->addSeconds($map->shutdown_delay);
+            } elseif (now()->greaterThan($map->shutdown_in)) {
+                // Карта должна работать до тех пор пока не истечёт время.
+                // Если время выключения настоло - выключаем карту
+                $map->is_enabled = false;
+            }
+
+            $map->refreshed_at = now();
+
+            $isEnabledSwitched = $map->isDirty('is_enabled');
+
+            if ($isEnabledSwitched || $map->changed_at == null) {
+                $map->changed_at = now();
+
+                $this->historyService->createHistory($map);
+            }
+
+            $map->save([
+                'timestamps' => false,
+            ]);
+
+            $campaigns = $map->campaigns()->get();
+
+            $campaigns->each(function (CampaignModel $campaign) {
+                $this->campaignService->updateStatus($campaign);
+            });
+
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            throw $exception;
         }
-
-        $map->refreshed_at = now();
-
-        $isEnabledSwitched = $map->isDirty('is_enabled');
-
-        if ($isEnabledSwitched || $map->changed_at == null) {
-            $map->changed_at = now();
-        }
-
-        $map->save([
-            'timestamps' => false,
-        ]);
-
-        $campaigns = $map->campaigns()->get();
-
-        $campaigns->each(function (CampaignModel $campaign) {
-            $this->campaignService->updateStatus($campaign);
-        });
     }
 
     /**

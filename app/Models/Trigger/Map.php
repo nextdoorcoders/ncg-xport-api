@@ -93,4 +93,12 @@ class Map extends Model
     {
         return $this->hasMany(Group::class, 'map_id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(History::class, 'map_id');
+    }
 }

@@ -155,7 +155,7 @@ class GroupService
             /** @var MapModel $map */
             $map = $group->map()->first();
 
-            $this->mapService->updateStatus($map, true);
+            $this->mapService->updateStatus($map);
         }
     }
 }
