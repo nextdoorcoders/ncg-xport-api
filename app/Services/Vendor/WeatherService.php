@@ -35,7 +35,7 @@ class WeatherService
         self::VALUE_SNOW,
     ];
 
-    protected string $url = 'http://api.openweathermap.org/data/2.5/weather';
+    protected string $url = 'https://api.openweathermap.org/data/2.5/forecast';
 
     /**
      * @param int    $id
@@ -123,7 +123,6 @@ class WeatherService
     /**
      * @param int $id
      * @return array
-     * @throws RequestException
      */
     public function getTranslationsById(int $id)
     {
@@ -163,7 +162,9 @@ class WeatherService
                     $weather = $this->getWeatherByNames($location);
                 }
 
-                if ($weather !== null) {
+                if ($weather !== null && isset($weather['list']) && !empty($weather['list'])) {
+                    $weather = $weather['list'][0];
+
                     $location->vendorsTypes()->sync($vendors);
                     $location->load('vendorsTypes');
 
@@ -187,10 +188,10 @@ class WeatherService
                                 $value = round($weather['clouds']['all'] ?? null);
                                 break;
                             case self::VALUE_RAIN:
-                                $value = round($weather['rain']['1h'] ?? null);
+                                $value = round($weather['rain']['1h'] ?? $weather['rain']['3h'] ?? $weather['rain']['5h'] ?? null);
                                 break;
                             case self::VALUE_SNOW:
-                                $value = round($weather['snow']['1h'] ?? null);
+                                $value = round($weather['snow']['1h'] ?? $weather['snow']['3h'] ?? $weather['snow']['5h'] ?? null);
                                 break;
                         }
 
