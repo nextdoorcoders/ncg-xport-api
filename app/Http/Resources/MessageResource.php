@@ -7,9 +7,8 @@ use Illuminate\Http\Response;
 
 class MessageResource extends JsonResponse
 {
-    const SUCCESS = 'success';
-    const WARNING = 'warning';
-    const DANGER = 'danger';
+    const OK = 'ok';
+    const ERROR = 'error';
 
     protected ?string $title;
 
@@ -28,21 +27,17 @@ class MessageResource extends JsonResponse
     {
         $this->title = $title;
         $this->message = $message;
-        $this->type = self::SUCCESS;
+        $this->type = self::OK;
 
         if ($httpStatus >= 400) {
-            $this->type = self::WARNING;
-        }
-
-        if ($httpStatus >= 500) {
-            $this->type = self::DANGER;
+            $this->type = self::ERROR;
         }
 
         parent::__construct([
+            'type'    => $this->type,
             'message' => [
                 'title'       => $this->title,
                 'description' => $this->message,
-                'type'        => $this->type,
             ],
         ], $httpStatus);
     }

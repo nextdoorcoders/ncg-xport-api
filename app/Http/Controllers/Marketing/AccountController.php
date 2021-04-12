@@ -13,6 +13,7 @@ use App\Services\Account\UserService as UserService;
 use App\Services\Marketing\AccountService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\FacebookProvider;
 use Laravel\Socialite\Two\GoogleProvider;
@@ -108,6 +109,8 @@ class AccountController extends Controller
 
             return new MessageResource();
         } catch (Exception $exception) {
+            report($exception);
+
             throw new MessageException('Something happened', 'Failed to get profile information. Please try again later');
         }
     }

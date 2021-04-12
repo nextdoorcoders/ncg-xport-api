@@ -98,7 +98,7 @@ class WeatherService
             $value = explode('/', $value);
 
             try {
-                $countryAlpha2 = $country->parameters['alpha2'] ?? null;
+                $countryAlpha2 = $country->parameters->alpha2 ?? null;
 
                 $weather = $this->findByName(trim(trim(Arr::first($value)) . ',' . mb_strtolower($countryAlpha2), ','), $lang);
 
@@ -147,17 +147,17 @@ class WeatherService
             ->where('type', LocationModel::TYPE_CITY)
             ->get();
 
-        $vendors = VendorTypeModel::query()
+        $vendorTypes = VendorTypeModel::query()
             ->whereHas('vendor', function ($vendor) {
                 $vendor->where('type', Vendor::TYPE_WEATHER)
                     ->where('source', self::SOURCE_OWM);
             })
             ->get();
 
-        $locations->each(function (LocationModel $location) use ($vendors) {
+        $locations->each(function (LocationModel $location) use ($vendorTypes) {
             try {
-                if (!is_null($location->parameters) && array_key_exists('owm_id', $location->parameters)) {
-                    $weather = $this->findById($location->parameters['owm_id']);
+                if (!is_null($location->parameters) && property_exists($location->parameters, 'owm_id')) {
+                    $weather = $this->findById($location->parameters->owm_id);
                 } else {
                     $weather = $this->getWeatherByNames($location);
                 }
@@ -165,7 +165,7 @@ class WeatherService
                 if ($weather !== null && isset($weather['list']) && !empty($weather['list'])) {
                     $weather = $weather['list'][0];
 
-                    $location->vendorsTypes()->sync($vendors);
+                    $location->vendorsTypes()->sync($vendorTypes, false);
                     $location->load('vendorsTypes');
 
                     foreach (self::VALUES as $valueType) {

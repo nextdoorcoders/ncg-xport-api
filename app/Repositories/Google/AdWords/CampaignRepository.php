@@ -11,6 +11,7 @@ use Google\AdsApi\AdWords\v201809\cm\BudgetService;
 use Google\AdsApi\AdWords\v201809\cm\Campaign;
 use Google\AdsApi\AdWords\v201809\cm\CampaignOperation;
 use Google\AdsApi\AdWords\v201809\cm\CampaignService;
+use Google\AdsApi\AdWords\v201809\cm\CampaignStatus;
 use Google\AdsApi\AdWords\v201809\cm\Money;
 use Google\AdsApi\AdWords\v201809\cm\Operator;
 use Google\AdsApi\AdWords\v201809\cm\OrderBy;
@@ -82,13 +83,11 @@ class CampaignRepository extends AdWords
         /** @var AdWordsSession $session */
         $session = $this->sessionBuilder->build();
 
-        $campaignService = $this->services->get($session, CampaignService::class);
+        // Create a campaign with PAUSED status.
+        $campaign = $this->find($campaignModel);
+        $campaign->setStatus($status);
 
         $operations = [];
-        // Create a campaign with PAUSED status.
-        $campaign = new Campaign();
-        $campaign->setId($campaignModel->foreign_campaign_id);
-        $campaign->setStatus($status);
 
         // Create a campaign operation and add it to the list.
         $operation = new CampaignOperation();
@@ -97,6 +96,8 @@ class CampaignRepository extends AdWords
         $operations[] = $operation;
 
         // Update the campaign on the server.
+        $campaignService = $this->services->get($session, CampaignService::class);
+
         $result = $campaignService->mutate($operations);
 
         return collect($result->getValue())->first();
@@ -109,12 +110,13 @@ class CampaignRepository extends AdWords
      */
     public function updateBudget(CampaignModel $campaignModel, float $amount)
     {
-        $campaign = $this->find($campaignModel);
-
         /** @var AdWordsSession $session */
         $session = $this->sessionBuilder->build();
 
-        $budgetService = $this->services->get($session, BudgetService::class);
+        $campaign = $this->find($campaignModel);
+
+        // Enable campaign by default
+        $this->updateStatus($campaignModel, CampaignStatus::ENABLED);
 
         // Create the shared budget (required).
         $money = new Money();
@@ -133,6 +135,8 @@ class CampaignRepository extends AdWords
         $operations[] = $operation;
 
         // Create the budget on the server.
+        $budgetService = $this->services->get($session, BudgetService::class);
+
         $result = $budgetService->mutate($operations);
 
         return collect($result->getValue())->first();

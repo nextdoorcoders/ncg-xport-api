@@ -24,13 +24,26 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('vendor:weather')
-             ->everyThirtyMinutes()
-             ->withoutOverlapping(15);
-
          $schedule->command('vendor:currency')
              ->everyThirtyMinutes()
              ->withoutOverlapping(15);
+
+         $schedule->command('vendor:keyword')
+             ->everyThreeHours()
+             ->withoutOverlapping(15);
+
+        $schedule->command('vendor:media-sync')
+            ->everyMinute()
+            ->withoutOverlapping(1);
+
+        $schedule->command('vendor:uptime-robot')
+            ->everyMinute()
+            ->withoutOverlapping(1);
+
+        $schedule->command('vendor:weather')
+            ->everyThirtyMinutes()
+            ->withoutOverlapping(15);
+
 
         $schedule->command('vendor:clear')
             ->hourly()

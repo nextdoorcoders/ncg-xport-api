@@ -46,4 +46,8 @@ return [
         'redirect'      => env('GOOGLE_REDIRECT'),
     ],
 
+    'uptime_robot' => [
+        'secret' => env('UPTIME_ROBOT_SECRET')
+    ],
+
 ];

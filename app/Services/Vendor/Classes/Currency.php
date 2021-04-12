@@ -14,11 +14,11 @@ class Currency extends BaseVendor
      */
     public function check(ConditionModel $condition, $current = null): bool
     {
-        $parameters = (object)$condition->parameters;
-
         if (is_null($current)) {
             return false;
         }
+
+        $parameters = $condition->parameters;
 
         if ($parameters->rate_min <= $current && $current <= $parameters->rate_max) {
             return true;
@@ -37,8 +37,8 @@ class Currency extends BaseVendor
 
         $parameters = $condition->parameters;
 
-        $formCurrencyId = $parameters['from_currency_id'];
-        $toCurrencyId = $parameters['to_currency_id'];
+        $formCurrencyId = $parameters->from_currency_id;
+        $toCurrencyId = $parameters->to_currency_id;
 
         /** @var CurrencyRate $currencyRate */
         $currencyRate = CurrencyRate::query()
@@ -75,16 +75,16 @@ class Currency extends BaseVendor
         $parameters = $condition->parameters;
 
         $rate = $currencyRate->value;
-        $rateType = $parameters['rate_type']; // минимальное, среднее или максимальное
 
-        return $rate[$rateType] ?? null;
+        // минимальное, среднее или максимальное
+        return $rate->{$parameters->rate_type} ?? null;
     }
 
     /**
      * @param ConditionModel $condition
      * @return mixed|null
      */
-    public function exchange(ConditionModel $condition)
+    public function currentExchange(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -93,7 +93,7 @@ class Currency extends BaseVendor
      * @param ConditionModel $condition
      * @return mixed|null
      */
-    public function national(ConditionModel $condition)
+    public function currentNational(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -102,7 +102,7 @@ class Currency extends BaseVendor
      * @param ConditionModel $condition
      * @return mixed|null
      */
-    public function interbank(ConditionModel $condition)
+    public function currentInterbank(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }

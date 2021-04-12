@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Marketing;
 
 use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Marketing\Campaing as CampaingRequest;
 use App\Http\Resources\Marketing\Campaign as CampaignResource;
 use App\Http\Resources\Marketing\CampaignCollection;
 use App\Models\Account\User as UserModel;
@@ -93,7 +94,7 @@ class CampaignController extends Controller
      * @param CampaignModel $campaign
      * @return CampaignResource
      */
-    public function updateCampaign(Request $request, CampaignModel $campaign)
+    public function updateCampaign(CampaingRequest $request, CampaignModel $campaign)
     {
         /** @var UserModel $user */
         $user = auth()->user();

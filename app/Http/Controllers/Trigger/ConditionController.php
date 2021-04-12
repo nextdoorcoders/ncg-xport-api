@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Trigger;
 
+use App\Exceptions\MessageException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Trigger\ConditionRequest;
 use App\Http\Resources\Trigger\Condition as ConditionResource;
 use App\Http\Resources\Trigger\ConditionCollection;
 use App\Models\Account\User as UserModel;
@@ -10,7 +12,6 @@ use App\Models\Trigger\Condition as ConditionModel;
 use App\Models\Trigger\Group as GroupModel;
 use App\Services\Trigger\ConditionService;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ConditionController extends Controller
@@ -42,12 +43,12 @@ class ConditionController extends Controller
     }
 
     /**
-     * @param Request    $request
-     * @param GroupModel $group
+     * @param ConditionRequest $request
+     * @param GroupModel       $group
      * @return ConditionResource
-     * @throws \App\Exceptions\MessageException
+     * @throws MessageException
      */
-    public function createCondition(Request $request, GroupModel $group)
+    public function createCondition(ConditionRequest $request, GroupModel $group)
     {
         /** @var UserModel $user */
         $user = auth()->user();
@@ -74,11 +75,11 @@ class ConditionController extends Controller
     }
 
     /**
-     * @param Request        $request
-     * @param ConditionModel $condition
+     * @param ConditionRequest $request
+     * @param ConditionModel   $condition
      * @return ConditionResource
      */
-    public function updateCondition(Request $request, ConditionModel $condition)
+    public function updateCondition(ConditionRequest $request, ConditionModel $condition)
     {
         /** @var UserModel $user */
         $user = auth()->user();

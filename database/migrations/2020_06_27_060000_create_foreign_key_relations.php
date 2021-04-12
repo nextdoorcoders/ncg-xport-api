@@ -78,6 +78,23 @@ class CreateForeignKeyRelations extends Migration
                 ->onDelete('cascade');
         });
 
+        Schema::table('vendor_keywords_rate', function (Blueprint $table) {
+            $table->foreign('vendor_type_id')
+                ->references('id')
+                ->on('trigger_vendors_types')
+                ->onDelete('cascade');
+
+            $table->foreign('vendor_location_id')
+                ->references('id')
+                ->on('trigger_vendors_locations')
+                ->onDelete('cascade');
+
+            $table->foreign('keyword_id')
+                ->references('id')
+                ->on('vendor_keywords')
+                ->onDelete('cascade');
+        });
+
         Schema::table('vendor_weather', function (Blueprint $table) {
             $table->foreign('vendor_type_id')
                 ->references('id')

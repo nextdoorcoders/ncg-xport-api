@@ -2,6 +2,7 @@
 
 namespace App\Models\Vendor;
 
+use App\Casts\Json;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\VendorLocation;
 use App\Models\Trigger\VendorType;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string         $vendor_location_id
  * @property string         $from_currency_id
  * @property string         $to_currency_id
- * @property array          $value
+ * @property object         $value
  * @property Carbon         $created_at
  * @property Carbon         $updated_at
  * @property VendorType     $vendorType
@@ -42,7 +43,7 @@ class CurrencyRate extends Model
     ];
 
     protected $casts = [
-        'value' => 'array',
+        'value' => Json::class,
     ];
 
     /*

@@ -55,7 +55,7 @@ class VendorCurrencyDataSeeder extends Seeder
 
         CurrencyModel::query()
             ->create([
-                'code' => 'GBR',
+                'code' => 'GBP',
             ]);
 
         CurrencyModel::query()

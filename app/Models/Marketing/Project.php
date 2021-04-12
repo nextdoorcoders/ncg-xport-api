@@ -2,7 +2,6 @@
 
 namespace App\Models\Marketing;
 
-use App\Casts\Encrypt;
 use App\Models\Account\User;
 use App\Models\Traits\UuidTrait;
 use App\Models\Trigger\Map;
@@ -23,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string               $user_id
  * @property string               $name
  * @property string               $desc
- * @property array                $parameters
+ * @property object               $parameters
  * @property boolean              $is_enabled
  * @property Carbon               $date_start_at
  * @property Carbon               $date_end_at
@@ -59,7 +58,7 @@ class Project extends Model
     ];
 
     protected $casts = [
-        'parameters' => Encrypt::class,
+        'parameters' => 'encrypted:object',
     ];
 
     /*

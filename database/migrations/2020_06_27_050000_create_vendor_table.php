@@ -35,7 +35,37 @@ class CreateVendorTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('vendor_keywords', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
+
+            $table->string('code')->index();
+            $table->string('keyword')->comment('External service key');
+
+            $table->timestamps();
+        });
+
+        Schema::create('vendor_keywords_rate', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
+            $table->uuid('vendor_type_id')->index();
+            $table->uuid('vendor_location_id')->index();
+            $table->uuid('keyword_id')->index();
+
+            $table->string('value');
+
+            $table->timestamps();
+        });
+
         Schema::create('vendor_media_sync', function (Blueprint $table) {
+            $table->uuid('id')->index()->primary();
+            $table->uuid('vendor_type_id')->index();
+            $table->uuid('vendor_location_id')->index()->nullable();
+
+            $table->string('value');
+
+            $table->timestamps();
+        });
+
+        Schema::create('vendor_monitors', function (Blueprint $table) {
             $table->uuid('id')->index()->primary();
             $table->uuid('vendor_type_id')->index();
             $table->uuid('vendor_location_id')->index()->nullable();
@@ -64,7 +94,11 @@ class CreateVendorTable extends Migration
     public function down()
     {
         Schema::dropIfExists('vendor_weather');
+        Schema::dropIfExists('vendor_monitors_rate');
+        Schema::dropIfExists('vendor_monitors');
         Schema::dropIfExists('vendor_media_sync');
+        Schema::dropIfExists('vendor_keywords_rate');
+        Schema::dropIfExists('vendor_keywords');
         Schema::dropIfExists('vendor_currencies_rate');
         Schema::dropIfExists('vendor_currency');
     }

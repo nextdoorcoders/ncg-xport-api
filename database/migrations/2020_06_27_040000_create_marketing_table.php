@@ -56,7 +56,7 @@ class CreateMarketingTable extends Migration
             $table->string('name');
             $table->string('desc')->nullable();
 
-            $table->json('parameters');
+            $table->text('parameters');
             $table->boolean('is_enabled')->default(false)->index();
             $table->date('date_start_at')->index()->nullable();
             $table->date('date_end_at')->index()->nullable();
@@ -70,6 +70,9 @@ class CreateMarketingTable extends Migration
 
             $table->string('foreign_campaign_id')->index();
             $table->string('name');
+            $table->boolean('is_rate_enabled')->after('is_enabled')->default(false)->index();
+            $table->decimal('rate_min', 10, 2)->after('is_rate_enabled')->default(0)->nullable();
+            $table->decimal('rate_max', 10, 2)->after('rate_min')->default(0)->nullable();
 
             $table->boolean('is_enabled')->default(false)->index();
 

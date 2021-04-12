@@ -4,6 +4,7 @@ namespace App\Http\Resources\Trigger;
 
 use App\Http\Resources\Traits\ResourceTrait;
 use App\Http\Resources\Vendor\Currency;
+use App\Http\Resources\Vendor\Keyword;
 use App\Models\Trigger\Condition as ConditionModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -59,6 +60,20 @@ class Condition extends JsonResource
             // It's dynamic relation
             $response = array_merge($response, [
                 'toCurrency' => new Currency($resource->toCurrency),
+            ]);
+        }
+
+        if ($resource->relationLoaded('keyword')) {
+            // It's dynamic relation
+            $response = array_merge($response, [
+                'keyword' => new Keyword($resource->keyword),
+            ]);
+        }
+
+        if ($resource->relationLoaded('referenceKeyword')) {
+            // It's dynamic relation
+            $response = array_merge($response, [
+                'referenceKeyword' => new Keyword($resource->referenceKeyword),
             ]);
         }
 

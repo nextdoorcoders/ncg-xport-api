@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(TriggerVendorDataSeeder::class);
         $this->call(VendorCurrencyDataSeeder::class);
+        $this->call(VendorKeywordDataSeeder::class);
         $this->call(VendorWeatherDataSeeder::class);
     }
 }

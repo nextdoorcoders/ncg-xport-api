@@ -160,6 +160,10 @@ class CampaignService
             $campaign->save();
         }
 
-        $this->googleCampaignService->updateCampaignStatus($campaign);
+        if ($campaign->is_rate_enabled) {
+            $this->googleCampaignService->updateCampaignBudget($campaign);
+        } else {
+            $this->googleCampaignService->updateCampaignStatus($campaign);
+        }
     }
 }

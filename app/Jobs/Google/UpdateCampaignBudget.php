@@ -51,9 +51,9 @@ class UpdateCampaignBudget implements ShouldQueue
 
             if ($googleCampaign) {
                 if ($campaign->is_enabled) {
-                    $amount = 1000000;
+                    $amount = $campaign->rate_max;
                 } else {
-                    $amount = 1;
+                    $amount = $campaign->rate_min;
                 }
 
                 $this->campaignRepository->updateBudget($campaign, $amount);

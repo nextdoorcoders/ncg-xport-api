@@ -2,6 +2,7 @@
 
 namespace App\Models\Geo;
 
+use App\Casts\Json;
 use App\Models\Account\User;
 use App\Models\Marketing\Organization;
 use App\Models\Traits\NestedTreeTrait;
@@ -26,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property integer                  $nest_left
  * @property integer                  $nest_right
  * @property integer                  $nest_depth
- * @property array                    $parameters
+ * @property object                   $parameters
  * @property Carbon                   $created_at
  * @property Carbon                   $updated_at
  * @property array                    $name
@@ -60,7 +61,7 @@ class Location extends Model
     ];
 
     protected $casts = [
-        'parameters' => 'array',
+        'parameters' => Json::class,
     ];
 
     protected $translatable = [

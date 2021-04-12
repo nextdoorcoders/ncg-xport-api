@@ -2,11 +2,20 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Trigger\UptimeRobot\HttpAuthTypeEnum;
+use App\Enums\Trigger\UptimeRobot\HttpMethodEnum;
+use App\Enums\Trigger\UptimeRobot\KeywordTypeEnum;
+use App\Enums\Trigger\UptimeRobot\PostContentTypeEnum;
+use App\Enums\Trigger\UptimeRobot\PostTypeEnum;
+use App\Enums\Trigger\UptimeRobot\SubtypeEnum;
+use App\Enums\Trigger\UptimeRobot\TypeEnum;
 use App\Models\Account\Language as LanguageModel;
 use App\Models\Trigger\Vendor as VendorModel;
 use App\Services\Vendor\Classes\Calendar;
 use App\Services\Vendor\Classes\Currency;
+use App\Services\Vendor\Classes\Keyword;
 use App\Services\Vendor\Classes\MediaSync;
+use App\Services\Vendor\Classes\UptimeRobot;
 use App\Services\Vendor\Classes\Weather;
 use Illuminate\Database\Seeder;
 
@@ -37,12 +46,30 @@ class TriggerVendorDataSeeder extends Seeder
                 'settings' => null,
             ]);
 
+        /** @var VendorModel $keyword */
+        $keyword = VendorModel::query()
+            ->create([
+                'callback' => Keyword::class,
+                'type'     => VendorModel::TYPE_KEYWORD,
+                'source'   => 'google_trends',
+                'settings' => null,
+            ]);
+
         /** @var VendorModel $mediaSync */
         $mediaSync = VendorModel::query()
             ->create([
                 'callback' => MediaSync::class,
                 'type'     => VendorModel::TYPE_MEDIA_SYNC,
                 'source'   => 'ncg',
+                'settings' => null,
+            ]);
+
+        /** @var VendorModel $uptimeRobot */
+        $uptimeRobot = VendorModel::query()
+            ->create([
+                'callback' => UptimeRobot::class,
+                'type'     => VendorModel::TYPE_UPTIME_ROBOT,
+                'source'   => 'uptime_robot',
                 'settings' => null,
             ]);
 
@@ -144,6 +171,51 @@ class TriggerVendorDataSeeder extends Seeder
                 ],
             ]);
 
+        $keyword->vendorsTypes()
+            ->create([
+                'type'               => 'checkRank',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Check rank',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'Check keyword rank',
+                ],
+                'default_parameters' => [
+                    'keyword'      => null,
+                    'keyword_code' => null,
+                    'min_rank'     => 0,
+                    'max_rank'     => 100,
+                    'days_ago'     => 1,
+                ],
+                'settings'           => [
+                    'color' => '#9C27B0',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/google-trends.svg')),
+                ],
+            ]);
+
+        $keyword->vendorsTypes()
+            ->create([
+                'type'               => 'compareRank',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Compare rank',
+                ],
+                'desc'               => [
+                    LanguageModel::LANGUAGE_EN => 'Compare keywords rank',
+                ],
+                'default_parameters' => [
+                    'keyword'                => null,
+                    'reference_keyword'      => null,
+                    'keyword_code'           => null,
+                    'reference_keyword_code' => null,
+                    'rate_type'              => 'greater',
+                    'days_ago'               => 1,
+                ],
+                'settings'           => [
+                    'color' => '#9C27B0',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/google-trends.svg')),
+                ],
+            ]);
+
         $mediaSync->vendorsTypes()
             ->create([
                 'type'               => 'tv',
@@ -192,6 +264,134 @@ class TriggerVendorDataSeeder extends Seeder
                 'settings'           => [
                     'color' => '#FF9800',
                     'icon'  => file_get_contents(resource_path('images/vendor-icons/tv.svg')),
+                ],
+            ]);
+
+        $uptimeRobot->vendorsTypes()
+            ->create([
+                'type'               => 'http',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Check resource HTTP status',
+                ],
+                'default_parameters' => [
+                    'monitor_id'       => null,
+                    'alert_contact_id' => null,
+                    'settings'         => [
+                        'type'              => TypeEnum::http,
+                        'friendly_name'     => 'HTTP',
+                        'url'               => null,
+                        'interval'          => 300,
+                        'http_username'     => null,
+                        'http_password'     => null,
+                        'http_auth_type'    => HttpAuthTypeEnum::basic,
+                        'http_method'       => HttpMethodEnum::get,
+                        'post_type'         => PostTypeEnum::key_value,
+                        'post_value'        => null,
+                        'post_content_type' => PostContentTypeEnum::application_json,
+                    ],
+                ],
+                'settings'           => [
+                    'color' => '#8BC34A',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/uptime.svg')),
+                ],
+            ]);
+
+        $uptimeRobot->vendorsTypes()
+            ->create([
+                'type'               => 'keyword',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Check resource KEYWORD status',
+                ],
+                'default_parameters' => [
+                    'monitor_id'       => null,
+                    'alert_contact_id' => null,
+                    'settings'         => [
+                        'type'              => TypeEnum::keyword,
+                        'friendly_name'     => 'KEYWORD',
+                        'url'               => null,
+                        'interval'          => 300,
+                        'http_username'     => null,
+                        'http_password'     => null,
+                        'http_auth_type'    => HttpAuthTypeEnum::basic,
+                        'http_method'       => HttpMethodEnum::get,
+                        'post_type'         => PostTypeEnum::key_value,
+                        'post_value'        => null,
+                        'post_content_type' => PostContentTypeEnum::application_json,
+                        'keyword_type'      => KeywordTypeEnum::exists,
+                        'keyword_value'     => null,
+                    ],
+                ],
+                'settings'           => [
+                    'color' => '#8BC34A',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/uptime.svg')),
+                ],
+            ]);
+
+        $uptimeRobot->vendorsTypes()
+            ->create([
+                'type'               => 'ping',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Check resource PING status',
+                ],
+                'default_parameters' => [
+                    'monitor_id'       => null,
+                    'alert_contact_id' => null,
+                    'settings'         => [
+                        'type'          => TypeEnum::ping,
+                        'friendly_name' => 'PING',
+                        'url'           => null,
+                        'interval'      => 300,
+                    ],
+                ],
+                'settings'           => [
+                    'color' => '#8BC34A',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/uptime.svg')),
+                ],
+            ]);
+
+        $uptimeRobot->vendorsTypes()
+            ->create([
+                'type'               => 'port',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Check resource PORT status',
+                ],
+                'default_parameters' => [
+                    'monitor_id'       => null,
+                    'alert_contact_id' => null,
+                    'settings'         => [
+                        'type'          => TypeEnum::port,
+                        'friendly_name' => 'PORT',
+                        'url'           => null,
+                        'interval'      => 300,
+                        'sub_type'      => SubtypeEnum::http,
+                        'port'          => null,
+                    ],
+                ],
+                'settings'           => [
+                    'color' => '#8BC34A',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/uptime.svg')),
+                ],
+            ]);
+
+        $uptimeRobot->vendorsTypes()
+            ->create([
+                'type'               => 'heartBeat',
+                'name'               => [
+                    LanguageModel::LANGUAGE_EN => 'Check resource HEART BEAT status',
+                ],
+                'default_parameters' => [
+                    'monitor_id'       => null,
+                    'alert_contact_id' => null,
+                    'settings'         => [
+                        'type'          => TypeEnum::heartbeat,
+                        'friendly_name' => 'HEART BEAT',
+                        'url'           => null,
+                        'interval'      => 300,
+                    ],
+                ],
+                'settings'           => [
+                    'color' => '#8BC34A',
+                    'icon'  => file_get_contents(resource_path('images/vendor-icons/uptime.svg')),
                 ],
             ]);
 

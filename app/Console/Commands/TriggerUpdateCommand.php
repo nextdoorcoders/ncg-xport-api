@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Services\Trigger\ConditionService;
 use Illuminate\Console\Command;
 
-class Trigger extends Command
+class TriggerUpdateCommand extends Command
 {
     /**
      * The name and signature of the console command.

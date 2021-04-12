@@ -3,10 +3,11 @@
 namespace App\Console\Commands\Vendor;
 
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
+use App\Models\Vendor\MediaSync as MediaSyncModel;
 use App\Models\Vendor\Weather as WeatherModel;
 use Illuminate\Console\Command;
 
-class Cleaner extends Command
+class CleanerCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -40,11 +41,15 @@ class Cleaner extends Command
     public function handle()
     {
         CurrencyRateModel::query()
-            ->where('created_at', '<', now()->subDay())
+            ->where('created_at', '<', now()->subWeek())
+            ->delete();
+
+        MediaSyncModel::query()
+            ->where('created_at', '<', now()->subWeek())
             ->delete();
 
         WeatherModel::query()
-            ->where('created_at', '<', now()->subDay())
+            ->where('created_at', '<', now()->subWeek())
             ->delete();
     }
 }

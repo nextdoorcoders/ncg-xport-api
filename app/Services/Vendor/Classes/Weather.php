@@ -14,11 +14,11 @@ class Weather extends BaseVendor
      */
     public function check(ConditionModel $condition, $current = null): bool
     {
-        $parameters = (object)$condition->parameters;
-
         if (is_null($current)) {
             return false;
         }
+
+        $parameters = $condition->parameters;
 
         if ($parameters->min <= $current && $current <= $parameters->max) {
             return true;
@@ -61,7 +61,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function temperature(ConditionModel $condition)
+    public function currentTemperature(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -70,7 +70,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function wind(ConditionModel $condition)
+    public function currentWind(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -79,7 +79,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function pressure(ConditionModel $condition)
+    public function currentPressure(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -88,7 +88,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function humidity(ConditionModel $condition)
+    public function currentHumidity(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -97,7 +97,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function clouds(ConditionModel $condition)
+    public function currentClouds(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -106,7 +106,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function rain(ConditionModel $condition)
+    public function currentRain(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }
@@ -115,7 +115,7 @@ class Weather extends BaseVendor
      * @param ConditionModel $condition
      * @return int|null
      */
-    public function snow(ConditionModel $condition)
+    public function currentSnow(ConditionModel $condition)
     {
         return $this->getValue($condition);
     }

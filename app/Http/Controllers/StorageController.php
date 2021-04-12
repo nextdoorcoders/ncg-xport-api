@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Storage as StorageRequest;
 use App\Http\Resources\DataResource;
 use App\Models\Storage as StorageModel;
+use App\Models\Trigger\Condition;
 use App\Services\StorageService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +37,8 @@ class StorageController extends Controller
     {
         $data = json_decode($request->get('data'), true);
         $file = $request->file('file');
+
+        $data['fileable_type'] = Condition::class;
 
         $response = $this->storageService->uploadFile($data, $file);
 

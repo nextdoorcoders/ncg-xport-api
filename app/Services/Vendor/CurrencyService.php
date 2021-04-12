@@ -14,6 +14,7 @@ use DiDom\Query;
 use Exception;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class CurrencyService
 {
@@ -186,7 +187,6 @@ class CurrencyService
     {
         $locations = LocationModel::query()
             ->where('type', LocationModel::TYPE_COUNTRY)
-            ->whereJsonContains('parameters', ['alpha2' => 'UA']) // TODO: Remove in future
             ->get();
 
         $vendorsTypes = VendorTypeModel::query()
@@ -200,11 +200,17 @@ class CurrencyService
             ->get();
 
         $locations->each(function (LocationModel $location) use ($vendorsTypes, $currencies, $mergedValues) {
-            $location->vendorsTypes()->sync($vendorsTypes);
+            /*
+             * Processing currency rates
+             */
+
+            $location->vendorsTypes()->sync($vendorsTypes, false);
             $location->load('vendorsTypes');
 
-            $mergedValues->each(function ($rate) use ($location, $currencies) {
+            $rates = $mergedValues->map(function ($rate) use ($location, $currencies) {
                 // Each currency rate, one by one
+
+                $currencyRates = [];
 
                 /** @var CurrencyModel $fromCurrency */
                 $fromCurrency = $currencies->where('code', $rate->from_currency)
@@ -239,7 +245,6 @@ class CurrencyService
                             /** @var VendorLocation $vendorLocation */
                             $vendorLocation = $vendorType->pivot;
 
-                            // Forward value
                             /** @var CurrencyRateModel $currencyRate */
                             $currencyRate = CurrencyRateModel::query()
                                 ->create([
@@ -250,61 +255,52 @@ class CurrencyService
                                     'value'              => $value,
                                 ]);
 
-                            // Back value
-                            $currencyRate->createBackRate();
+                            $currencyRates[] = $currencyRate;
+                            $currencyRates[] = $currencyRate->createBackRate();
                         }
                     }
+                } else {
+                    Log::info(sprintf('Unknown currency %s', $rate->from_currency));
                 }
-            });
-        });
-    }
 
-    private function processCrossRate()
-    {
-        $rates = CurrencyRateModel::query()
-            ->whereHas('toCurrency', function ($toCurrency) {
-                $toCurrency->where('code', 'UAH');
-            })
-            ->whereHas('vendorType', function ($vendorType) {
-                $vendorType->whereHas('vendor', function ($vendor) {
-                    $vendor->where([
-                        'type'   => Vendor::TYPE_CURRENCY,
-                        'source' => self::SOURCE_MINFIN,
-                    ]);
-                });
-            })
-            ->get();
+                return $currencyRates;
+            })->flatten();
 
-        $groups = $rates->groupBy('vendorType.type');
+            /*
+             * Calculate cross rate
+             */
+            $groups = $rates->where('toCurrency.code','UAH')
+                ->groupBy('vendorType.type');
 
-        $groups->each(function ($group, $type) {
-            $group->each(function (CurrencyRateModel $from) use ($group, $type) {
-                $group->each(function (CurrencyRateModel $to) use ($from, $type) {
-                    try {
-                        if ($type === self::VALUE_NATIONAL) {
-                            $value = [
-                                'average' => round($from->value['average'] / $to->value['average'], 4),
-                            ];
-                        } else {
-                            $value = [
-                                'purchase' => round($from->value['purchase'] / $to->value['purchase'], 4),
-                                'average'  => round($from->value['average'] / $to->value['average'], 4),
-                                'sale'     => round($from->value['sale'] / $to->value['sale'], 4),
-                            ];
+            $groups->each(function ($group, $type) {
+                $group->each(function (CurrencyRateModel $from) use ($group, $type) {
+                    $group->each(function (CurrencyRateModel $to) use ($from, $type) {
+                        try {
+                            if ($type === self::VALUE_NATIONAL) {
+                                $value = [
+                                    'average' => round($from->value->average / $to->value->average, 4),
+                                ];
+                            } else {
+                                $value = [
+                                    'purchase' => round($from->value->purchase / $to->value->purchase, 4),
+                                    'average'  => round($from->value->average / $to->value->average, 4),
+                                    'sale'     => round($from->value->sale / $to->value->sale, 4),
+                                ];
+                            }
+
+                            // Cross value
+                            CurrencyRateModel::query()
+                                ->create([
+                                    'vendor_type_id'     => $from->vendor_type_id,
+                                    'vendor_location_id' => $from->vendor_location_id,
+                                    'from_currency_id'   => $from->from_currency_id,
+                                    'to_currency_id'     => $to->from_currency_id,
+                                    'value'              => $value,
+                                ]);
+                        } catch (Exception $exception) {
+                            throw $exception;
                         }
-
-                        // Cross value
-                        CurrencyRateModel::query()
-                            ->create([
-                                'vendor_type_id'     => $from->vendor_type_id,
-                                'vendor_location_id' => $from->vendor_location_id,
-                                'from_currency_id'   => $from->from_currency_id,
-                                'to_currency_id'     => $to->from_currency_id,
-                                'value'              => $value,
-                            ]);
-                    } catch (Exception $exception) {
-                        throw $exception;
-                    }
+                    });
                 });
             });
         });
@@ -334,19 +330,12 @@ class CurrencyService
                 return $value1;
             });
 
-            /*
-             * Processing currency rates
-             */
             $this->processCurrencyRate($mergedValues);
-
-            /*
-             * Calculate cross rate
-             */
-            $this->processCrossRate();
         } catch (InvalidSelectorException $exception) {
-            throw $exception;
+//            throw $exception;
         } catch (Exception $exception) {
-            throw $exception;
+            report($exception);
+//            throw $exception;
         }
     }
 }

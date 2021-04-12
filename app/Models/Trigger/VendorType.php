@@ -2,6 +2,7 @@
 
 namespace App\Models\Trigger;
 
+use App\Casts\Json;
 use App\Models\Geo\Location;
 use App\Models\Traits\TranslatableTrait;
 use App\Models\Traits\UuidTrait;
@@ -20,8 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string                     $id
  * @property string                     $vendor_id
  * @property string                     $type
- * @property array                      $default_parameters
- * @property array                      $settings
+ * @property object                     $default_parameters
+ * @property object                     $settings
  * @property Carbon                     $created_at
  * @property Carbon                     $updated_at
  * @property array                      $name
@@ -50,8 +51,8 @@ class VendorType extends Model
     ];
 
     protected $casts = [
-        'default_parameters' => 'array',
-        'settings'           => 'array',
+        'default_parameters' => Json::class,
+        'settings'           => Json::class,
     ];
 
     /*

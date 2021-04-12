@@ -6,7 +6,7 @@ use App\Services\Vendor\WeatherService;
 use Exception;
 use Illuminate\Console\Command;
 
-class Weather extends Command
+class WeatherCommand extends Command
 {
     /**
      * The name and signature of the console command.

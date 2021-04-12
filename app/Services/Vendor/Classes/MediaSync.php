@@ -3,35 +3,49 @@
 namespace App\Services\Vendor\Classes;
 
 use App\Models\Trigger\Condition as ConditionModel;
-use Carbon\Carbon;
+use App\Models\Vendor\MediaSync as MediaSyncModel;
 
 class MediaSync extends BaseVendor
 {
     /**
-     * @param ConditionModel $condition
-     * @param Carbon|null    $current
+     * @param ConditionModel      $condition
+     * @param MediaSyncModel|null $current
      * @return bool
      */
-    public function check(ConditionModel $condition, Carbon $current = null): bool
+    public function check(ConditionModel $condition, MediaSyncModel $current = null): bool
     {
-        return false;
+        if (!$current) {
+            return false;
+        }
+
+        if ($condition->id !== $current->value) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * @param ConditionModel $condition
-     * @return \Illuminate\Support\Carbon
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function tv(ConditionModel $condition)
+    public function currentTv(ConditionModel $condition)
     {
-        return null;
+        return MediaSyncModel::query()
+            ->where('vendor_type_id', $condition->vendor_type_id)
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 
     /**
      * @param ConditionModel $condition
-     * @return \Illuminate\Support\Carbon
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function radio(ConditionModel $condition)
+    public function currentRadio(ConditionModel $condition)
     {
-        return null;
+        return MediaSyncModel::query()
+            ->where('vendor_type_id', $condition->vendor_type_id)
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 }

@@ -50,6 +50,8 @@ abstract class AdWords
      */
     private function getSessionBuilder(ProjectModel $project)
     {
+        $params = $project->parameters;
+
         $configuration = $this->getConfiguration($project);
 
         // Generate a refreshable OAuth2 credential for authentication.
@@ -77,8 +79,8 @@ abstract class AdWords
                  * https://developers.google.com/adwords/api/docs/guides/basic-concepts#soap_and_xml
                  */
 
-                'developerToken'   => $account->parameters['developer_token'],
-                'clientCustomerId' => $account->parameters['account_id'],
+                'developerToken'   => $account->parameters->developer_token,
+                'clientCustomerId' => $account->parameters->account_id,
 
                 /*
                  * Optional. Set a friendly application name identifier.

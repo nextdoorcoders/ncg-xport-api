@@ -16,7 +16,7 @@ class Calendar extends BaseVendor
     {
         $timezone = $current->timezone;
 
-        $dayOfWeek = $condition->parameters['day_of_week'] ?? null;
+        $dayOfWeek = $condition->parameters->day_of_week ?? null;
 
         /**
          * Check day of week
@@ -36,15 +36,15 @@ class Calendar extends BaseVendor
          * не указано - берем начало или конец дня в зависимости от поля настройки
          */
 
-        $dateStartAt = $condition->parameters['date_start_at'] ?? now();
-        $timeStartAt = $condition->parameters['time_start_at'] ?? now()->startOfDay();
+        $dateStartAt = $condition->parameters->date_start_at ?? now();
+        $timeStartAt = $condition->parameters->time_start_at ?? now()->startOfDay();
 
         $dateTimeStart = Carbon::now($timezone);
         $dateTimeStart->setDateFrom(Carbon::parse($dateStartAt));
         $dateTimeStart->setTimeFrom(Carbon::parse($timeStartAt));
 
-        $dateEndAt = $condition->parameters['date_end_at'] ?? now();
-        $timeEndAt = $condition->parameters['time_end_at'] ?? now()->endOfDay();
+        $dateEndAt = $condition->parameters->date_end_at ?? now();
+        $timeEndAt = $condition->parameters->time_end_at ?? now()->endOfDay();
 
         $dateTimeEnd = Carbon::now($timezone);
         $dateTimeEnd->setDateFrom(Carbon::parse($dateEndAt));
@@ -61,8 +61,8 @@ class Calendar extends BaseVendor
      * @param ConditionModel $condition
      * @return \Illuminate\Support\Carbon
      */
-    public function calendar(ConditionModel $condition)
+    public function currentCalendar(ConditionModel $condition)
     {
-        return now($condition->parameters['timezone'] ?? 'UTC');
+        return now($condition->parameters->timezone ?? 'UTC');
     }
 }

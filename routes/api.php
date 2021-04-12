@@ -19,6 +19,7 @@ use App\Http\Controllers\Trigger\GroupController;
 use App\Http\Controllers\Trigger\HistoryController;
 use App\Http\Controllers\Trigger\MapController;
 use App\Http\Controllers\Trigger\VendorController;
+use App\Http\Controllers\Trigger\WebhookController;
 use App\Http\Controllers\Vendor\CurrencyController;
 use App\Http\Controllers\Vendor\MediaSyncController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,16 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::name('webhook.')
+    ->prefix('webhook')
+    ->group(function () {
+        Route::get('uptime-robot/{condition}', [WebhookController::class, 'uptimeRobot'])
+            ->name('uptime-robot');
+
+        Route::get('media-sync/{condition}', [WebhookController::class, 'mediaSync'])
+            ->name('media-sync');
+    });
 
 Route::group([
     'prefix' => 'accounts',

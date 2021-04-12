@@ -11,6 +11,9 @@ use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Services\Vendor\Classes\BaseVendor;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class ConditionService
 {
@@ -53,7 +56,7 @@ class ConditionService
      * @param UserModel  $user
      * @param array      $data
      * @return ConditionModel
-     * @throws MessageException
+     * @throws MessageException|ValidationException
      */
     public function createCondition(GroupModel $group, UserModel $user, array $data)
     {
@@ -64,6 +67,7 @@ class ConditionService
         if ($vendorType === 'global') {
             /** @var VendorTypeModel $vendorType */
             $vendorType = VendorTypeModel::query()
+                ->with('vendor')
                 ->where('id', $vendorId)
                 ->first();
 
@@ -76,29 +80,42 @@ class ConditionService
         } elseif ($vendorType === 'local') {
             /** @var VendorLocationModel $vendorLocation */
             $vendorLocation = VendorLocationModel::query()
-                ->with('vendorType')
+                ->with('vendorType.vendor')
                 ->where('id', $vendorId)
                 ->first();
 
+            $vendorType = $vendorLocation->vendorType;
+
             $data = [
                 'group_id'           => $group->id,
-                'vendor_type_id'     => $vendorLocation->vendor_type_id,
+                'vendor_type_id'     => $vendorType->id,
                 'vendor_location_id' => $vendorLocation->id,
-                'parameters'         => $vendorLocation->vendorType->default_parameters,
+                'parameters'         => $vendorType->default_parameters,
             ];
         } else {
             throw new MessageException('Unknown trigger location');
         }
 
+        /** @var BaseVendor $service */
+        $service = app($vendorType->vendor->callback);
+        $rules = $service->getValidateRulesCreating($vendorType->type);
+
+        $validator = Validator::make($data, $rules);
+        $validator->validate();
+
         $condition = app(ConditionModel::class);
         $condition->fill($data);
 
+        $service->creating($condition);
+
         $isNeedCheckStatus = false;
-        if ($condition->isDirty('parameters')) {
+        if ($condition->isDirty(['parameters', 'is_inverted'])) {
             $isNeedCheckStatus = true;
         }
 
         $condition->save();
+
+        $service->created($condition);
 
         if ($isNeedCheckStatus == true) {
             $this->updateStatus($condition, true);
@@ -122,10 +139,26 @@ class ConditionService
      * @param UserModel      $user
      * @param array          $data
      * @return ConditionModel|null
+     * @throws ValidationException
      */
     public function updateCondition(ConditionModel $condition, UserModel $user, array $data)
     {
+        $condition->loadMissing([
+            'vendorType.vendor',
+        ]);
+
+        $vendorType = $condition->vendorType;
+
+        /** @var BaseVendor $service */
+        $service = app($vendorType->vendor->callback);
+        $rules = $service->getValidateRulesUpdating($vendorType->type);
+
+        $validator = Validator::make($data, $rules);
+        $validator->validate();
+
         $condition->fill($data);
+
+        $service->updating($condition);
 
         $isNeedCheckStatus = false;
         if ($condition->isDirty(['parameters', 'is_inverted'])) {
@@ -133,6 +166,8 @@ class ConditionService
         }
 
         $condition->save();
+
+        $service->updated($condition);
 
         if ($isNeedCheckStatus == true) {
             $this->updateStatus($condition, true);
@@ -148,11 +183,24 @@ class ConditionService
      */
     public function deleteCondition(ConditionModel $condition, UserModel $user)
     {
+        $condition->loadMissing([
+            'vendorType.vendor',
+        ]);
+
+        $vendorType = $condition->vendorType;
+
+        /** @var BaseVendor $service */
+        $service = app($vendorType->vendor->callback);
+
+        $service->deleting($condition);
+
         try {
             $condition->delete();
         } catch (Exception $exception) {
             throw $exception;
         }
+
+        $service->deleted($condition);
     }
 
     /**

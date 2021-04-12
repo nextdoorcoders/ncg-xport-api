@@ -2,6 +2,7 @@
 
 namespace App\Models\Trigger;
 
+use App\Casts\Json;
 use App\Models\Storage;
 use App\Models\Traits\UuidTrait;
 use Carbon\Carbon;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string         $group_id
  * @property string         $vendor_type_id
  * @property string         $vendor_location_id
- * @property array          $parameters
+ * @property object         $parameters
  * @property integer        $order_index
  * @property boolean        $is_enabled
  * @property boolean        $is_inverted
@@ -50,7 +51,7 @@ class Condition extends Model
     ];
 
     protected $casts = [
-        'parameters' => 'array',
+        'parameters' => 'object',
     ];
 
     protected $dates = [

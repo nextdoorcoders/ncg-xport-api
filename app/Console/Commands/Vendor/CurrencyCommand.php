@@ -5,7 +5,7 @@ namespace App\Console\Commands\Vendor;
 use App\Services\Vendor\CurrencyService;
 use Illuminate\Console\Command;
 
-class Currency extends Command
+class CurrencyCommand extends Command
 {
     /**
      * The name and signature of the console command.

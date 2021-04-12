@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string  $foreign_campaign_id
  * @property string  $name
  * @property boolean $is_enabled
+ * @property boolean $is_rate_enabled
+ * @property string  $rate_min
+ * @property string  $rate_max
  * @property Carbon  $created_at
  * @property Carbon  $updated_at
  * @property Map     $map
@@ -33,6 +36,9 @@ class Campaign extends Model
         'foreign_campaign_id',
         'name',
         'is_enabled',
+        'is_rate_enabled',
+        'rate_min',
+        'rate_max',
     ];
 
     /*
