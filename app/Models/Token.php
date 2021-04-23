@@ -26,6 +26,20 @@ use Laravel\Sanctum\Contracts\HasAbilities;
  * @property Carbon $updated_at
  * @property Carbon $last_used_at
  * @property Model  $tokenable
+ * @method static \Illuminate\Database\Eloquent\Builder|Token newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Token newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Token query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereAbilities($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereAgent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereLastUsedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereTokenableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereTokenableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Token whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Token extends Model implements HasAbilities
 {

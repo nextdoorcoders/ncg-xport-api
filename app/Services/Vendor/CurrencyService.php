@@ -8,6 +8,8 @@ use App\Models\Trigger\VendorLocation;
 use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Vendor\Currency as CurrencyModel;
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
+use App\Models\VendorsLog;
+use App\Services\Logs\VendorsLogService;
 use DiDom\Document;
 use DiDom\Exceptions\InvalidSelectorException;
 use DiDom\Query;
@@ -55,70 +57,76 @@ class CurrencyService
      */
     public function getMinfinExchangeAndNationalRates(): Collection
     {
-        $document = new Document($this->exchangeAndNationalRates, true);
+        try {
+            $document = new Document($this->exchangeAndNationalRates, true);
 
-        $table = $document->first('table.table-response.mfm-table.mfcur-table-lg-banks.mfcur-table-lg');
+            $table = $document->first('table.table-response.mfm-table.mfcur-table-lg-banks.mfcur-table-lg');
 
-        $values = collect();
+            $values = collect();
 
-        $rows = $table->find('//tbody//tr', Query::TYPE_XPATH);
+            $rows = $table->find('//tbody//tr', Query::TYPE_XPATH);
 
-        foreach ($rows as $rowIndex => $row) {
-            $row = new Document($row->html());
+            foreach ($rows as $rowIndex => $row) {
+                $row = new Document($row->html());
 
-            foreach ($row->find('.mfm-posr') as $item) {
-                $item->setInnerHtml('/');
-            }
-
-            foreach ($row->find('.mfcur-nbu-full') as $item) {
-                $item->remove();
-            }
-
-            $cols = $row->find('//td', Query::TYPE_XPATH);
-
-            $cols = array_slice($cols, 0, 3);
-
-            $data = [];
-
-            foreach ($cols as $col) {
-                $col = new Document($col->html());
-
-                $link = $col->first('a[href*=banks]');
-
-                if ($link) {
-                    $href = $link->attr('href');
-                    $data['from_currency'] = mb_strtoupper(last(explode('/', trim($href, '/'))));
-                    $data['to_currency'] = 'UAH';
-                } else {
-                    $data['values'][] = preg_replace('/\n/', '', $col->text());
+                foreach ($row->find('.mfm-posr') as $item) {
+                    $item->setInnerHtml('/');
                 }
-            }
 
-            [$purchase, $sale] = explode('/', $data['values'][0]);
+                foreach ($row->find('.mfcur-nbu-full') as $item) {
+                    $item->remove();
+                }
 
-            $purchase = (float)$purchase;
-            $sale = (float)$sale;
+                $cols = $row->find('//td', Query::TYPE_XPATH);
 
-            try {
-                $data[self::VALUE_EXCHANGE] = (object)[
-                    'purchase' => round($purchase, 4),
-                    'average'  => round(($purchase + $sale) / 2, 4),
-                    'sale'     => round($sale, 4),
+                $cols = array_slice($cols, 0, 3);
+
+                $data = [];
+
+                foreach ($cols as $col) {
+                    $col = new Document($col->html());
+
+                    $link = $col->first('a[href*=banks]');
+
+                    if ($link) {
+                        $href = $link->attr('href');
+                        $data['from_currency'] = mb_strtoupper(last(explode('/', trim($href, '/'))));
+                        $data['to_currency'] = 'UAH';
+                    } else {
+                        $data['values'][] = preg_replace('/\n/', '', $col->text());
+                    }
+                }
+
+                [$purchase, $sale] = explode('/', $data['values'][0]);
+
+                $purchase = (float)$purchase;
+                $sale = (float)$sale;
+
+                try {
+                    $data[self::VALUE_EXCHANGE] = (object)[
+                        'purchase' => round($purchase, 4),
+                        'average'  => round(($purchase + $sale) / 2, 4),
+                        'sale'     => round($sale, 4),
+                    ];
+                } catch (Exception $exception) {
+                    throw $exception;
+                }
+
+                $data[self::VALUE_NATIONAL] = (object)[
+                    'average' => round((float)$data['values'][1], 4),
                 ];
-            } catch (Exception $exception) {
-                throw $exception;
+
+                unset($data['values']);
+
+                $values->push((object)$data);
             }
 
-            $data[self::VALUE_NATIONAL] = (object)[
-                'average' => round((float)$data['values'][1], 4),
-            ];
-
-            unset($data['values']);
-
-            $values->push((object)$data);
+            return $values;
         }
-
-        return $values;
+        catch (Exception $e){
+            VendorsLogService::write($e->getMessage(), 'Currency:National', $e->getCode());
+            return collect();
+        }
     }
 
     /**
@@ -129,55 +137,61 @@ class CurrencyService
      */
     public function getMinfinInterbankRates(): Collection
     {
-        $document = new Document($this->interbankRates, true);
+        try {
+            $document = new Document($this->interbankRates, true);
 
-        $table = $document->first('table.mb-table-currency');
+            $table = $document->first('table.mb-table-currency');
 
-        $values = collect();
+            $values = collect();
 
-        $rows = $table->find('//tbody//tr', Query::TYPE_XPATH);
+            $rows = $table->find('//tbody//tr', Query::TYPE_XPATH);
 
-        $data = [];
+            $data = [];
 
-        array_push($data, [
-            'USD',
-            'EUR',
-            'RUB',
-        ]);
-
-        foreach ($rows as $rowIndex => $row) {
-            $row = new Document($row->html());
-
-            foreach ($row->find('.mb-table-currency--trend') as $item) {
-                $item->remove();
-            }
-
-            $cols = $row->find('//td', Query::TYPE_XPATH);
-
-            $cols = array_slice($cols, 1, count($cols));
-
-            foreach ($cols as $col) {
-                $col = new Document($col->html());
-
-                $data[$rowIndex + 1][] = trim(preg_replace('/\n/', '', $col->text()));
-            }
-        }
-
-        $data = array_map(null, ...$data);
-
-        foreach ($data as $key => $value) {
-            $values->push((object)[
-                'from_currency'       => $value[0],
-                'to_currency'         => 'UAH',
-                self::VALUE_INTERBANK => (object)[
-                    'purchase' => round((float)$value[1], 4),
-                    'average'  => round((float)($value[1] + $value[2]) / 2, 4),
-                    'sale'     => round((float)$value[2], 4),
-                ],
+            array_push($data, [
+                'USD',
+                'EUR',
+                'RUB',
             ]);
-        }
 
-        return $values;
+            foreach ($rows as $rowIndex => $row) {
+                $row = new Document($row->html());
+
+                foreach ($row->find('.mb-table-currency--trend') as $item) {
+                    $item->remove();
+                }
+
+                $cols = $row->find('//td', Query::TYPE_XPATH);
+
+                $cols = array_slice($cols, 1, count($cols));
+
+                foreach ($cols as $col) {
+                    $col = new Document($col->html());
+
+                    $data[$rowIndex + 1][] = trim(preg_replace('/\n/', '', $col->text()));
+                }
+            }
+
+            $data = array_map(null, ...$data);
+
+            foreach ($data as $key => $value) {
+                $values->push((object)[
+                    'from_currency'       => $value[0],
+                    'to_currency'         => 'UAH',
+                    self::VALUE_INTERBANK => (object)[
+                        'purchase' => round((float)$value[1], 4),
+                        'average'  => round((float)($value[1] + $value[2]) / 2, 4),
+                        'sale'     => round((float)$value[2], 4),
+                    ],
+                ]);
+            }
+
+            return $values;
+        }
+        catch (Exception $e){
+            VendorsLogService::write($e->getMessage(), 'Currency:Interbanks', $e->getCode());
+            return collect();
+        }
     }
 
     /**

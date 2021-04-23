@@ -26,6 +26,24 @@ use Illuminate\Support\Facades\Storage as StorageHelper;
  * @property integer $file_size
  * @property Carbon  $created_at
  * @property Carbon  $updated_at
+ * @property-read Model|\Eloquent $fileable
+ * @property-read string $url
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereDesc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereFileExtension($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereFileMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereFileSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereFileableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereFileableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Storage whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Storage extends Model
 {

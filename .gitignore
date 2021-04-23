@@ -1,4 +1,5 @@
 .idea
+/docker
 /node_modules
 /public/hot
 /public/storage
@@ -11,3 +12,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+/public/adm.php
+/public/adminer/
