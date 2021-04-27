@@ -32,9 +32,9 @@ class CurrencyService
         self::VALUE_NATIONAL,
     ];
 
-    protected string $exchangeAndNationalRates = 'https://minfin.com.ua/currency/banks1/';
+    protected string $exchangeAndNationalRates = 'https://minfin.com.ua/currency/banks/';
 
-    protected string $interbankRates = 'https://minfin.com.ua/currency/mb1/';
+    protected string $interbankRates = 'https://minfin.com.ua/currency/mb/';
 
     /**
      * @return DatabaseCollection
