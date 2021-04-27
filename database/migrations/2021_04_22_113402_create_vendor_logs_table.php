@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddVendorsLogsTable extends Migration
+class CreateVendorLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddVendorsLogsTable extends Migration
     public function up()
     {
         //
-        Schema::create('vendors_logs', function (Blueprint $table) {
+        Schema::create('vendor_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('vendor_service')->index();
             $table->integer('http_code')->nullable();

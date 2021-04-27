@@ -25,8 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('vendor:currency')
-//             ->everyThirtyMinutes()
-             ->everyMinute()
+             ->everyThirtyMinutes()
              ->withoutOverlapping(15);
 
          $schedule->command('vendor:keyword')

@@ -8,8 +8,8 @@ use App\Models\Trigger\VendorLocation;
 use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Vendor\Currency as CurrencyModel;
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
-use App\Models\VendorsLog;
-use App\Services\Logs\VendorsLogService;
+use App\Models\VendorLog;
+use App\Services\Logs\VendorLogService;
 use DiDom\Document;
 use DiDom\Exceptions\InvalidSelectorException;
 use DiDom\Query;
@@ -32,9 +32,9 @@ class CurrencyService
         self::VALUE_NATIONAL,
     ];
 
-    protected string $exchangeAndNationalRates = 'https://minfin.com.ua/currency/banks/';
+    protected string $exchangeAndNationalRates = 'https://minfin.com.ua/currency/banks1/';
 
-    protected string $interbankRates = 'https://minfin.com.ua/currency/mb/';
+    protected string $interbankRates = 'https://minfin.com.ua/currency/mb1/';
 
     /**
      * @return DatabaseCollection
@@ -124,7 +124,7 @@ class CurrencyService
             return $values;
         }
         catch (Exception $e){
-            VendorsLogService::write($e->getMessage(), 'Currency:National', $e->getCode());
+            VendorLogService::write($e->getMessage(), 'Currency:National', $e->getCode());
             return collect();
         }
     }
@@ -189,7 +189,7 @@ class CurrencyService
             return $values;
         }
         catch (Exception $e){
-            VendorsLogService::write($e->getMessage(), 'Currency:Interbanks', $e->getCode());
+            VendorLogService::write($e->getMessage(), 'Currency:Interbanks', $e->getCode());
             return collect();
         }
     }

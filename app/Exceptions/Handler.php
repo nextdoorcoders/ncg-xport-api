@@ -77,7 +77,7 @@ class Handler extends ExceptionHandler
 
         // Other error
         $this->renderable(function (Exception $exception, Request $request) {
-            return $this->response('Error', $exception->getMessage(), [], $exception->getCode());
+            return $this->response('Error', $exception->getCode() .': ' . $exception->getMessage(), [], 202);
         });
     }
 
@@ -102,6 +102,6 @@ class Handler extends ExceptionHandler
                 'description' => $description,
             ]),
             'errors'  => $errors,
-        ]), $code);
+        ]), (int) $code);
     }
 }

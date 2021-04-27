@@ -4,9 +4,9 @@
 namespace App\Services\Logs;
 
 
-use App\Models\VendorsLog;
+use App\Models\VendorLog;
 
-class VendorsLogService
+class VendorLogService
 {
     /**
      * @param string $message
@@ -15,7 +15,7 @@ class VendorsLogService
      */
     public static function write(string $message, string $vendorService, $httpCode = null)
     {
-        VendorsLog::create([
+        VendorLog::create([
             'message' => $message,
             'vendor_service' => $vendorService,
             'http_code' => $httpCode

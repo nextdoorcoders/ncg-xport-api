@@ -24,6 +24,8 @@ use App\Http\Controllers\Vendor\CurrencyController;
 use App\Http\Controllers\Vendor\MediaSyncController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Reports\ReportController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -385,4 +387,12 @@ Route::group([
     ], function () {
         Route::get('campaigns', [GoogleCampaignController::class, 'allGoogleCampaigns']);
     });
+});
+
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix'     => 'reports',
+], function () {
+    Route::get('vendors', [ReportController::class, 'vendors']);
+
 });
