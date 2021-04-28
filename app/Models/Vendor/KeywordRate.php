@@ -24,6 +24,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon         $updated_at
  * @property VendorType     $vendorType
  * @property VendorLocation $vendorLocation
+ * @property-read Condition $condition
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate whereKeywordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate whereValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate whereVendorLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KeywordRate whereVendorTypeId($value)
+ * @mixin \Eloquent
  */
 class KeywordRate extends Model
 {

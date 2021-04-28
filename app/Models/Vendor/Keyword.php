@@ -19,6 +19,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon                  $created_at
  * @property Carbon                  $updated_at
  * @property Collection<KeywordRate> $rates
+ * @property string $id
+ * @property-read int|null $rates_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword whereKeyword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Keyword whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Keyword extends Model
 {

@@ -20,6 +20,17 @@ use Illuminate\Support\Arr;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property User   $user
+ * @property-read array|\ArrayAccess|mixed $type_text
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contact whereValue($value)
+ * @mixin \Eloquent
  */
 class Contact extends Model
 {

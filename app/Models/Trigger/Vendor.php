@@ -23,6 +23,20 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property Carbon                 $created_at
  * @property Carbon                 $updated_at
  * @property Collection<VendorType> $vendorsTypes
+ * @property-read Collection|\App\Models\Trigger\VendorLocation[] $vendorsLocations
+ * @property-read int|null $vendors_locations_count
+ * @property-read int|null $vendors_types_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereCallback($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereSettings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Vendor whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Vendor extends Model
 {

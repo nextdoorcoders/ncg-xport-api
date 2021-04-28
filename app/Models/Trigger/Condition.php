@@ -31,6 +31,23 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property Group          $group
  * @property VendorType     $vendorType
  * @property VendorLocation $vendorLocation
+ * @property-read Storage|null $media
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereChangedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereIsEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereIsInverted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereOrderIndex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereParameters($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereRefreshedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereVendorLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Condition whereVendorTypeId($value)
+ * @mixin \Eloquent
  */
 class Condition extends Model
 {

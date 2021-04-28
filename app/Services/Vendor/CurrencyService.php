@@ -9,6 +9,7 @@ use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Vendor\Currency as CurrencyModel;
 use App\Models\Vendor\CurrencyRate as CurrencyRateModel;
 use App\Models\VendorLog;
+use App\Models\VendorState;
 use App\Services\Logs\VendorLogService;
 use DiDom\Document;
 use DiDom\Exceptions\InvalidSelectorException;
@@ -122,9 +123,8 @@ class CurrencyService
             }
 
             return $values;
-        }
-        catch (Exception $e){
-            VendorLogService::write($e->getMessage(), 'Currency:National', $e->getCode());
+        } catch (Exception $e) {
+            VendorLogService::writeError($e->getMessage(), 'Currency',  $e->getCode(), 'National');
             return collect();
         }
     }
@@ -185,11 +185,9 @@ class CurrencyService
                     ],
                 ]);
             }
-
             return $values;
-        }
-        catch (Exception $e){
-            VendorLogService::write($e->getMessage(), 'Currency:Interbanks', $e->getCode());
+        } catch (Exception $e) {
+            VendorLogService::writeError($e->getMessage(), 'Currency', $e->getCode(), 'InterBank');
             return collect();
         }
     }
@@ -283,7 +281,7 @@ class CurrencyService
             /*
              * Calculate cross rate
              */
-            $groups = $rates->where('toCurrency.code','UAH')
+            $groups = $rates->where('toCurrency.code', 'UAH')
                 ->groupBy('vendorType.type');
 
             $groups->each(function ($group, $type) {
@@ -332,6 +330,9 @@ class CurrencyService
             $values1 = $this->getMinfinExchangeAndNationalRates();
             $values2 = $this->getMinfinInterbankRates();
 
+            if ($values1[0] && $values2[0]) {
+                VendorState::setActive('Currency');
+            }
             $mergedValues = $values1->map(function ($value1) use ($values2) {
                 $value2 = $values2->where('from_currency', $value1->from_currency)
                     ->where('to_currency', $value1->to_currency)

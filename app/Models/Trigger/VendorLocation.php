@@ -20,6 +20,14 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property Location              $location
  * @property VendorType            $vendorType
  * @property Collection<Condition> $conditions
+ * @property-read int|null $conditions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|VendorLocation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VendorLocation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VendorLocation query()
+ * @method static \Illuminate\Database\Eloquent\Builder|VendorLocation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VendorLocation whereLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VendorLocation whereVendorTypeId($value)
+ * @mixin \Eloquent
  */
 class VendorLocation extends Pivot
 {

@@ -394,5 +394,6 @@ Route::group([
     'prefix'     => 'reports',
 ], function () {
     Route::get('vendors', [ReportController::class, 'vendors']);
+    Route::get('vendors-state', [ReportController::class, 'vendorsState']);
 
 });

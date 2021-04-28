@@ -33,6 +33,26 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Project              $project
  * @property Collection<Campaign> $campaigns
  * @property Collection<Group>    $groups
+ * @property-read int|null $campaigns_count
+ * @property-read int|null $groups_count
+ * @property-read Collection|\App\Models\Trigger\History[] $histories
+ * @property-read int|null $histories_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Map newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Map newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Map query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereChangedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereDesc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereIsEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereProjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereRefreshedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereShutdownDelay($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereShutdownIn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Map whereUserId($value)
+ * @mixin \Eloquent
  */
 class Map extends Model
 {

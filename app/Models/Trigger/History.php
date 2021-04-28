@@ -18,6 +18,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string  $imprint
  * @property Carbon  $created_at
  * @property Carbon  $updated_at
+ * @property-read \App\Models\Trigger\Map $map
+ * @method static \Illuminate\Database\Eloquent\Builder|History newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|History newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|History query()
+ * @method static \Illuminate\Database\Eloquent\Builder|History whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|History whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|History whereImprint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|History whereIsEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|History whereMapId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|History whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class History extends Model
 {

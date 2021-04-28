@@ -4,6 +4,7 @@ namespace App\Services\Vendor;
 
 use App\Enums\Trigger\UptimeRobot\HttpMethodEnum;
 use App\Exceptions\MessageException;
+use App\Services\Logs\VendorLogService;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -163,10 +164,12 @@ class UptimeRobotService
 
         $response = curl_exec($curl);
         $err = curl_error($curl);
+        $code = curl_errno($curl);
 
         curl_close($curl);
 
         if ($err) {
+            VendorLogService::writeError($response, 'UptimeRobot',  $code, $data);
             throw new MessageException('Uptime Robot returned error');
         }
 

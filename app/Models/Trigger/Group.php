@@ -26,6 +26,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon                $updated_at
  * @property Map                   $map
  * @property Collection<Condition> $conditions
+ * @property-read int|null $conditions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Group newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Group newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Group query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereChangedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereDesc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereIsEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereMapId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereOrderIndex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereRefreshedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Group extends Model
 {

@@ -22,6 +22,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon         $updated_at
  * @property VendorType     $vendorType
  * @property VendorLocation $vendorLocation
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather whereValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather whereVendorLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Weather whereVendorTypeId($value)
+ * @mixin \Eloquent
  */
 class Weather extends Model
 {

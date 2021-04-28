@@ -21,6 +21,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon                   $updated_at
  * @property Collection<CurrencyRate> $fromCurrency
  * @property Collection<CurrencyRate> $toCurrency
+ * @property-read int|null $from_currency_count
+ * @property-read int|null $to_currency_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereSymbol($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereSymbolBefore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Currency extends Model
 {

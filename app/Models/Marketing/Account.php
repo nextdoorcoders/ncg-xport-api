@@ -27,6 +27,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon              $updated_at
  * @property User                $user
  * @property Collection<Project> $projects
+ * @property-read int|null $projects_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Account newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Account newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Account query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereAccessToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereProviderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereProviderName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereRefreshToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Account whereUserId($value)
+ * @mixin \Eloquent
  */
 class Account extends Model
 {

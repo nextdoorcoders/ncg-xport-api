@@ -18,9 +18,9 @@ class CreateVendorLogsTable extends Migration
             $table->bigIncrements('id');
             $table->string('vendor_service')->index();
             $table->integer('http_code')->nullable();
+            $table->longText('data')->nullable();
             $table->longText('message');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->timestamps();
         });
     }
 

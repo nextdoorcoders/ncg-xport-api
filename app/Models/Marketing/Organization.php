@@ -31,6 +31,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property User                $user
  * @property Location            $location
  * @property Collection<Project> $projects
+ * @property-read int|null $projects_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereAddresses($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization wherePhones($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereSocialNetworks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereWorkingHours($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Organization whereZip($value)
+ * @mixin \Eloquent
  */
 class Organization extends Model
 {

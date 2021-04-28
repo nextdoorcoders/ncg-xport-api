@@ -27,6 +27,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property VendorLocation $vendorLocation
  * @property Currency       $fromCurrency
  * @property Currency       $toCurrency
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereFromCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereToCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereVendorLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyRate whereVendorTypeId($value)
+ * @mixin \Eloquent
  */
 class CurrencyRate extends Model
 {

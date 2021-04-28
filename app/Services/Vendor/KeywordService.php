@@ -7,6 +7,7 @@ use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Vendor\Keyword as KeywordModel;
 use App\Models\Vendor\KeywordRate as KeywordRateModel;
+use App\Services\Logs\VendorLogService;
 use Carbon\Carbon;
 use Exception;
 use GSoares\GoogleTrends\Error\GoogleTrendsException;
@@ -169,7 +170,7 @@ class KeywordService
      * @param                $daysAgo
      * @return KeywordRateModel
      */
-    protected function getStatistics(ConditionModel $condition, KeywordModel $keyword, string $location, $daysAgo)
+    protected function getStatistics(ConditionModel $condition, KeywordModel $keyword, string $location, $daysAgo): KeywordRateModel
     {
         $value = 0;
 
@@ -181,9 +182,9 @@ class KeywordService
                 ->withTopMetrics()
                 ->withRisingMetrics();
 
-            $results = (new RelatedQueriesSearch())
-                ->search($searchFilter)
-                ->getResults();
+                $results = (new RelatedQueriesSearch())
+                    ->search($searchFilter)
+                    ->getResults();
 
             if ($results && count($results) > 0) {
                 $value = $results[0]->getValue();
@@ -198,6 +199,7 @@ class KeywordService
                 ]);
             }
         } catch (Exception $exception) {
+            VendorLogService::writeError($exception->getMessage(), 'Weather', 0, [$condition, $keyword]);
             report($exception);
         }
 

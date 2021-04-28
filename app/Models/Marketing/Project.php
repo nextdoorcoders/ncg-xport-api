@@ -33,6 +33,24 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property User                 $user
  * @property Collection<Campaign> $campaigns
  * @property Collection<Map>      $maps
+ * @property-read int|null $campaigns_count
+ * @property-read int|null $maps_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Project newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Project newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Project query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereDateEndAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereDateStartAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereDesc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereIsEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereOrganizationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereParameters($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Project whereUserId($value)
+ * @mixin \Eloquent
  */
 class Project extends Model
 {

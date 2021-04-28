@@ -54,6 +54,36 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Storage                  $picture
  * @property Collection<Permission>   $permissions
  * @property Collection<Role>         $roles
+ * @property-read int|null $accounts_count
+ * @property-read Collection|Campaign[] $campaigns
+ * @property-read int|null $campaigns_count
+ * @property-read int|null $contacts_count
+ * @property-read int|null $maps_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read int|null $organizations_count
+ * @property-read int|null $permissions_count
+ * @property-read int|null $projects_count
+ * @property-read int|null $roles_count
+ * @property-read Collection|\App\Models\Token[] $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLanguageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastLoginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastSeenAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePasswordResetCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {

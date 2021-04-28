@@ -22,6 +22,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon         $updated_at
  * @property VendorType     $vendorType
  * @property VendorLocation $vendorLocation
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync query()
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync whereValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync whereVendorLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|MediaSync whereVendorTypeId($value)
+ * @mixin \Eloquent
  */
 class MediaSync extends Model
 {

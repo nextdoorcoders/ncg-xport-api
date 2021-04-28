@@ -24,6 +24,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon  $created_at
  * @property Carbon  $updated_at
  * @property Map     $map
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereForeignCampaignId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereIsEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereIsRateEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereMapId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereRateMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereRateMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Campaign whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Campaign extends Model
 {

@@ -8,6 +8,7 @@ use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorLocation;
 use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Vendor\Weather as WeatherModel;
+use App\Services\Logs\VendorLogService;
 use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
@@ -76,7 +77,9 @@ class WeatherService
             'APPID' => config('services.owm.app_id'),
             'units' => 'metric',
         ]));
-
+        if ($response->failed()){
+            VendorLogService::writeError($response->body(), 'Weather', $response->status(), $data);
+        }
         $response->throw();
 
         return $response->json();
