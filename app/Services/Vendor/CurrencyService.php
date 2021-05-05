@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 
 class CurrencyService
 {
+    const STAT_CLASS_NAME = 'Currency';
     const SOURCE_MINFIN = 'minfin';
 
     const VALUE_EXCHANGE = 'exchange';
@@ -124,7 +125,7 @@ class CurrencyService
 
             return $values;
         } catch (Exception $e) {
-            VendorLogService::writeError($e->getMessage(), 'Currency',  $e->getCode(), 'National');
+            VendorLogService::writeError($e->getMessage(), self::STAT_CLASS_NAME,  $e->getCode(), 'National');
             return collect();
         }
     }
@@ -187,7 +188,7 @@ class CurrencyService
             }
             return $values;
         } catch (Exception $e) {
-            VendorLogService::writeError($e->getMessage(), 'Currency', $e->getCode(), 'InterBank');
+            VendorLogService::writeError($e->getMessage(), self::STAT_CLASS_NAME, $e->getCode(), 'InterBank');
             return collect();
         }
     }
@@ -332,7 +333,7 @@ class CurrencyService
 
             // Если всё нормально - отмечаем вендора как активного
             if ($values1[0] && $values2[0]) {
-                VendorState::setActive('Currency');
+                VendorState::setActive(self::STAT_CLASS_NAME);
             }
             $mergedValues = $values1->map(function ($value1) use ($values2) {
                 $value2 = $values2->where('from_currency', $value1->from_currency)

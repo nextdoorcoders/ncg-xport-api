@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 
 /**
@@ -14,8 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $http_code
  * @property string|null $data
  * @property string $message
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read string $time
  * @method static \Illuminate\Database\Eloquent\Builder|VendorLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|VendorLog newQuery()
@@ -27,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|VendorLog whereMessage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VendorLog whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VendorLog whereVendorService($value)
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class VendorLog extends Model
 {

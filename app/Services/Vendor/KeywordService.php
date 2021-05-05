@@ -7,6 +7,7 @@ use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Vendor\Keyword as KeywordModel;
 use App\Models\Vendor\KeywordRate as KeywordRateModel;
+use App\Models\VendorState;
 use App\Services\Logs\VendorLogService;
 use Carbon\Carbon;
 use Exception;
@@ -19,6 +20,7 @@ use Illuminate\Support\Str;
 
 class KeywordService
 {
+    const STAT_CLASS_NAME = 'Keywords';
     const SOURCE_GOOGLE_TRENDS = 'google_trends';
 
     /**
@@ -198,8 +200,9 @@ class KeywordService
                     ],
                 ]);
             }
+            VendorState::setActive(self::STAT_CLASS_NAME);
         } catch (Exception $exception) {
-            VendorLogService::writeError($exception->getMessage(), 'Weather', 0, [$condition, $keyword]);
+            VendorLogService::writeError($exception->getMessage(), self::STAT_CLASS_NAME, 0, [$condition, $keyword]);
             report($exception);
         }
 

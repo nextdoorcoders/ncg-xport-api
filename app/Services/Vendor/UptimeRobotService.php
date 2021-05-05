@@ -4,6 +4,7 @@ namespace App\Services\Vendor;
 
 use App\Enums\Trigger\UptimeRobot\HttpMethodEnum;
 use App\Exceptions\MessageException;
+use App\Models\VendorState;
 use App\Services\Logs\VendorLogService;
 use Illuminate\Support\Facades\Log;
 
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Log;
  */
 class UptimeRobotService
 {
+    const STAT_CLASS_NAME = 'UptimeRobot';
     /**
      * @param array $data
      * @return object
@@ -169,10 +171,10 @@ class UptimeRobotService
         curl_close($curl);
 
         if ($err) {
-            VendorLogService::writeError($response, 'UptimeRobot',  $code, $data);
+            VendorLogService::writeError($response, self::STAT_CLASS_NAME,  $code, $data);
             throw new MessageException('Uptime Robot returned error');
         }
-
+        VendorState::setActive(self::STAT_CLASS_NAME);
         $response = json_decode($response);
 
         Log::debug($url, [

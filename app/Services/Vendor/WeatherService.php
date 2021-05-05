@@ -8,6 +8,7 @@ use App\Models\Trigger\Vendor;
 use App\Models\Trigger\VendorLocation;
 use App\Models\Trigger\VendorType as VendorTypeModel;
 use App\Models\Vendor\Weather as WeatherModel;
+use App\Models\VendorState;
 use App\Services\Logs\VendorLogService;
 use Exception;
 use Illuminate\Http\Client\RequestException;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Http;
 
 class WeatherService
 {
+    const STAT_CLASS_NAME = 'Weather';
     const SOURCE_OWM = 'open_weather_map';
 
     const VALUE_TEMPERATURE = 'temperature';
@@ -78,10 +80,10 @@ class WeatherService
             'units' => 'metric',
         ]));
         if ($response->failed()){
-            VendorLogService::writeError($response->body(), 'Weather', $response->status(), $data);
+            VendorLogService::writeError($response->body(), self::STAT_CLASS_NAME, $response->status(), $data);
         }
         $response->throw();
-
+        VendorState::setActive(self::STAT_CLASS_NAME);
         return $response->json();
     }
 
