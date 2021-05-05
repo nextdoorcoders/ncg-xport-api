@@ -29,8 +29,6 @@ RUN php -r "unlink('composer-setup.php');"
 RUN mkdir -p /usr/local/bin
 RUN mv composer.phar /usr/local/bin/composer
 
-RUN systemctl enable cron
-
 RUN a2enmod rewrite
 RUN service apache2 restart
 
