@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     wget \
     libpng-dev \
-    libpq-dev \
-    cron
+    libpq-dev
 
 RUN docker-php-ext-install  zip sockets gd pcntl pdo pdo_pgsql pgsql
 
