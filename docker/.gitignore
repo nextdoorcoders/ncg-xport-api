@@ -1,0 +1,5 @@
+.idea
+base
+sql
+data/LOGS
+data/dev/.composer

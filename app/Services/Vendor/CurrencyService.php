@@ -330,6 +330,7 @@ class CurrencyService
             $values1 = $this->getMinfinExchangeAndNationalRates();
             $values2 = $this->getMinfinInterbankRates();
 
+            // Если всё нормально - отмечаем вендора как активного
             if ($values1[0] && $values2[0]) {
                 VendorState::setActive('Currency');
             }

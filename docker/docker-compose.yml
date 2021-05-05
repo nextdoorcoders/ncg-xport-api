@@ -1,0 +1,58 @@
+version: '3'
+services:
+  app:
+    build:
+      context: ./php
+    volumes:
+      - './../:/var/www/html'
+      - './php/ini:/usr/local/etc/php'
+      - './data/sites:/etc/apache2/sites-available'
+      - './data/LOGS:/var/www/logs'
+      - './data/dev:/home/dev'
+    links:
+      - pgsql
+      - redis
+    depends_on:
+      - pgsql
+      - redis
+    user: dev
+    networks:
+      app_net:
+        ipv4_address: 172.16.0.79
+  pgsql:
+    container_name: xport_pgsql
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: xport
+    expose:
+      - 5432
+    image: 'postgres:12'
+    volumes:
+      - './sql:/home/sql'
+      - './base:/var/lib/postgresql'
+    networks:
+      app_net:
+        ipv4_address: 172.16.0.78
+  redis:
+    container_name: xport_redis
+    networks:
+      app_net:
+        ipv4_address: 172.16.0.77
+    image: 'redis:latest'
+    expose:
+      - 6379
+  adminer:
+    image: adminer
+    ports:
+      - '8080:8080'
+    networks:
+      app_net:
+        ipv4_address: 172.16.0.76
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.0.0/24
