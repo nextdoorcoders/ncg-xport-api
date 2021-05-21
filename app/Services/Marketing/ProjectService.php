@@ -68,8 +68,8 @@ class ProjectService
 
             if (
                 $project->isDirty('account_id') ||
-                $params['account_id'] !== $originalParams['account_id'] ||
-                $params['developer_token'] !== $originalParams['developer_token']
+                $params['account_id'] !== $originalParams->account_id ||
+                $params['developer_token'] !== $originalParams->developer_token
             ) {
                 $maps = $project->maps()
                     ->get();

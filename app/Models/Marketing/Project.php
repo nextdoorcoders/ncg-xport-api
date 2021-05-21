@@ -122,4 +122,12 @@ class Project extends Model
     {
         return $this->hasMany(Campaign::class, 'project_id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function platforms(): HasMany
+    {
+        return $this->hasMany(Platforms::class, 'project_id');
+    }
 }
