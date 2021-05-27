@@ -22,7 +22,7 @@ class CreateAccountTable extends Migration
 
             $table->json('priority')->nullable();
 
-            $table->boolean('is_primary')->default(false)->index();
+            $table->boolean('is_primary')->default(0)->index();
 
             $table->timestamps();
         });

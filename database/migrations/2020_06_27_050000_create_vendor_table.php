@@ -18,7 +18,7 @@ class CreateVendorTable extends Migration
 
             $table->string('code')->index();
             $table->string('symbol')->nullable();
-            $table->boolean('symbol_before')->default(true);
+            $table->boolean('symbol_before')->default(0);
 
             $table->timestamps();
         });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Vendor;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,21 +13,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $state
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState query()
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState whereState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|VendorState whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|States newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|States newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|States query()
+ * @method static \Illuminate\Database\Eloquent\Builder|States whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|States whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|States whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|States whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|States whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read string $state_for_show
  */
-class VendorState extends Model
+class States extends Model
 {
     use HasFactory;
 
+    protected $table = 'vendor_states';
 
     public $fillable = ['state'];
 

@@ -19,28 +19,28 @@ class VendorCurrencyDataSeeder extends Seeder
             ->create([
                 'code'          => 'USD',
                 'symbol'        => '$',
-                'symbol_before' => true,
+                'symbol_before' => "0",
             ]);
 
         CurrencyModel::query()
             ->create([
                 'code'          => 'EUR',
                 'symbol'        => '€',
-                'symbol_before' => true,
+                'symbol_before' => "0",
             ]);
 
         CurrencyModel::query()
             ->create([
                 'code'          => 'UAH',
                 'symbol'        => '₴',
-                'symbol_before' => true,
+                'symbol_before' => "0",
             ]);
 
         CurrencyModel::query()
             ->create([
                 'code'          => 'RUB',
                 'symbol'        => '₽',
-                'symbol_before' => true,
+                'symbol_before' => "0",
             ]);
 
         CurrencyModel::query()

@@ -31,6 +31,7 @@ class Project extends JsonResource
             'name'            => $resource->name,
             'parameters'      => $resource->parameters,
             'is_enabled'      => $resource->is_enabled,
+            'platforms'       => $resource->platforms,
             'date_start_at'   => !is_null($resource->date_start_at) ? Carbon::parse($resource->date_start_at)->toDateString() : null,
             'date_end_at'     => !is_null($resource->date_end_at) ? Carbon::parse($resource->date_end_at)->toDateString() : null,
         ];

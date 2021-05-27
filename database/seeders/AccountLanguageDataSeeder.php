@@ -19,7 +19,7 @@ class AccountLanguageDataSeeder extends Seeder
                 'name'       => 'English',
                 'code'       => LanguageModel::LANGUAGE_EN,
                 'priority'   => [LanguageModel::LANGUAGE_RU, LanguageModel::LANGUAGE_UK],
-                'is_primary' => true,
+                'is_primary' => '1',
             ],
             [
                 'name'     => 'Русский язык',

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DataResourceCollection;
-use App\Models\VendorLog;
-use App\Models\VendorState;
+use App\Models\Vendor\Logs;
+use App\Models\Vendor\States;
 
 class ReportController extends Controller
 {
@@ -15,7 +15,7 @@ class ReportController extends Controller
      */
     public function vendors(): DataResourceCollection
     {
-        $logs = VendorLog::query()->orderBy('created_at', 'desc')->get();
+        $logs = Logs::query()->orderBy('created_at', 'desc')->get();
         return new DataResourceCollection($logs);
     }
 
@@ -24,7 +24,7 @@ class ReportController extends Controller
      */
     public function vendorsState(): DataResourceCollection
     {
-        $states = VendorState::orderBy('updated_at', 'desc')->get();;
+        $states = States::orderBy('updated_at', 'desc')->get();;
         return new DataResourceCollection($states );
     }
 }

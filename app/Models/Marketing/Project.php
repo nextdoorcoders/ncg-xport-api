@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string               $desc
  * @property object               $parameters
  * @property boolean              $is_enabled
+ * @property object               $platforms
  * @property Carbon               $date_start_at
  * @property Carbon               $date_end_at
  * @property Carbon               $created_at
@@ -66,6 +67,7 @@ class Project extends Model
         'desc',
         'parameters',
         'is_enabled',
+        'platforms',
         'date_start_at',
         'date_end_at',
     ];
